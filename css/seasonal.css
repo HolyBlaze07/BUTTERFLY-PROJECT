@@ -1,0 +1,401 @@
+/* Seasonal Holiday Themes CSS */
+
+/* Seasonal backgrounds */
+body.spring-theme {
+  background: linear-gradient(135deg, #87ceeb, #98fb98, #f0e68c) !important;
+}
+
+body.summer-theme {
+  background: linear-gradient(135deg, #ff6b6b, #ffe66d, #4ecdc4) !important;
+}
+
+body.autumn-theme {
+  background: linear-gradient(135deg, #d2691e, #ff8c00, #b8860b) !important;
+}
+
+body.winter-theme {
+  background: linear-gradient(135deg, #4682b4, #87ceeb, #f0f8ff) !important;
+}
+
+body.christmas-theme {
+  background: linear-gradient(135deg, #dc143c, #228b22, #ffd700) !important;
+}
+
+body.valentine-theme {
+  background: linear-gradient(135deg, #dc143c, #ff69b4, #ffb6c1) !important;
+}
+
+body.newyear-theme {
+  background: linear-gradient(135deg, #ffd700, #ff69b4, #00ced1) !important;
+}
+
+/* Seasonal Challenges Panel */
+.seasonal-challenges-panel {
+  position: fixed;
+  top: 20px;
+  right: 540px;
+  background: rgba(0, 0, 0, 0.9);
+  padding: 15px;
+  border-radius: 15px;
+  color: white;
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 107, 107, 0.5);
+  width: 240px;
+  max-height: 90vh;
+  overflow-y: auto;
+  display: none;
+  transition: all 0.3s ease;
+}
+
+.seasonal-challenges-panel.minimized {
+  max-height: none;
+  overflow: hidden;
+}
+
+.seasonal-challenges-panel.minimized .challenges-content {
+  display: none;
+}
+
+#gameMode .seasonal-challenges-panel {
+  display: block;
+}
+
+.seasonal-title {
+  color: #ff6b6b;
+  font-size: 16px;
+  margin-bottom: 15px;
+  text-align: center;
+  text-shadow: 0 0 15px rgba(255, 107, 107, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  position: relative;
+}
+
+.season-info {
+  background: rgba(255, 107, 107, 0.1);
+  border: 1px solid rgba(255, 107, 107, 0.5);
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.season-name {
+  color: #ffe66d;
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 3px;
+}
+
+.season-timer {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 11px;
+}
+
+.seasonal-challenge-item {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 107, 107, 0.3);
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 8px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.seasonal-challenge-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 107, 107, 0.6);
+}
+
+.seasonal-challenge-item.completed {
+  background: rgba(0, 212, 255, 0.2);
+  border-color: rgba(0, 212, 255, 0.8);
+}
+
+.seasonal-challenge-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.seasonal-challenge-name {
+  color: #ffe66d;
+  font-weight: bold;
+  font-size: 13px;
+}
+
+.seasonal-challenge-reward {
+  color: #ff6b6b;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.seasonal-challenge-description {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 11px;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.seasonal-challenge-progress {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  height: 6px;
+  overflow: hidden;
+  margin-bottom: 5px;
+}
+
+.seasonal-challenge-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ff6b6b, #ffe66d);
+  border-radius: 10px;
+  transition: width 0.3s ease;
+}
+
+.seasonal-challenge-status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.seasonal-challenge-check {
+  color: #00d4ff;
+  font-size: 14px;
+  display: none;
+}
+
+.seasonal-challenge-item.completed .seasonal-challenge-check {
+  display: block;
+}
+
+.seasonal-event-banner {
+  background: linear-gradient(45deg, #ff6b6b, #ffe66d);
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 10px;
+  text-align: center;
+  animation: seasonalPulse 2s ease-in-out infinite;
+}
+
+@keyframes seasonalPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 20px rgba(255, 107, 107, 0.5);
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 0 40px rgba(255, 107, 107, 0.8);
+  }
+}
+
+.event-title {
+  color: white;
+  font-size: 13px;
+  font-weight: bold;
+  margin-bottom: 3px;
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.event-description {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 10px;
+}
+
+.seasonal-timer {
+  background: rgba(0, 212, 255, 0.1);
+  border: 1px solid rgba(0, 212, 255, 0.5);
+  border-radius: 8px;
+  padding: 8px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.seasonal-timer-label {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 10px;
+  margin-bottom: 3px;
+}
+
+.seasonal-timer-countdown {
+  color: #00d4ff;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.seasonal-collection {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 10px;
+  margin-top: 10px;
+}
+
+.collection-title {
+  color: #88d8c3;
+  font-size: 12px;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.collection-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+}
+
+.collection-item {
+  width: 60px;
+  height: 70px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 6px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.collection-butterfly {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
+.collection-count {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.collection-name {
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+  line-height: 1.1;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.collection-item.collected {
+  background: rgba(255, 230, 109, 0.2);
+  border-color: #ffe66d;
+  animation: collectItem 0.5s ease-out;
+}
+
+.collection-item.unlocked {
+  background: rgba(255, 230, 109, 0.2);
+  border-color: #ffe66d;
+}
+
+@keyframes collectItem {
+  0% {
+    transform: scale(0) rotate(0deg);
+  }
+  50% {
+    transform: scale(1.3) rotate(180deg);
+  }
+  100% {
+    transform: scale(1) rotate(360deg);
+  }
+}
+
+.seasonal-mode-btn {
+  background: linear-gradient(45deg, #ff6b6b, #ffe66d);
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: bold;
+  margin-top: 10px;
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
+.seasonal-mode-btn:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 20px rgba(255, 107, 107, 0.8);
+}
+
+.seasonal-mode-btn.active {
+  background: linear-gradient(45deg, #ffe66d, #ff6b6b);
+}
+
+/* Seasonal Butterflies */
+.seasonal-special-butterfly {
+  border: 3px solid #ffe66d !important;
+  animation: seasonalSpecialGlow 1s ease-in-out infinite alternate;
+}
+
+@keyframes seasonalSpecialGlow {
+  0% {
+    box-shadow: 0 0 25px rgba(255, 230, 109, 0.9),
+      0 0 50px rgba(255, 230, 109, 0.7);
+  }
+  100% {
+    box-shadow: 0 0 40px rgba(255, 230, 109, 1),
+      0 0 80px rgba(255, 230, 109, 0.9);
+  }
+}
+
+/* Seasonal Completion Animation */
+.seasonal-complete-animation {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 48px;
+  color: #ffe66d;
+  font-weight: bold;
+  text-shadow: 0 0 30px rgba(255, 230, 109, 0.8);
+  z-index: 3000;
+  animation: seasonalComplete 2s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes seasonalComplete {
+  0% {
+    transform: translate(-50%, -50%) scale(0) rotate(0deg);
+    opacity: 0;
+  }
+  20% {
+    transform: translate(-50%, -50%) scale(1.5) rotate(180deg);
+    opacity: 1;
+  }
+  80% {
+    transform: translate(-50%, -50%) scale(1.2) rotate(360deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(0.8) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* Seasonal Catch Effect */
+@keyframes seasonalCatchEffect {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.5);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 0;
+  }
+}

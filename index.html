@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Glowing Blue Butterfly</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="assets/butterfly.png"
+      alt="butterfly icon"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/game.css" />
+    <link rel="stylesheet" href="css/seasonal.css" />
+  </head>
+  <body>
+    <!-- Display Mode -->
+    <div id="displayMode" class="mode-section active">
+      <!-- Mode Toggle Button -->
+      <button id="modeToggle" class="mode-toggle">Play Game</button>
+      <button class="hub-button" onclick="window.location.href='hub.html'">
+        🦋 Back to Hub
+      </button>
+
+      <div class="stars" id="stars"></div>
+
+      <h1 class="title">Glowing Blue Butterfly</h1>
+
+      <div class="butterfly-container">
+        <div class="butterfly">
+          <!-- Wings -->
+          <div class="wing wing-left-upper">
+            <div class="wing-pattern pattern-1"></div>
+          </div>
+          <div class="wing wing-left-lower">
+            <div class="wing-pattern pattern-2"></div>
+          </div>
+          <div class="wing wing-right-upper">
+            <div class="wing-pattern pattern-3"></div>
+          </div>
+          <div class="wing wing-right-lower"></div>
+
+          <!-- Body -->
+          <div class="body"></div>
+
+          <!-- Antennae -->
+          <div class="antennae">
+            <div class="antenna antenna-left"></div>
+            <div class="antenna antenna-right"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Game Mode -->
+    <div id="gameMode" class="mode-section">
+      <div class="game-container">
+        <div class="ui-panel">
+          <div class="score-display">Score: <span id="score">0</span></div>
+          <div class="level-display">Level: <span id="level">1</span></div>
+          <div class="time-display">Time: <span id="time">60</span>s</div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+          <div>Combo: <span id="combo">0</span>x</div>
+          <div>Butterflies: <span id="butterflyCount">0</span></div>
+        </div>
+
+        <!-- Restart Game Button -->
+        <button
+          class="restart-game-btn"
+          onclick="restartGame()"
+          title="Restart Game"
+        >
+          Restart Game
+        </button>
+
+        <!-- Worldwide Records Panel -->
+        <div class="records-panel">
+          <div class="records-title">
+            🏆 Worldwide Records
+            <button
+              class="panel-toggle-btn"
+              onclick="togglePanel('records')"
+              title="Minimize"
+            >
+              −
+            </button>
+          </div>
+          <div class="records-content">
+            <div id="worldwideRecords">
+              <div class="record-item">
+                <span class="record-rank">1</span>
+                <span class="record-name">Loading...</span>
+                <span class="record-score">---</span>
+              </div>
+            </div>
+
+            <div class="your-record" id="yourRecord" style="display: none">
+              <div
+                style="color: #00d4ff; font-weight: bold; margin-bottom: 5px"
+              >
+                Your Record
+              </div>
+              <div class="record-item">
+                <span class="record-rank" id="yourRank">-</span>
+                <span class="record-name" id="yourName">Player</span>
+                <span class="record-score" id="yourScore">0</span>
+              </div>
+            </div>
+
+            <div style="margin-top: 15px">
+              <input
+                type="text"
+                class="name-input"
+                id="playerName"
+                placeholder="Enter your name"
+                maxlength="20"
+              />
+              <button class="submit-score-btn" onclick="submitScore()">
+                Submit Score
+              </button>
+            </div>
+
+            <div class="achievements">
+              <div style="color: #ffe66d; font-size: 14px; margin-bottom: 10px">
+                🏅 Achievements
+              </div>
+              <div id="achievementsList">
+                <div class="achievement" id="ach-first-catch">
+                  <div class="achievement-icon">🦋</div>
+                  <div class="achievement-text">First Catch</div>
+                </div>
+                <div class="achievement" id="ach-combo-5">
+                  <div class="achievement-icon">⚡</div>
+                  <div class="achievement-text">5x Combo</div>
+                </div>
+                <div class="achievement" id="ach-level-5">
+                  <div class="achievement-icon">🌟</div>
+                  <div class="achievement-text">Level 5</div>
+                </div>
+                <div class="achievement" id="ach-score-500">
+                  <div class="achievement-icon">💎</div>
+                  <div class="achievement-text">500 Points</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="stats-display">
+              <div style="color: #88d8c3; font-size: 14px; margin-bottom: 8px">
+                <img
+                  src="assets/Butterfly12.png"
+                  style="
+                    width: 20px;
+                    vertical-align: middle;
+                    image-rendering: pixelated;
+                  "
+                />
+                Your Stats
+              </div>
+              <div class="stat-item">
+                <span>Games Played:</span>
+                <span class="stat-value" id="gamesPlayed">0</span>
+              </div>
+              <div class="stat-item">
+                <span>Total Score:</span>
+                <span class="stat-value" id="totalScore">0</span>
+              </div>
+              <div class="stat-item">
+                <span>Best Combo:</span>
+                <span class="stat-value" id="bestCombo">0</span>
+              </div>
+              <div class="stat-item">
+                <span>Butterflies Caught:</span>
+                <span class="stat-value" id="totalCaught">0</span>
+              </div>
+            </div>
+          </div>
+
+          <button class="view-leaderboard-btn" onclick="showLeaderboard()">
+            View Leaderboard
+          </button>
+        </div>
+        <!-- Daily Challenges Panel -->
+        <div class="daily-challenges-panel">
+          <div class="challenges-title">
+            🗓️ Daily Challenges
+            <button
+              class="panel-toggle-btn"
+              onclick="togglePanel('challenges')"
+              title="Minimize"
+            >
+              −
+            </button>
+          </div>
+          <div class="challenges-content">
+            <div class="daily-streak" id="dailyStreak">
+              <div class="streak-number" id="streakNumber">0</div>
+              <div class="streak-text">Day Streak</div>
+            </div>
+
+            <div class="daily-timer">
+              <div class="timer-label">New Challenges In</div>
+              <div class="timer-countdown" id="timerCountdown">23:59:59</div>
+            </div>
+
+            <div id="dailyChallenges">
+              <!-- Challenges will be populated here -->
+            </div>
+
+            <div class="weekly-progress">
+              <div class="weekly-title">Weekly Progress</div>
+              <div class="week-days" id="weekDays">
+                <!-- Days will be populated here -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Seasonal Challenges Panel -->
+        <div class="seasonal-challenges-panel">
+          <div class="seasonal-title">
+            🎉 Seasonal Event
+            <button
+              class="panel-toggle-btn"
+              onclick="togglePanel('seasonal')"
+              title="Minimize"
+            >
+              −
+            </button>
+          </div>
+          <div class="challenges-content">
+            <div class="season-info">
+              <div class="season-name">Spring Bloom</div>
+              <div class="season-end">Ends: May 31</div>
+            </div>
+
+            <div class="seasonal-event-banner">
+              🦋 Spring Bloom Event Active! 🦋
+            </div>
+
+            <div class="seasonal-timer">
+              <div class="timer-label">Event Ends In</div>
+              <div class="timer-countdown" id="seasonalTimer">30d 12h 45m</div>
+            </div>
+
+            <div class="seasonal-challenges-list" id="seasonalChallengesList">
+              <!-- Seasonal challenges will be populated here -->
+            </div>
+
+            <div class="seasonal-collection">
+              <div class="collection-title">🦋 Collection</div>
+              <div class="collection-grid" id="seasonalCollectionGrid">
+                <!-- Collection items will be populated here -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="butterflyContainer"></div>
+
+        <div class="game-over" id="gameOver">
+          <button class="close-modal-btn" onclick="closeGameOverModal(event)">
+            ×
+          </button>
+          <div class="game-over-butterfly">
+            <div class="butterfly-container-modal">
+              <div class="butterfly">
+                <!-- Wings -->
+                <div class="wing wing-left-upper">
+                  <div class="wing-pattern pattern-1"></div>
+                </div>
+                <div class="wing wing-left-lower">
+                  <div class="wing-pattern pattern-2"></div>
+                </div>
+                <div class="wing wing-right-upper">
+                  <div class="wing-pattern pattern-3"></div>
+                </div>
+                <div class="wing wing-right-lower"></div>
+
+                <!-- Body -->
+                <div class="body"></div>
+
+                <!-- Antennae -->
+                <div class="antennae">
+                  <div class="antenna antenna-left"></div>
+                  <div class="antenna antenna-right"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <h2>Game Over!</h2>
+          <p>Final Score: <span id="finalScore">0</span></p>
+          <p>Level Reached: <span id="finalLevel">1</span></p>
+          <p>Butterflies Caught: <span id="caughtCount">0</span></p>
+          <p>Best Combo: <span id="finalCombo">0</span>x</p>
+          <button class="restart-btn" onclick="restartGame()">
+            Play Again
+          </button>
+          <button class="restart-btn" onclick="viewDisplayFromGameOver()">
+            Exit Game
+          </button>
+        </div>
+
+        <div class="combo-display" id="comboDisplay"></div>
+      </div>
+    </div>
+
+    <script src="js/index.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/leaderboard.js"></script>
+    <script src="js/daily-challenges.js"></script>
+    <script src="js/seasonal-challenges.js"></script>
+    <script src="js/mode-toggle.js"></script>
+  </body>
+</html>
