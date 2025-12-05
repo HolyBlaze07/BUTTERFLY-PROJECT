@@ -1,0 +1,124 @@
+{
+  "skins": [
+    {
+      "id": "default",
+      "name": "Midnight Sky",
+      "premium": false,
+      "new": false,
+      "description": "Deep blue midnight gradient with subtle star glow.",
+      "preview": "linear-gradient(135deg, #1c2541, #0b132b)",
+      "cssVars": {
+        "--bg-gradient": "radial-gradient(circle at top, #1c2541, #0b132b, #000000)",
+        "--accent": "#52abf4",
+        "--accent-2": "#52abf4",
+        "--glow-primary": "rgba(82, 171, 244, 0.7)",
+        "--glow-secondary": "rgba(82, 171, 244, 0.5)"
+      }
+    },
+    {
+      "id": "holo-prism",
+      "name": "Holographic Prism",
+      "premium": true,
+      "new": true,
+      "description": "Neon holographic gradient with rainbow sparkles and vibrant glow.",
+      "preview": "linear-gradient(135deg, #ff7cf8, #52abf4, #ffc857)",
+      "cssVars": {
+        "--bg-gradient": "radial-gradient(circle at top, #ff7cf8, #52abf4, #090012)",
+        "--accent": "#ff7cf8",
+        "--accent-2": "#52abf4",
+        "--glow-primary": "rgba(255, 124, 248, 0.8)",
+        "--glow-secondary": "rgba(82, 171, 244, 0.6)"
+      }
+    },
+    {
+      "id": "angel-aura",
+      "name": "Angel Aura",
+      "premium": true,
+      "new": false,
+      "description": "Soft gold and cream glow with gentle ethereal light.",
+      "preview": "linear-gradient(135deg, #fff6d9, #fbc2eb)",
+      "cssVars": {
+        "--bg-gradient": "radial-gradient(circle at top, #fbc2eb, #a18cd1, #230b42)",
+        "--accent": "#ffd27f",
+        "--accent-2": "#fbc2eb",
+        "--glow-primary": "rgba(255, 210, 127, 0.7)",
+        "--glow-secondary": "rgba(251, 194, 235, 0.5)"
+      }
+    },
+    {
+      "id": "neon-nights",
+      "name": "Neon Nights",
+      "premium": true,
+      "new": true,
+      "description": "Electric neon colors with cyberpunk vibes and intense glow.",
+      "preview": "linear-gradient(135deg, #00ffff, #ff00ff, #ffff00)",
+      "cssVars": {
+        "--bg-gradient": "radial-gradient(circle at top, #ff00ff, #00ffff, #0a0014)",
+        "--accent": "#00ffff",
+        "--accent-2": "#ff00ff",
+        "--glow-primary": "rgba(0, 255, 255, 0.9)",
+        "--glow-secondary": "rgba(255, 0, 255, 0.7)"
+      }
+    },
+    {
+      "id": "cotton-candy",
+      "name": "Cotton Candy",
+      "premium": false,
+      "new": false,
+      "description": "Sweet pastel pink and blue like fluffy cotton candy clouds.",
+      "preview": "linear-gradient(135deg, #ffd1ff, #a8edea)",
+      "cssVars": {
+        "--bg-gradient": "radial-gradient(circle at top, #ffd1ff, #a8edea, #1a1a2e)",
+        "--accent": "#ffc0ff",
+        "--accent-2": "#a8edea",
+        "--glow-primary": "rgba(255, 192, 255, 0.6)",
+        "--glow-secondary": "rgba(168, 237, 234, 0.5)"
+      }
+    },
+    {
+      "id": "sunset-vibes",
+      "name": "Sunset Vibes",
+      "premium": true,
+      "new": false,
+      "description": "Warm sunset colors with orange, pink, and purple gradients.",
+      "preview": "linear-gradient(135deg, #ff6b6b, #feca57, #ee5a6f)",
+      "cssVars": {
+        "--bg-gradient": "radial-gradient(circle at top, #ff6b6b, #feca57, #1e1e30)",
+        "--accent": "#feca57",
+        "--accent-2": "#ff6b6b",
+        "--glow-primary": "rgba(254, 202, 87, 0.7)",
+        "--glow-secondary": "rgba(255, 107, 107, 0.6)"
+      }
+    },
+    {
+      "id": "aurora-borealis",
+      "name": "Aurora Borealis",
+      "premium": true,
+      "new": true,
+      "description": "Mystical northern lights with flowing green and purple waves.",
+      "preview": "linear-gradient(135deg, #00f260, #0575e6, #6a11cb)",
+      "cssVars": {
+        "--bg-gradient": "radial-gradient(circle at top, #00f260, #0575e6, #000428)",
+        "--accent": "#00f260",
+        "--accent-2": "#6a11cb",
+        "--glow-primary": "rgba(0, 242, 96, 0.7)",
+        "--glow-secondary": "rgba(106, 17, 203, 0.6)"
+      }
+    },
+    {
+      "id": "moonlight",
+      "name": "Moonlight",
+      "premium": false,
+      "new": false,
+      "description": "Calm midnight blue with soft silver moonlight shimmer.",
+      "preview": "linear-gradient(135deg, #2c3e50, #34495e, #bdc3c7)",
+      "cssVars": {
+        "--bg-gradient": "radial-gradient(circle at top, #34495e, #2c3e50, #0a0a0f)",
+        "--accent": "#bdc3c7",
+        "--accent-2": "#7f8c8d",
+        "--glow-primary": "rgba(189, 195, 199, 0.6)",
+        "--glow-secondary": "rgba(127, 140, 141, 0.5)"
+      }
+    }
+  ]
+}

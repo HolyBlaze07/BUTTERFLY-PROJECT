@@ -1,0 +1,2249 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      Free Online Bible Reader | Berean Standard Bible | Scripture Journal &
+      Study Tool
+    </title>
+    <meta
+      name="description"
+      content="Read the Berean Standard Bible online for free. Interactive Bible reader with chapter navigation, verse bookmarks, reading history, progress tracking, and scripture journaling. Beautiful Y2K-inspired design. Perfect for daily devotions and Bible study."
+    />
+    <meta
+      name="keywords"
+      content="Bible online, read Bible free, Berean Standard Bible, BSB, scripture reader, Bible study tool, verse bookmarks, Bible journal, daily devotions, Christian faith, Bible chapters, Bible verses, scripture study, free Bible app, online Bible study"
+    />
+    <meta name="theme-color" content="#00ffff" />
+    <meta name="author" content="Butterfly Project" />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:title"
+      content="Free Online Bible Reader - Berean Standard Bible"
+    />
+    <meta property="og:site_name" content="Butterfly Bible Console" />
+    <meta
+      property="og:description"
+      content="Read the Berean Standard Bible online for free. Interactive Bible reader with chapter navigation, verse bookmarks, reading history, and scripture journaling."
+    />
+    <meta property="og:image" content="../assets/Butterfly4.png" />
+    <meta property="og:image:alt" content="Butterfly Bible Console Logo" />
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta
+      property="twitter:title"
+      content="Free Online Bible Reader - Berean Standard Bible"
+    />
+    <meta
+      property="twitter:description"
+      content="Interactive Bible study tool with bookmarks, journaling, and reading progress tracking. Free to use."
+    />
+    <meta property="twitter:image:alt" content="Butterfly Bible Console Logo" />
+
+    <!-- Butterfly Theme System -->
+    <script src="../js/butterfly-theme.js"></script>
+    <link rel="stylesheet" href="../css/theme-selector.css" />
+    <script src="../js/theme-selector.js" defer></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Unbounded:wght@600&display=swap"
+      rel="stylesheet"
+    />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Butterfly Bible Console",
+        "applicationCategory": "LifestyleApplication",
+        "description": "Free online Bible reader with the Berean Standard Bible. Features include chapter navigation, verse bookmarks, reading history, progress tracking, and scripture journaling.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "featureList": "Bible reading, Chapter navigation, Verse bookmarks, Reading history, Progress tracking, Scripture journaling",
+        "operatingSystem": "Any",
+        "browserRequirements": "Requires JavaScript"
+      }
+    </script>
+    <style>
+      :root {
+        /* Light Mode (Y2K) */
+        --bg: #ffffff;
+        --bg-alt: rgba(230, 230, 255, 0.95);
+        --text: #1a0033;
+        --muted: #7b68ee;
+        --accent: #00ffff;
+        --accent-2: #ff00ff;
+        --card: rgba(255, 255, 255, 0.95);
+        --border: rgba(138, 43, 226, 0.4);
+        --panel-gradient-1: rgba(0, 255, 42, 0.9);
+        --panel-gradient-2: rgba(112, 28, 208, 0.78);
+        --panel-gradient-3: rgba(33, 180, 213, 0.75);
+        --panel-gradient-4: rgba(255, 0, 247, 0.78);
+        --chapter-bg: rgba(3, 7, 20, 0.65);
+        --chapter-text: rgba(255, 255, 255, 0.95);
+        --book-tile-bg: rgba(4, 6, 18, 0.55);
+        --book-tile-text: #ffffff;
+        --label-text: #ffffff;
+      }
+
+      /* Dark Mode (Night Reading) */
+      body.dark-mode {
+        --bg: #0a0a0f;
+        --bg-alt: rgba(20, 20, 30, 0.95);
+        --text: #e0e0e0;
+        --muted: #9b8bff;
+        --accent: #00ffff;
+        --accent-2: #ff00ff;
+        --card: rgba(25, 25, 35, 0.95);
+        --border: rgba(138, 43, 226, 0.6);
+        --panel-gradient-1: rgba(15, 15, 25, 0.9);
+        --panel-gradient-2: rgba(25, 20, 35, 0.88);
+        --panel-gradient-3: rgba(20, 25, 30, 0.85);
+        --panel-gradient-4: rgba(30, 15, 30, 0.88);
+        --chapter-bg: rgba(8, 8, 12, 0.95);
+        --chapter-text: #ffffff;
+        --book-tile-bg: rgba(15, 15, 20, 0.75);
+        --book-tile-text: #d0d0e0;
+        --label-text: #d0d0e0;
+      }
+
+      body.dark-mode {
+        background: url("../assets/Castle Pack by CaptainSkeleto/castle pack6.png"),
+          var(
+            --bg-gradient,
+            linear-gradient(135deg, #0a0a0f, #1a1a2e 60%, #15151f)
+          ),
+          radial-gradient(
+            ellipse at 30% 20%,
+            rgba(138, 43, 226, 0.2),
+            transparent 50%
+          ),
+          radial-gradient(
+            ellipse at 70% 80%,
+            rgba(0, 255, 255, 0.15),
+            transparent 50%
+          );
+        background-size: contain, cover, 100% 100%, 100% 100%;
+        background-position: center, center, center, center;
+        background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
+        background-attachment: fixed;
+        image-rendering: pixelated;
+      }
+
+      body.dark-mode header {
+        background: linear-gradient(
+          135deg,
+          rgba(25, 25, 40, 0.95),
+          rgba(30, 20, 40, 0.95)
+        );
+        color: #ffffff;
+      }
+
+      body.dark-mode header h1 {
+        color: #ffffff;
+      }
+
+      body.dark-mode header p {
+        color: #e0e0e0;
+      }
+
+      .skip-link {
+        position: absolute;
+        top: -40px;
+        left: 0;
+        background: #00ffff;
+        color: #1a0033;
+        padding: 8px 16px;
+        text-decoration: none;
+        font-weight: 600;
+        z-index: 100000;
+        border-radius: 0 0 4px 0;
+      }
+
+      .skip-link:focus {
+        top: 0;
+      }
+
+      .theme-toggle {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 10000;
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50px;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-family: "Space Grotesk", sans-serif;
+        font-weight: 600;
+        font-size: 14px;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 4px 15px rgba(0, 255, 255, 0.3),
+          0 0 20px rgba(255, 0, 255, 0.2);
+        transition: all 0.3s ease;
+      }
+
+      .theme-toggle:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 255, 255, 0.5),
+          0 0 30px rgba(255, 0, 255, 0.3);
+      }
+
+      .theme-toggle:active {
+        transform: translateY(0);
+      }
+
+      .theme-toggle-icon {
+        font-size: 18px;
+        line-height: 1;
+      }
+
+      body {
+        font-family: "Space Grotesk", system-ui, -apple-system,
+          BlinkMacSystemFont, "Segoe UI", sans-serif;
+        min-height: 100vh;
+        margin: 0;
+        color: var(--text);
+        background: url("../assets/Mythical Valley Backgrounds Pack by Captainskeleto (1)/Mythical Valley Background1.png"),
+          var(
+            --bg-gradient,
+            linear-gradient(135deg, #e0b3ff, #b8f3ff 60%, #ffc9f0)
+          ),
+          radial-gradient(
+            ellipse at 20% 30%,
+            rgba(255, 182, 255, 0.3),
+            transparent 50%
+          ),
+          radial-gradient(
+            ellipse at 80% 70%,
+            rgba(182, 243, 255, 0.3),
+            transparent 50%
+          );
+        background-size: contain, cover, 100% 100%, 100% 100%;
+        background-position: center, center, center, center;
+        background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
+        background-attachment: fixed;
+        image-rendering: pixelated;
+        overflow-x: hidden;
+      }
+
+      .butterfly-field {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .butterfly-field span {
+        position: absolute;
+        width: 48px;
+        height: 48px;
+        background-size: contain;
+        background-repeat: no-repeat;
+        animation: drift 18s linear infinite;
+        opacity: 0.7;
+        filter: drop-shadow(0 0 12px rgba(255, 0, 255, 0.8))
+          drop-shadow(0 0 8px rgba(0, 255, 255, 0.6));
+      }
+
+      @keyframes drift {
+        0% {
+          transform: translateY(0) scale(0.8);
+        }
+        50% {
+          transform: translateY(-40vh) scale(1.1);
+        }
+        100% {
+          transform: translateY(-100vh) scale(0.7);
+        }
+      }
+
+      main {
+        position: relative;
+        z-index: 1;
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 1.5rem 1.2rem 3rem;
+        zoom: 0.9;
+      }
+
+      header {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        background: linear-gradient(
+          135deg,
+          rgba(230, 230, 255, 0.98),
+          rgba(255, 200, 255, 0.98)
+        );
+        border: 3px solid var(--accent-2);
+        border-radius: 26px;
+        padding: 1.75rem;
+        box-shadow: 0 10px 40px rgba(255, 0, 255, 0.4),
+          0 0 30px rgba(0, 255, 255, 0.3),
+          inset 0 2px 0 rgba(255, 255, 255, 0.8);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      header:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 50px rgba(255, 0, 255, 0.6),
+          0 0 40px rgba(0, 255, 255, 0.5),
+          inset 0 2px 0 rgba(255, 255, 255, 0.8);
+      }
+
+      header h1 {
+        margin: 0;
+        font-family: "Unbounded", cursive;
+        font-size: clamp(1.8rem, 3vw, 2.6rem);
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+      }
+
+      .hub-link {
+        align-self: flex-start;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        padding: 0.6rem 1rem;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        text-decoration: none;
+        color: var(--text);
+        background: rgba(255, 255, 255, 0.03);
+        transition: transform 0.2s ease, border-color 0.2s ease;
+      }
+
+      .hub-link:hover {
+        transform: translateY(-2px);
+        border-color: var(--accent);
+      }
+
+      .app-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.25fr) minmax(0, 1.5fr) minmax(
+            280px,
+            0.8fr
+          );
+        gap: 1.25rem;
+      }
+
+      .panel {
+        background: linear-gradient(
+          135deg,
+          var(--panel-gradient-1),
+          var(--panel-gradient-2),
+          var(--panel-gradient-3),
+          var(--panel-gradient-4)
+        );
+        background-size: 400% 400%;
+        animation: gradientShift 15s ease infinite;
+        border-radius: 22px;
+        border: 3px solid var(--border);
+        padding: 1.25rem;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 8px 25px rgba(138, 43, 226, 0.25),
+          inset 0 2px 0 rgba(255, 255, 255, 0.9);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      @keyframes gradientShift {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      .panel:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 35px rgba(138, 43, 226, 0.35),
+          0 0 20px rgba(0, 255, 255, 0.3),
+          inset 0 2px 0 rgba(255, 255, 255, 0.9);
+      }
+
+      .panel h2 {
+        margin: 0 0 0.8rem;
+        font-size: 1.1rem;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        background: linear-gradient(90deg, #00ffff, #ff00ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+        filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.1));
+      }
+
+      .controls {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      label span {
+        display: block;
+        margin-bottom: 0.35rem;
+        font-size: 0.85rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--label-text);
+      }
+
+      select,
+      input[type="text"],
+      input[type="search"] {
+        width: 100%;
+        padding: 0.75rem 0.85rem;
+        border-radius: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: var(--book-tile-bg);
+        color: var(--book-tile-text);
+        font-size: 0.95rem;
+      }
+
+      input::placeholder {
+        color: var(--label-text);
+        opacity: 0.7;
+      }
+
+      button,
+      .ghost-btn {
+        font: inherit;
+        cursor: pointer;
+        border: none;
+        border-radius: 14px;
+        padding: 0.75rem 1rem;
+      }
+
+      .primary-btn {
+        background: linear-gradient(120deg, var(--accent), var(--accent-2));
+        color: #120513;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .ghost-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        border: 1px dashed rgba(255, 255, 255, 0.2);
+        color: var(--muted);
+        background: transparent;
+      }
+
+      .book-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 0.65rem;
+        max-height: 420px;
+        overflow: auto;
+      }
+
+      .book-tile {
+        padding: 0.85rem;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        background: rgba(255, 255, 255, 0.02);
+        color: inherit;
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        transition: border 0.2s ease, transform 0.2s ease;
+      }
+
+      .book-tile strong {
+        font-size: 0.95rem;
+        color: var(--book-tile-text);
+      }
+
+      .book-tile span {
+        font-size: 0.8rem;
+        color: var(--book-tile-text);
+        opacity: 0.8;
+      }
+
+      .book-tile:hover,
+      .book-tile.active {
+        border-color: var(--accent);
+        transform: translateY(-2px);
+      }
+
+      .chapter-reader {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        min-height: 70vh;
+      }
+
+      .chapter-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        align-items: center;
+        justify-content: space-between;
+        border-radius: 16px;
+        padding: 0.9rem 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(7, 7, 18, 0.6);
+      }
+
+      .chapter-meta h3 {
+        margin: 0;
+        font-size: 1.25rem;
+      }
+
+      .chapter-controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        align-items: center;
+      }
+
+      .bottom-controls {
+        margin-top: 1rem;
+        justify-content: center;
+      }
+
+      .bottom-controls .ghost-btn {
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        border: 2px solid var(--accent);
+        color: #ffffff;
+        font-weight: bold;
+        border-style: solid;
+      }
+
+      .bottom-controls .ghost-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 255, 255, 0.4);
+      }
+
+      .bottom-controls .ghost-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .chapter-content {
+        flex: 1;
+        min-height: 0;
+        border-radius: 18px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: var(--chapter-bg);
+        padding: 1.2rem;
+        overflow-y: auto;
+        color: var(--chapter-text);
+      }
+
+      .chapter-content h4 {
+        margin: 1.8rem 0 0.5rem;
+        font-size: 1rem;
+        color: var(--accent-2);
+      }
+
+      .verse {
+        padding: 0.5rem 0.35rem;
+        border-radius: 12px;
+        position: relative;
+      }
+
+      .verse:hover {
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .verse-number {
+        font-size: 0.8rem;
+        color: var(--accent-2);
+        margin-right: 0.35rem;
+      }
+
+      .verse button {
+        position: absolute;
+        right: 0.5rem;
+        top: 0.5rem;
+        background: none;
+        border: none;
+        color: var(--accent);
+        font-size: 0.85rem;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+      }
+
+      .verse:hover button,
+      .verse.saved button {
+        opacity: 1;
+      }
+
+      .footnotes {
+        margin-top: 2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.15);
+        padding-top: 1.25rem;
+        font-size: 0.9rem;
+        color: var(--muted);
+      }
+
+      .sidebar {
+        gap: 1rem;
+      }
+
+      .bookmark-section {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .history-section,
+      .progress-section {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .bookmark-header,
+      .history-header,
+      .progress-header {
+        cursor: pointer;
+        user-select: none;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+        transition: opacity 0.2s ease;
+      }
+
+      .bookmark-header:hover {
+        opacity: 0.8;
+      }
+
+      #bookmark-toggle,
+      #history-toggle,
+      #progress-toggle {
+        font-size: 0.8em;
+        transition: transform 0.3s ease;
+        display: inline-block;
+      }
+
+      #bookmark-toggle.open,
+      #history-toggle.open,
+      #progress-toggle.open {
+        transform: rotate(-180deg);
+      }
+
+      .bookmark-list,
+      .history-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.65rem;
+        max-height: 45vh;
+        overflow: auto;
+        margin-top: 0.5rem;
+      }
+
+      .progress-content {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+      }
+
+      /* Journal Section */
+      .journal-section {
+        margin-top: 1.5rem;
+        padding: 1.5rem;
+      }
+
+      .journal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+
+      .journal-header h2 {
+        margin: 0;
+        background: linear-gradient(90deg, #00ffff, #ff00ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .journal-stats {
+        display: flex;
+        gap: 1rem;
+        font-size: 0.85rem;
+        color: var(--muted);
+      }
+
+      .journal-form {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        margin-bottom: 2rem;
+        padding: 1.25rem;
+        border-radius: 16px;
+        background: rgba(3, 7, 20, 0.4);
+        border: 2px solid var(--border);
+      }
+
+      #entry-title,
+      #entry-tags {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border-radius: 12px;
+        border: 2px solid var(--border);
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--text);
+        font-family: inherit;
+        font-size: 1rem;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        box-sizing: border-box;
+      }
+
+      #entry-title:focus,
+      #entry-tags:focus,
+      #entry-description:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 4px rgba(0, 255, 255, 0.15);
+      }
+
+      #entry-description {
+        width: 100%;
+        min-height: 120px;
+        padding: 0.75rem 1rem;
+        border-radius: 12px;
+        border: 2px solid var(--border);
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--text);
+        font-family: inherit;
+        font-size: 1rem;
+        line-height: 1.6;
+        resize: vertical;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        box-sizing: border-box;
+      }
+
+      .save-entry-btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 12px;
+        border: none;
+        background: linear-gradient(90deg, var(--accent), var(--accent-2));
+        color: white;
+        font-weight: bold;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        align-self: flex-end;
+      }
+
+      .save-entry-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 255, 255, 0.4);
+      }
+
+      .journal-entries-container {
+        margin-top: 2rem;
+      }
+
+      .journal-entries-container h3 {
+        margin: 0 0 1rem;
+        color: var(--accent);
+        font-size: 1.1rem;
+      }
+
+      .journal-entries-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .no-entries {
+        text-align: center;
+        color: var(--muted);
+        padding: 2rem;
+        font-style: italic;
+      }
+
+      .journal-entry {
+        padding: 1.25rem;
+        border-radius: 14px;
+        background: rgba(3, 7, 20, 0.5);
+        border: 2px solid var(--border);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .journal-entry:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 255, 255, 0.2);
+      }
+
+      .entry-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 0.75rem;
+        gap: 1rem;
+      }
+
+      .entry-title {
+        margin: 0;
+        color: var(--accent);
+        font-size: 1.1rem;
+        flex: 1;
+      }
+
+      .entry-meta {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .entry-date {
+        font-size: 0.85rem;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+
+      .delete-entry-btn {
+        background: rgba(255, 107, 107, 0.2);
+        border: 2px solid rgba(255, 107, 107, 0.5);
+        color: #ff6b6b;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 14px;
+        line-height: 1;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .delete-entry-btn:hover {
+        background: rgba(255, 107, 107, 0.4);
+        border-color: #ff6b6b;
+        transform: rotate(90deg);
+      }
+
+      .entry-description {
+        margin: 0 0 0.75rem;
+        line-height: 1.6;
+        color: var(--text);
+        white-space: pre-wrap;
+      }
+
+      .entry-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+
+      .tag {
+        padding: 0.35rem 0.75rem;
+        border-radius: 20px;
+        background: rgba(0, 255, 255, 0.15);
+        border: 1px solid rgba(0, 255, 255, 0.3);
+        color: var(--accent);
+        font-size: 0.85rem;
+        font-weight: 500;
+      }
+
+      .bookmark-item {
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 14px;
+        padding: 0.65rem;
+        display: flex;
+        justify-content: space-between;
+        gap: 0.5rem;
+        background: rgba(255, 255, 255, 0.02);
+      }
+
+      .bookmark-item button {
+        background: none;
+        border: none;
+        color: var(--accent);
+        cursor: pointer;
+      }
+
+      .progress-bar {
+        width: 100%;
+        height: 8px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.08);
+        overflow: hidden;
+      }
+
+      .progress-bar span {
+        display: block;
+        height: 100%;
+        background: linear-gradient(120deg, var(--accent), var(--accent-2));
+      }
+
+      .status-pill {
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        padding: 0.35rem 0.8rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+      }
+
+      .alert {
+        border-radius: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        padding: 0.8rem 1rem;
+        background: rgba(255, 255, 255, 0.03);
+        font-size: 0.9rem;
+      }
+
+      /* Delete Confirmation Modal */
+      .delete-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(5px);
+        z-index: 99999;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .delete-modal.active {
+        display: flex;
+      }
+
+      .delete-modal .modal-content {
+        position: relative;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.98),
+          rgba(245, 245, 255, 0.98)
+        );
+        border: 3px solid var(--border);
+        border-radius: 22px;
+        padding: 30px;
+        width: 90vw;
+        max-width: 450px;
+        box-shadow: 0 10px 50px rgba(138, 43, 226, 0.4),
+          0 0 30px rgba(0, 255, 255, 0.3);
+        animation: modalSlideIn 0.3s ease;
+      }
+
+      @keyframes modalSlideIn {
+        from {
+          transform: translateY(-50px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      .delete-modal .modal-header h2 {
+        margin: 0 0 20px 0;
+        text-align: center;
+        background: linear-gradient(90deg, #ff00ff, #ff6b6b);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-size: 24px;
+      }
+
+      .delete-modal .modal-body {
+        color: var(--text);
+      }
+
+      .modal-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        margin-top: 20px;
+      }
+
+      .cancel-btn,
+      .confirm-delete-btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 12px;
+        border: 2px solid;
+        font-weight: bold;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .cancel-btn {
+        background: rgba(255, 255, 255, 0.9);
+        border-color: var(--border);
+        color: var(--text);
+      }
+
+      .cancel-btn:hover {
+        background: rgba(255, 255, 255, 1);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+      }
+
+      .confirm-delete-btn {
+        background: linear-gradient(90deg, #ff00ff, #ff6b6b);
+        border-color: #ff6b6b;
+        color: white;
+      }
+
+      .confirm-delete-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(255, 107, 107, 0.5);
+      }
+
+      /* Chapter Selector Modal */
+      .chapter-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(5px);
+        z-index: 99999;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .chapter-modal.active {
+        display: flex;
+      }
+
+      .chapter-modal .modal-content {
+        max-height: 80vh;
+        overflow-y: auto;
+      }
+
+      .chapter-modal .modal-header h2 {
+        margin: 0 0 20px 0;
+        text-align: center;
+        color: #ffffff;
+        font-size: 24px;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .chapter-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+        gap: 0.75rem;
+        padding: 0.5rem 0;
+      }
+
+      .chapter-btn {
+        padding: 0.75rem;
+        border-radius: 12px;
+        border: 2px solid var(--border);
+        background: rgba(255, 255, 255, 0.95);
+        color: #1a0033;
+        font-weight: bold;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+      }
+
+      .chapter-btn:hover {
+        transform: translateY(-2px);
+        border-color: var(--accent);
+        background: linear-gradient(
+          135deg,
+          rgba(0, 255, 255, 0.4),
+          rgba(255, 0, 255, 0.4)
+        );
+        box-shadow: 0 4px 15px rgba(0, 255, 255, 0.3);
+      }
+
+      @media (max-width: 1100px) {
+        .app-grid {
+          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        }
+
+        .chapter-content {
+          min-height: 50vh;
+        }
+      }
+
+      @media (max-width: 600px) {
+        header {
+          padding: 1.2rem;
+        }
+
+        .chapter-meta {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .chapter-controls {
+          width: 100%;
+          justify-content: space-between;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+      <span class="theme-toggle-icon" id="themeIcon">🌙</span>
+      <span id="themeText">Dark Mode</span>
+    </button>
+    <div class="butterfly-field" aria-hidden="true"></div>
+    <main id="main-content" role="main">
+      <header role="banner">
+        <a
+          class="hub-link"
+          href="../hub.html"
+          aria-label="Return to Butterfly Hub home page"
+        >
+          <img
+            src="../assets/Butterfly6.png"
+            width="24"
+            height="24"
+            alt="Butterfly home icon"
+            loading="lazy"
+          />
+          Back to Hub
+        </a>
+        <h1>
+          <img
+            src="../assets/Butterfly4.png"
+            style="
+              width: 32px;
+              vertical-align: middle;
+              image-rendering: pixelated;
+              margin-right: 10px;
+            "
+            alt="Butterfly Bible Console icon"
+            loading="eager"
+          />
+          Bible Console
+        </h1>
+        <p>
+          Dive into Scripture with a sleek, modern reader! Stream any chapter
+          from the Berean Standard Bible, bookmark your favorite verses, and
+          track your spiritual journey—all beautifully synced with your Hub
+          profile. Your faith, digitized and elevated.
+        </p>
+        <div class="alert">
+          Berean Standard Bible text courtesy of the
+          <a href="https://bible.helloao.org/" target="_blank" rel="noreferrer"
+            >Free Use Bible API</a
+          >. Dedicated to the public domain (CC0) — attribution appreciated but
+          not required.
+        </div>
+      </header>
+
+      <div class="app-grid">
+        <section class="panel controls" aria-label="Bible navigation controls">
+          <h2>Navigator</h2>
+          <label for="translation-select">
+            <span>Translation</span>
+            <select
+              id="translation-select"
+              aria-label="Select Bible translation"
+            ></select>
+          </label>
+          <label for="book-search">
+            <span>Search Books</span>
+            <input
+              type="search"
+              id="book-search"
+              placeholder="Filter by name"
+              aria-label="Search for Bible books by name"
+            />
+          </label>
+          <div
+            class="status-pill"
+            id="status-pill"
+            role="status"
+            aria-live="polite"
+          >
+            Connecting…
+          </div>
+          <div
+            class="book-grid"
+            id="book-grid"
+            role="region"
+            aria-label="Bible books list"
+            aria-live="polite"
+          ></div>
+        </section>
+
+        <section
+          class="panel chapter-reader"
+          aria-label="Bible chapter reader"
+          role="region"
+        >
+          <div class="chapter-meta">
+            <div>
+              <p class="status-pill" id="chapter-label" role="status">
+                Choose a book
+              </p>
+              <h3 id="chapter-heading">No chapter loaded</h3>
+            </div>
+            <div class="chapter-controls">
+              <button
+                class="ghost-btn"
+                id="prev-chapter"
+                disabled
+                aria-label="Go to previous chapter"
+              >
+                ◀ Prev
+              </button>
+              <button
+                class="ghost-btn"
+                id="next-chapter"
+                disabled
+                aria-label="Go to next chapter"
+              >
+                Next ▶
+              </button>
+            </div>
+          </div>
+          <div
+            class="chapter-content"
+            id="chapter-content"
+            role="article"
+            aria-live="polite"
+          >
+            <p>Select a book to stream its opening chapter.</p>
+          </div>
+          <div class="chapter-controls bottom-controls">
+            <button
+              class="ghost-btn"
+              id="prev-chapter-bottom"
+              disabled
+              aria-label="Go to previous chapter"
+            >
+              ◀ Prev
+            </button>
+            <button
+              class="ghost-btn"
+              id="next-chapter-bottom"
+              disabled
+              aria-label="Go to next chapter"
+            >
+              Next ▶
+            </button>
+          </div>
+        </section>
+
+        <aside
+          class="panel sidebar"
+          role="complementary"
+          aria-label="Bookmarks, history, and progress"
+        >
+          <div class="bookmark-section">
+            <h2
+              class="bookmark-header"
+              onclick="toggleBookmarks()"
+              role="button"
+              tabindex="0"
+              aria-expanded="false"
+              aria-controls="bookmark-list"
+            >
+              Bookmarks <span id="bookmark-toggle" aria-hidden="true">▼</span>
+            </h2>
+            <div
+              class="bookmark-list"
+              id="bookmark-list"
+              style="display: none"
+              role="region"
+              aria-label="Your saved bookmarks"
+            ></div>
+          </div>
+
+          <div class="history-section">
+            <h2
+              class="history-header"
+              onclick="toggleHistory()"
+              role="button"
+              tabindex="0"
+              aria-expanded="false"
+              aria-controls="history-list"
+            >
+              History <span id="history-toggle" aria-hidden="true">▼</span>
+            </h2>
+            <div
+              class="history-list"
+              id="history-list"
+              style="display: none"
+              role="region"
+              aria-label="Your reading history"
+            ></div>
+          </div>
+
+          <div class="progress-section">
+            <h2
+              class="progress-header"
+              onclick="toggleProgress()"
+              role="button"
+              tabindex="0"
+              aria-expanded="false"
+              aria-controls="progress-content"
+            >
+              Progress <span id="progress-toggle" aria-hidden="true">▼</span>
+            </h2>
+            <div
+              class="progress-content"
+              id="progress-content"
+              style="display: none"
+              role="region"
+              aria-label="Your reading progress"
+            >
+              <div
+                class="progress-bar"
+                role="progressbar"
+                aria-valuemin="0"
+                aria-valuemax="1189"
+                aria-valuenow="0"
+                aria-label="Chapters read progress"
+              >
+                <span id="progress-meter" style="width: 0%"></span>
+              </div>
+              <small id="progress-copy" aria-live="polite"
+                >0 of 1,189 chapters logged</small
+              >
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <!-- Journal Section -->
+      <section
+        class="journal-section panel"
+        role="region"
+        aria-labelledby="journal-heading"
+      >
+        <div class="journal-header">
+          <h2 id="journal-heading">📖 Scripture Journal</h2>
+          <div class="journal-stats">
+            <span id="entry-count" aria-live="polite">0 entries</span>
+          </div>
+        </div>
+
+        <form
+          class="journal-form"
+          onsubmit="event.preventDefault(); saveJournalEntry();"
+          aria-label="Add new journal entry"
+        >
+          <input
+            type="text"
+            id="entry-title"
+            placeholder="Entry Title (e.g., Genesis 1 - Creation)"
+            maxlength="100"
+            aria-label="Entry title"
+            required
+          />
+          <textarea
+            id="entry-description"
+            placeholder="Write your reflections, prayers, and insights..."
+            rows="6"
+            aria-label="Entry description"
+            required
+          ></textarea>
+          <input
+            type="text"
+            id="entry-tags"
+            placeholder="Tags (optional, comma-separated: faith, hope, prayer)"
+            aria-label="Entry tags (optional)"
+          />
+          <button
+            class="save-entry-btn"
+            type="submit"
+            aria-label="Save journal entry"
+          >
+            💾 Save Entry
+          </button>
+        </form>
+
+        <div class="journal-entries-container">
+          <h3>Journal Entries</h3>
+          <div
+            id="journal-entries-list"
+            class="journal-entries-list"
+            role="list"
+            aria-label="Your journal entries"
+          >
+            <p class="no-entries" role="status">
+              No entries yet. Start writing your first reflection!
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Delete Confirmation Modal -->
+    <div
+      class="delete-modal"
+      id="deleteModal"
+      onclick="closeDeleteModal(event)"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="deleteModalTitle"
+      aria-hidden="true"
+    >
+      <div class="modal-content" onclick="event.stopPropagation()">
+        <div class="modal-header">
+          <h2 id="deleteModalTitle">⚠️ Delete Entry</h2>
+        </div>
+        <div class="modal-body">
+          <p style="text-align: center; font-size: 16px; margin-bottom: 20px">
+            Are you sure you want to delete this journal entry? This action
+            cannot be undone.
+          </p>
+          <div class="modal-actions">
+            <button
+              class="cancel-btn"
+              onclick="closeDeleteModal(event)"
+              aria-label="Cancel deletion"
+            >
+              Cancel
+            </button>
+            <button
+              class="confirm-delete-btn"
+              onclick="confirmDelete()"
+              aria-label="Confirm deletion"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chapter Selector Modal -->
+    <div
+      class="chapter-modal"
+      id="chapterModal"
+      onclick="closeChapterModal(event)"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="chapterModalTitle"
+      aria-hidden="true"
+    >
+      <div class="modal-content" onclick="event.stopPropagation()">
+        <div class="modal-header">
+          <h2 id="chapterModalTitle">📖 Select Chapter</h2>
+        </div>
+        <div class="modal-body">
+          <div
+            class="chapter-grid"
+            id="chapterGrid"
+            role="grid"
+            aria-label="Chapter selection grid"
+          ></div>
+        </div>
+      </div>
+    </div>
+
+    <template id="journal-entry-template">
+      <div class="journal-entry">
+        <div class="entry-header">
+          <h4 class="entry-title" data-field="title"></h4>
+          <div class="entry-meta">
+            <span class="entry-date" data-field="date"></span>
+            <button
+              class="delete-entry-btn"
+              onclick="deleteJournalEntry(this)"
+              aria-label="Delete entry"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+        <p class="entry-description" data-field="description"></p>
+        <div class="entry-tags" data-field="tags"></div>
+      </div>
+    </template>
+
+    <template id="bookmark-template">
+      <div class="bookmark-item">
+        <div>
+          <strong data-field="title"></strong>
+          <div data-field="excerpt"></div>
+        </div>
+        <button type="button" aria-label="Delete bookmark">✕</button>
+      </div>
+    </template>
+
+    <script>
+      const API_BASE = "https://bible.helloao.org/api";
+      const DEFAULT_TRANSLATION = "BSB";
+
+      // Theme Toggle Functionality
+      function initializeTheme() {
+        const themeToggle = document.getElementById("themeToggle");
+        const themeIcon = document.getElementById("themeIcon");
+        const themeText = document.getElementById("themeText");
+
+        // Check for saved theme preference or default to light mode
+        const savedTheme =
+          localStorage.getItem("butterflyBibleTheme") || "light";
+
+        if (savedTheme === "dark") {
+          document.body.classList.add("dark-mode");
+          themeIcon.textContent = "☀️";
+          themeText.textContent = "Light Mode";
+        }
+
+        // Theme toggle click handler
+        themeToggle.addEventListener("click", () => {
+          document.body.classList.toggle("dark-mode");
+          const isDark = document.body.classList.contains("dark-mode");
+
+          // Update button
+          if (isDark) {
+            themeIcon.textContent = "☀️";
+            themeText.textContent = "Light Mode";
+            localStorage.setItem("butterflyBibleTheme", "dark");
+          } else {
+            themeIcon.textContent = "🌙";
+            themeText.textContent = "Dark Mode";
+            localStorage.setItem("butterflyBibleTheme", "light");
+          }
+        });
+
+        // Keyboard accessibility
+        themeToggle.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            themeToggle.click();
+          }
+        });
+      }
+
+      // Toggle bookmarks dropdown
+      function toggleBookmarks() {
+        const bookmarkList = document.getElementById("bookmark-list");
+        const toggle = document.getElementById("bookmark-toggle");
+        const header = document.querySelector(".bookmark-header");
+
+        if (bookmarkList.style.display === "none") {
+          bookmarkList.style.display = "flex";
+          toggle.classList.add("open");
+          header.setAttribute("aria-expanded", "true");
+        } else {
+          bookmarkList.style.display = "none";
+          toggle.classList.remove("open");
+          header.setAttribute("aria-expanded", "false");
+        }
+      }
+
+      // Toggle history dropdown
+      function toggleHistory() {
+        const historyList = document.getElementById("history-list");
+        const toggle = document.getElementById("history-toggle");
+        const header = document.querySelector(".history-header");
+
+        if (historyList.style.display === "none") {
+          historyList.style.display = "flex";
+          toggle.classList.add("open");
+          header.setAttribute("aria-expanded", "true");
+        } else {
+          historyList.style.display = "none";
+          toggle.classList.remove("open");
+          header.setAttribute("aria-expanded", "false");
+        }
+      }
+
+      // Toggle progress dropdown
+      function toggleProgress() {
+        const progressContent = document.getElementById("progress-content");
+        const toggle = document.getElementById("progress-toggle");
+        const header = document.querySelector(".progress-header");
+
+        if (progressContent.style.display === "none") {
+          progressContent.style.display = "flex";
+          toggle.classList.add("open");
+          header.setAttribute("aria-expanded", "true");
+        } else {
+          progressContent.style.display = "none";
+          toggle.classList.remove("open");
+          header.setAttribute("aria-expanded", "false");
+        }
+      }
+
+      // Journal functionality
+      let journalEntries = [];
+
+      function initializeJournal() {
+        // Load saved journal entries
+        const savedEntries = localStorage.getItem(
+          "butterflyBibleJournalEntries"
+        );
+        if (savedEntries) {
+          journalEntries = JSON.parse(savedEntries);
+          renderJournalEntries();
+        }
+        updateEntryCount();
+      }
+
+      function saveJournalEntry() {
+        const titleInput = document.getElementById("entry-title");
+        const descriptionInput = document.getElementById("entry-description");
+        const tagsInput = document.getElementById("entry-tags");
+
+        const title = titleInput.value.trim();
+        const description = descriptionInput.value.trim();
+        const tags = tagsInput.value.trim();
+
+        if (!title) {
+          alert("Please enter a title for your journal entry.");
+          titleInput.focus();
+          return;
+        }
+
+        if (!description) {
+          alert("Please write your reflection in the description.");
+          descriptionInput.focus();
+          return;
+        }
+
+        // Create new entry
+        const entry = {
+          id: Date.now(),
+          title: title,
+          description: description,
+          tags: tags
+            ? tags
+                .split(",")
+                .map((tag) => tag.trim())
+                .filter((tag) => tag)
+            : [],
+          date: new Date().toISOString(),
+        };
+
+        // Add to beginning of array (newest first)
+        journalEntries.unshift(entry);
+
+        // Save to localStorage
+        localStorage.setItem(
+          "butterflyBibleJournalEntries",
+          JSON.stringify(journalEntries)
+        );
+
+        // Clear form
+        titleInput.value = "";
+        descriptionInput.value = "";
+        tagsInput.value = "";
+
+        // Re-render entries
+        renderJournalEntries();
+        updateEntryCount();
+
+        // Scroll to entries
+        document
+          .querySelector(".journal-entries-container")
+          .scrollIntoView({ behavior: "smooth" });
+      }
+
+      function renderJournalEntries() {
+        const container = document.getElementById("journal-entries-list");
+        const template = document.getElementById("journal-entry-template");
+
+        if (journalEntries.length === 0) {
+          container.innerHTML =
+            '<p class="no-entries">No entries yet. Start writing your first reflection!</p>';
+          return;
+        }
+
+        container.innerHTML = "";
+
+        journalEntries.forEach((entry) => {
+          const clone = template.content.cloneNode(true);
+
+          clone.querySelector('[data-field="title"]').textContent = entry.title;
+          clone.querySelector('[data-field="description"]').textContent =
+            entry.description;
+
+          const date = new Date(entry.date);
+          const dateStr = date.toLocaleDateString([], {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+          clone.querySelector('[data-field="date"]').textContent = dateStr;
+
+          const tagsContainer = clone.querySelector('[data-field="tags"]');
+          if (entry.tags && entry.tags.length > 0) {
+            tagsContainer.innerHTML = entry.tags
+              .map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`)
+              .join("");
+          } else {
+            tagsContainer.remove();
+          }
+
+          const entryDiv = clone.querySelector(".journal-entry");
+          entryDiv.dataset.id = entry.id;
+
+          container.appendChild(clone);
+        });
+      }
+
+      let entryToDelete = null;
+
+      function deleteJournalEntry(button) {
+        entryToDelete = button.closest(".journal-entry");
+        const modal = document.getElementById("deleteModal");
+        modal.classList.add("active");
+        modal.setAttribute("aria-hidden", "false");
+      }
+
+      function closeDeleteModal(event) {
+        if (event) {
+          event.stopPropagation();
+        }
+        const modal = document.getElementById("deleteModal");
+        modal.classList.remove("active");
+        modal.setAttribute("aria-hidden", "true");
+        entryToDelete = null;
+      }
+
+      function confirmDelete() {
+        if (!entryToDelete) return;
+
+        const entryId = parseInt(entryToDelete.dataset.id);
+
+        // Remove from array
+        journalEntries = journalEntries.filter((entry) => entry.id !== entryId);
+
+        // Save to localStorage
+        localStorage.setItem(
+          "butterflyBibleJournalEntries",
+          JSON.stringify(journalEntries)
+        );
+
+        // Re-render
+        renderJournalEntries();
+        updateEntryCount();
+
+        // Close modal
+        closeDeleteModal();
+      }
+
+      function updateEntryCount() {
+        const count = journalEntries.length;
+        document.getElementById("entry-count").textContent = `${count} ${
+          count === 1 ? "entry" : "entries"
+        }`;
+      }
+
+      function escapeHtml(text) {
+        const div = document.createElement("div");
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
+      const STORAGE_KEYS = {
+        bookmarks: "butterflyBibleBookmarks",
+        history: "butterflyBibleHistory",
+        settings: "butterflyBibleSettings",
+      };
+
+      const state = {
+        translations: [],
+        books: [],
+        translationId: DEFAULT_TRANSLATION,
+        currentBook: null,
+        currentChapter: null,
+        nextChapterLink: null,
+        prevChapterLink: null,
+        bookmarks: [],
+        history: [],
+        user: null,
+      };
+
+      const selectors = {
+        translationSelect: document.getElementById("translation-select"),
+        bookSearch: document.getElementById("book-search"),
+        bookGrid: document.getElementById("book-grid"),
+        chapterContent: document.getElementById("chapter-content"),
+        chapterLabel: document.getElementById("chapter-label"),
+        chapterHeading: document.getElementById("chapter-heading"),
+        prevBtn: document.getElementById("prev-chapter"),
+        nextBtn: document.getElementById("next-chapter"),
+        prevBtnBottom: document.getElementById("prev-chapter-bottom"),
+        nextBtnBottom: document.getElementById("next-chapter-bottom"),
+        statusPill: document.getElementById("status-pill"),
+        bookmarkList: document.getElementById("bookmark-list"),
+        historyList: document.getElementById("history-list"),
+        progressMeter: document.getElementById("progress-meter"),
+        progressCopy: document.getElementById("progress-copy"),
+        bookmarkTemplate: document.getElementById("bookmark-template"),
+        butterflyField: document.querySelector(".butterfly-field"),
+      };
+
+      document.addEventListener("DOMContentLoaded", () => {
+        enforceAuth();
+        hydrateButterflies();
+        loadLocalData();
+        initializeJournal();
+        initializeTheme();
+        bootstrapEvents();
+        hydrateTranslations();
+      });
+
+      function enforceAuth() {
+        const hubProfile = localStorage.getItem("butterflyHubCurrentUser");
+        const legacyProfile = localStorage.getItem("butterflyUser");
+        const rawProfile = hubProfile || legacyProfile;
+        if (!rawProfile) {
+          window.location.href = "butterfly-auth.html";
+          return;
+        }
+        try {
+          state.user = JSON.parse(rawProfile);
+        } catch (error) {
+          console.warn("Unable to parse stored profile", error);
+          window.location.href = "butterfly-auth.html";
+        }
+      }
+
+      function hydrateButterflies() {
+        const sprites = [
+          "Butterfly4.png",
+          "Butterfly6.png",
+          "Butterfly8.png",
+          "Butterfly12.png",
+        ];
+        for (let i = 0; i < 9; i++) {
+          const span = document.createElement("span");
+          const asset = sprites[i % sprites.length];
+          span.style.left = Math.random() * 100 + "%";
+          span.style.bottom = Math.random() * 20 - 10 + "vh";
+          span.style.animationDelay = `${Math.random() * 12}s`;
+          span.style.backgroundImage = `url(../assets/${asset})`;
+          selectors.butterflyField.appendChild(span);
+        }
+      }
+
+      function loadLocalData() {
+        state.bookmarks = JSON.parse(
+          localStorage.getItem(STORAGE_KEYS.bookmarks) || "[]"
+        );
+        state.history = JSON.parse(
+          localStorage.getItem(STORAGE_KEYS.history) || "[]"
+        );
+        const savedSettings = JSON.parse(
+          localStorage.getItem(STORAGE_KEYS.settings) || "{}"
+        );
+        if (savedSettings.translationId) {
+          state.translationId = savedSettings.translationId;
+        }
+        renderBookmarks();
+        renderHistory();
+        updateProgress();
+      }
+
+      function bootstrapEvents() {
+        selectors.translationSelect.addEventListener("change", (e) => {
+          state.translationId = e.target.value;
+          persistSettings();
+          loadBooks();
+        });
+
+        selectors.bookSearch.addEventListener("input", (e) => {
+          renderBooks(e.target.value.trim().toLowerCase());
+        });
+
+        selectors.prevBtn.addEventListener("click", () =>
+          navigateChapter(state.prevChapterLink)
+        );
+        selectors.nextBtn.addEventListener("click", () =>
+          navigateChapter(state.nextChapterLink)
+        );
+        selectors.prevBtnBottom.addEventListener("click", () =>
+          navigateChapter(state.prevChapterLink)
+        );
+        selectors.nextBtnBottom.addEventListener("click", () =>
+          navigateChapter(state.nextChapterLink)
+        );
+      }
+
+      async function hydrateTranslations() {
+        selectors.statusPill.textContent = "Fetching translations…";
+        try {
+          const res = await fetch(`${API_BASE}/available_translations.json`);
+          const payload = await res.json();
+          state.translations = payload.translations || [];
+          populateTranslationSelect();
+          await loadBooks();
+        } catch (err) {
+          console.error(err);
+          selectors.statusPill.textContent = "API unavailable";
+        }
+      }
+
+      function populateTranslationSelect() {
+        selectors.translationSelect.innerHTML = "";
+        state.translations.forEach((translation) => {
+          const option = document.createElement("option");
+          option.value = translation.id;
+          option.textContent = `${translation.shortName || translation.id} · ${
+            translation.englishName
+          }`;
+          if (translation.id === state.translationId) {
+            option.selected = true;
+          }
+          selectors.translationSelect.append(option);
+        });
+      }
+
+      async function loadBooks() {
+        selectors.statusPill.textContent = "Loading books…";
+        try {
+          const res = await fetch(
+            `${API_BASE}/${state.translationId}/books.json`
+          );
+          const payload = await res.json();
+          state.books = payload.books || [];
+          selectors.statusPill.textContent = `${
+            payload.translation?.englishName || state.translationId
+          } ready`;
+          renderBooks();
+        } catch (err) {
+          console.error(err);
+          selectors.statusPill.textContent = "Book list failed";
+        }
+      }
+
+      function renderBooks(filter = "") {
+        selectors.bookGrid.innerHTML = "";
+        const filtered = state.books.filter((book) =>
+          book.commonName.toLowerCase().includes(filter)
+        );
+        filtered.forEach((book) => {
+          const btn = document.createElement("button");
+          btn.className = "book-tile";
+          btn.type = "button";
+          btn.dataset.id = book.id;
+          btn.innerHTML = `<strong>${book.commonName}</strong><span>${book.numberOfChapters} chapters</span>`;
+          if (state.currentBook?.id === book.id) {
+            btn.classList.add("active");
+          }
+          btn.addEventListener("click", () => openChapterSelector(book));
+          selectors.bookGrid.append(btn);
+        });
+      }
+
+      function openChapterSelector(book) {
+        const modal = document.getElementById("chapterModal");
+        const title = document.getElementById("chapterModalTitle");
+        const grid = document.getElementById("chapterGrid");
+
+        title.textContent = `📖 ${book.commonName} - Select Chapter`;
+        grid.innerHTML = "";
+
+        // Create chapter buttons
+        const firstChapter = book.firstChapterNumber || 1;
+        for (
+          let i = firstChapter;
+          i < firstChapter + book.numberOfChapters;
+          i++
+        ) {
+          const btn = document.createElement("button");
+          btn.className = "chapter-btn";
+          btn.textContent = i;
+          btn.setAttribute(
+            "aria-label",
+            `Load chapter ${i} of ${book.commonName}`
+          );
+          btn.onclick = () => {
+            loadChapter(book.id, i);
+            closeChapterModal();
+          };
+          grid.appendChild(btn);
+        }
+
+        modal.classList.add("active");
+        modal.setAttribute("aria-hidden", "false");
+      }
+
+      function closeChapterModal(event) {
+        if (event) {
+          event.stopPropagation();
+        }
+        const modal = document.getElementById("chapterModal");
+        modal.classList.remove("active");
+        modal.setAttribute("aria-hidden", "true");
+      }
+
+      async function loadChapter(bookId, chapterNumber) {
+        selectors.chapterContent.innerHTML = "<p>Downloading chapter…</p>";
+        try {
+          const res = await fetch(
+            `${API_BASE}/${state.translationId}/${bookId}/${chapterNumber}.json`
+          );
+          const payload = await res.json();
+          state.currentBook = payload.book;
+          state.currentChapter = payload.chapter.number;
+          state.nextChapterLink = payload.nextChapterApiLink;
+          state.prevChapterLink = payload.previousChapterApiLink;
+          selectors.chapterLabel.textContent = payload.translation.englishName;
+          selectors.chapterHeading.textContent = `${payload.book.commonName} ${payload.chapter.number}`;
+          renderChapter(payload.chapter);
+          renderBooks(selectors.bookSearch.value.trim().toLowerCase());
+          updateNavButtons();
+          pushHistory(payload);
+        } catch (err) {
+          console.error(err);
+          selectors.chapterContent.innerHTML =
+            "<p>Unable to stream chapter. Please retry.</p>";
+        }
+      }
+
+      function renderChapter(chapter) {
+        const fragment = document.createDocumentFragment();
+        chapter.content.forEach((entry) => {
+          switch (entry.type) {
+            case "heading":
+              fragment.append(createHeading(entry.content));
+              break;
+            case "line_break":
+              fragment.append(document.createElement("br"));
+              break;
+            case "hebrew_subtitle":
+              fragment.append(createSubtitle(entry.content));
+              break;
+            case "verse":
+              fragment.append(createVerse(entry));
+              break;
+            default:
+              break;
+          }
+        });
+
+        const wrapper = document.createElement("div");
+        wrapper.append(fragment);
+
+        if (chapter.footnotes?.length) {
+          const footWrap = document.createElement("div");
+          footWrap.className = "footnotes";
+          footWrap.innerHTML = "<strong>Footnotes</strong>";
+          chapter.footnotes.forEach((note) => {
+            const p = document.createElement("p");
+            const caller =
+              note.caller && note.caller !== "+"
+                ? note.caller
+                : note.noteId + 1;
+            p.textContent = `${caller}) ${note.text}`;
+            footWrap.append(p);
+          });
+          wrapper.append(footWrap);
+        }
+
+        selectors.chapterContent.innerHTML = "";
+        selectors.chapterContent.append(wrapper);
+      }
+
+      function createHeading(lines) {
+        const el = document.createElement("h4");
+        el.textContent = lines.join(" ");
+        return el;
+      }
+
+      function createSubtitle(content) {
+        const el = document.createElement("p");
+        el.className = "subtitle";
+        el.style.fontStyle = "italic";
+        el.style.color = "var(--muted)";
+        el.textContent = content.map(toText).join(" ");
+        return el;
+      }
+
+      function createVerse(entry) {
+        const el = document.createElement("div");
+        el.className = "verse";
+        el.dataset.verse = entry.number;
+        const number = document.createElement("span");
+        number.className = "verse-number";
+        number.textContent = entry.number;
+        el.append(number);
+
+        const textSpan = document.createElement("span");
+        textSpan.innerHTML = entry.content.map(renderContentPiece).join("");
+        el.append(textSpan);
+
+        const action = document.createElement("button");
+        action.type = "button";
+        action.textContent = "★";
+        action.title = "Save bookmark";
+        action.addEventListener("click", () =>
+          saveBookmark(entry.number, textSpan.textContent.trim())
+        );
+        el.append(action);
+
+        return el;
+      }
+
+      function renderContentPiece(piece) {
+        if (typeof piece === "string") return escapeHtml(piece);
+        if (piece.lineBreak) return "<br />";
+        if (piece.heading)
+          return `<strong>${escapeHtml(piece.heading)}</strong>`;
+        if (piece.text) {
+          const cls = piece.poem ? ` class="poem indent-${piece.poem}"` : "";
+          return `<span${cls}>${escapeHtml(piece.text)}</span>`;
+        }
+        if (piece.noteId || piece.noteId === 0) {
+          return `<sup title="See footnote ${piece.noteId + 1}">†</sup>`;
+        }
+        return "";
+      }
+
+      function escapeHtml(text) {
+        const div = document.createElement("div");
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
+      function updateNavButtons() {
+        selectors.prevBtn.disabled = !state.prevChapterLink;
+        selectors.nextBtn.disabled = !state.nextChapterLink;
+        selectors.prevBtnBottom.disabled = !state.prevChapterLink;
+        selectors.nextBtnBottom.disabled = !state.nextChapterLink;
+      }
+
+      function navigateChapter(link) {
+        if (!link) return;
+        const parts = link.replace("/api/", "").replace(".json", "").split("/");
+        const [, book, chapter] = parts;
+        loadChapter(book, chapter);
+      }
+
+      function saveBookmark(verseNumber, excerpt) {
+        if (!state.currentBook) return;
+        const id = `${state.translationId}-${state.currentBook.id}-${state.currentChapter}-${verseNumber}`;
+        if (state.bookmarks.some((b) => b.id === id)) return;
+        const payload = {
+          id,
+          translation: state.translationId,
+          book: state.currentBook.commonName,
+          bookId: state.currentBook.id,
+          chapter: state.currentChapter,
+          verse: verseNumber,
+          excerpt: excerpt.slice(0, 140),
+          savedAt: Date.now(),
+        };
+        state.bookmarks.unshift(payload);
+        persist(STORAGE_KEYS.bookmarks, state.bookmarks);
+        renderBookmarks();
+      }
+
+      function renderBookmarks() {
+        selectors.bookmarkList.innerHTML = state.bookmarks.length
+          ? ""
+          : '<p style="color: var(--muted);">No verses saved yet.</p>';
+        state.bookmarks.forEach((bookmark) => {
+          const node = selectors.bookmarkTemplate.content.cloneNode(true);
+          node.querySelector(
+            '[data-field="title"]'
+          ).textContent = `${bookmark.book} ${bookmark.chapter}:${bookmark.verse}`;
+          node.querySelector('[data-field="excerpt"]').textContent =
+            bookmark.excerpt;
+          node
+            .querySelector("button")
+            .addEventListener("click", () => removeBookmark(bookmark.id));
+          node
+            .querySelector(".bookmark-item")
+            .addEventListener("click", () =>
+              loadChapter(bookmark.bookId, bookmark.chapter)
+            );
+          selectors.bookmarkList.append(node);
+        });
+      }
+
+      function removeBookmark(id) {
+        state.bookmarks = state.bookmarks.filter((b) => b.id !== id);
+        persist(STORAGE_KEYS.bookmarks, state.bookmarks);
+        renderBookmarks();
+      }
+
+      function pushHistory(payload) {
+        const record = {
+          translation: payload.translation.id,
+          book: payload.book.commonName,
+          bookId: payload.book.id,
+          chapter: payload.chapter.number,
+          visitedAt: Date.now(),
+        };
+        state.history = [record, ...state.history].slice(0, 25);
+        persist(STORAGE_KEYS.history, state.history);
+        renderHistory();
+        updateProgress();
+      }
+
+      function renderHistory() {
+        selectors.historyList.innerHTML = state.history.length
+          ? ""
+          : '<p style="color: var(--muted);">No reading activity yet.</p>';
+        state.history.forEach((item) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "ghost-btn";
+          btn.style.justifyContent = "space-between";
+          btn.innerHTML = `<span>${item.book} ${
+            item.chapter
+          }</span><small>${new Date(
+            item.visitedAt
+          ).toLocaleDateString()}</small>`;
+          btn.addEventListener("click", () =>
+            loadChapter(item.bookId, item.chapter)
+          );
+          selectors.historyList.append(btn);
+        });
+      }
+
+      function updateProgress() {
+        const uniqueChapters = new Set(
+          state.history.map((item) => `${item.bookId}-${item.chapter}`)
+        );
+        const completed = uniqueChapters.size;
+        const percent = Math.min((completed / 1189) * 100, 100);
+        selectors.progressMeter.style.width = `${percent.toFixed(1)}%`;
+        selectors.progressCopy.textContent = `${completed} of 1,189 chapters logged`;
+      }
+
+      function persist(key, value) {
+        localStorage.setItem(key, JSON.stringify(value));
+      }
+
+      function persistSettings() {
+        const settings = JSON.parse(
+          localStorage.getItem(STORAGE_KEYS.settings) || "{}"
+        );
+        settings.translationId = state.translationId;
+        persist(STORAGE_KEYS.settings, settings);
+      }
+    </script>
+  </body>
+</html>

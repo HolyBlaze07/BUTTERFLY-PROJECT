@@ -404,6 +404,30 @@ function restartGame() {
   initGame();
 }
 
+function exitGame() {
+  // Stop the game
+  gameActive = false;
+
+  // Clear all butterflies
+  butterflies = [];
+  const container = document.getElementById("butterflyContainer");
+  if (container) {
+    container.innerHTML = "";
+  }
+
+  // Hide game over modal if showing
+  document.getElementById("gameOver").style.display = "none";
+
+  // Switch back to display mode
+  const displayMode = document.getElementById("displayMode");
+  const gameMode = document.getElementById("gameMode");
+
+  if (displayMode && gameMode) {
+    displayMode.classList.add("active");
+    gameMode.classList.remove("active");
+  }
+}
+
 function updateUI() {
   document.getElementById("score").textContent = score;
   document.getElementById("level").textContent = level;
@@ -421,6 +445,67 @@ window.updateScore = function (points) {
   score += points;
   updateUI();
 };
+
+// Options panel toggle
+function toggleOptions() {
+  const optionsPanel = document.getElementById("optionsPanel");
+  if (optionsPanel) {
+    optionsPanel.classList.toggle("active");
+  }
+}
+
+// Music toggle functionality
+let isMusicMuted = false;
+
+function toggleMusic() {
+  isMusicMuted = !isMusicMuted;
+  const toggleBtn = document.getElementById("toggleMusicBtn");
+  const musicStatus = document.getElementById("musicStatus");
+
+  if (isMusicMuted) {
+    // Mute music - pause the player
+    if (
+      typeof window.seasonMusicPlayer !== "undefined" &&
+      window.seasonMusicPlayer
+    ) {
+      window.seasonMusicPlayer.pause();
+    }
+    toggleBtn.classList.add("muted");
+    musicStatus.textContent = "🔇 OFF";
+  } else {
+    // Unmute music - resume playing
+    if (
+      typeof window.seasonMusicPlayer !== "undefined" &&
+      window.seasonMusicPlayer
+    ) {
+      const playPromise = window.seasonMusicPlayer.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((error) => {
+          console.log("Playback prevented:", error);
+        });
+      }
+    }
+    toggleBtn.classList.remove("muted");
+    musicStatus.textContent = "🔊 ON";
+  }
+}
+
+// Initialize music state
+document.addEventListener("DOMContentLoaded", function () {
+  const toggleBtn = document.getElementById("toggleMusicBtn");
+  const musicStatus = document.getElementById("musicStatus");
+
+  if (toggleBtn && musicStatus) {
+    // Set initial state based on current music status
+    if (isMusicMuted) {
+      toggleBtn.classList.add("muted");
+      musicStatus.textContent = "🔇 OFF";
+    } else {
+      toggleBtn.classList.remove("muted");
+      musicStatus.textContent = "🔊 ON";
+    }
+  }
+});
 
 // Start the game
 initGame();

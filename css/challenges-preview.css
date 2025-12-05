@@ -1,0 +1,599 @@
+/* Challenges Preview Container Styles */
+.challenges-preview-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 15px;
+  z-index: 500;
+  pointer-events: none;
+}
+
+/* Daily challenges panel as trigger button */
+#displayMode .daily-challenges-panel {
+  display: block !important;
+  position: static !important;
+  width: 280px !important;
+  min-width: 280px !important;
+  height: 60px !important;
+  max-height: 60px !important;
+  flex-shrink: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(15px);
+  border-radius: 10px;
+  padding: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  pointer-events: auto;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#displayMode .daily-challenges-panel:hover {
+  box-shadow: 0 6px 30px rgba(0, 212, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Daily challenges title in trigger */
+#displayMode .daily-challenges-panel .challenges-title {
+  font-size: 14px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffe66d;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+/* Modal styles */
+.challenges-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+  z-index: 99999;
+  justify-content: center;
+  align-items: center;
+}
+
+.challenges-modal.active {
+  display: flex;
+}
+
+.modal-content {
+  position: relative;
+  background: linear-gradient(
+    135deg,
+    rgba(20, 20, 40, 0.98),
+    rgba(30, 30, 60, 0.98)
+  );
+  border: 2px solid rgba(0, 212, 255, 0.5);
+  border-radius: 20px;
+  padding: 30px;
+  width: 85vw;
+  max-width: 1200px;
+  max-height: 75vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 50px rgba(0, 212, 255, 0.3);
+  animation: modalSlideIn 0.3s ease;
+}
+
+@keyframes modalSlideIn {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modal-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(255, 107, 107, 0.2);
+  border: 2px solid rgba(255, 107, 107, 0.5);
+  color: #ff6b6b;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 20px;
+  line-height: 1;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-close:hover {
+  background: rgba(255, 107, 107, 0.4);
+  border-color: #ff6b6b;
+  transform: rotate(90deg);
+}
+
+.modal-header h2 {
+  color: #00d4ff;
+  font-size: 24px;
+  margin: 0 0 20px 0;
+  text-align: center;
+  text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+}
+
+.modal-body {
+  color: white;
+}
+
+/* Modal body content styles */
+.modal-body .daily-streak {
+  padding: 15px;
+  margin-bottom: 15px;
+  background: rgba(0, 212, 255, 0.1);
+  border-radius: 10px;
+  text-align: center;
+}
+
+.modal-body .streak-number {
+  font-size: 36px;
+  font-weight: bold;
+  color: #00d4ff;
+  text-shadow: 0 0 15px rgba(0, 212, 255, 0.8);
+}
+
+.modal-body .streak-text {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 5px;
+}
+
+.modal-body .daily-timer {
+  padding: 12px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  text-align: center;
+  background: rgba(255, 230, 109, 0.1);
+  border: 1px solid rgba(255, 230, 109, 0.3);
+}
+
+.modal-body .timer-label {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 5px;
+}
+
+.modal-body .timer-countdown {
+  font-size: 18px;
+  font-weight: bold;
+  color: #ffe66d;
+}
+
+.modal-body .challenge-item {
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-body .challenge-name {
+  font-size: 14px;
+  font-weight: bold;
+  color: #ffe66d;
+  margin-bottom: 5px;
+}
+
+.modal-body .challenge-description {
+  font-size: 12px;
+  margin-bottom: 8px;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.4;
+}
+
+.modal-body .challenge-reward {
+  font-size: 12px;
+  color: #ff6b6b;
+  font-weight: bold;
+}
+
+.modal-body .challenge-progress {
+  height: 6px;
+  margin-bottom: 5px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.modal-body .weekly-progress {
+  margin-top: 15px;
+  padding: 15px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+}
+
+.modal-body .weekly-title {
+  font-size: 14px;
+  margin-bottom: 10px;
+  color: #00d4ff;
+  font-weight: bold;
+}
+
+.modal-body .week-day {
+  width: 35px;
+  height: 35px;
+  font-size: 11px;
+}
+
+/* Seasonal panel styles - now also a trigger button */
+#displayMode .seasonal-challenges-panel {
+  display: block !important;
+  position: static !important;
+  width: 280px !important;
+  min-width: 280px !important;
+  height: 60px !important;
+  max-height: 60px !important;
+  flex-shrink: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(15px);
+  border-radius: 10px;
+  padding: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  pointer-events: auto;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#displayMode .seasonal-challenges-panel:hover {
+  box-shadow: 0 6px 30px rgba(255, 230, 109, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Seasonal title in trigger */
+#displayMode .seasonal-challenges-panel .seasonal-title {
+  font-size: 14px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffe66d;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+/* Seasonal title in trigger */
+#displayMode .seasonal-challenges-panel .seasonal-title {
+  font-size: 14px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffe66d;
+  font-weight: bold;
+}
+
+/* Modal body seasonal content styles */
+.modal-body .season-info {
+  padding: 15px;
+  margin-bottom: 15px;
+  background: rgba(255, 230, 109, 0.1);
+  border-radius: 10px;
+  text-align: center;
+}
+
+.modal-body .season-name {
+  font-size: 20px;
+  font-weight: bold;
+  color: #ffe66d;
+  margin-bottom: 5px;
+}
+
+.modal-body .season-end {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.modal-body .seasonal-event-banner {
+  padding: 12px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 16px;
+  background: linear-gradient(
+    45deg,
+    rgba(255, 215, 0, 0.2),
+    rgba(255, 165, 0, 0.2)
+  );
+  border: 2px solid rgba(255, 215, 0, 0.5);
+  color: #ffd700;
+}
+
+.modal-body .seasonal-timer {
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  text-align: center;
+  background: rgba(255, 107, 107, 0.15);
+  border: 2px solid rgba(255, 107, 107, 0.4);
+}
+
+.modal-body .seasonal-timer .timer-label {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.modal-body .seasonal-timer .timer-countdown {
+  font-size: 24px;
+  font-weight: bold;
+  color: #ff6b6b;
+  text-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+}
+
+.modal-body .seasonal-challenge-item {
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-body .seasonal-collection {
+  margin-top: 15px;
+  padding: 20px !important;
+  background: rgba(0, 0, 0, 0.3) !important;
+  border-radius: 10px;
+}
+
+.modal-body .collection-title {
+  font-size: 20px !important;
+  margin-bottom: 20px !important;
+  color: #ffe66d !important;
+  font-weight: bold !important;
+}
+
+.modal-body .collection-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)) !important;
+  gap: 20px !important;
+}
+
+.modal-body .collection-item {
+  width: auto !important;
+  height: auto !important;
+  padding: 15px !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-radius: 12px !important;
+  border: 2px solid rgba(255, 255, 255, 0.2) !important;
+  text-align: center !important;
+  transition: all 0.3s ease !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.modal-body .collection-item:hover {
+  transform: translateY(-5px) !important;
+  box-shadow: 0 8px 20px rgba(0, 212, 255, 0.4) !important;
+  border-color: rgba(0, 212, 255, 0.6) !important;
+}
+
+.modal-body .collection-item.unlocked {
+  border-color: rgba(0, 212, 255, 0.6) !important;
+  background: rgba(0, 212, 255, 0.15) !important;
+}
+
+.modal-body .collection-butterfly {
+  width: 80px !important;
+  height: 80px !important;
+  margin: 0 auto 12px !important;
+  border-radius: 50% !important;
+  box-shadow: 0 0 25px rgba(0, 212, 255, 0.5) !important;
+}
+
+.modal-body .collection-count {
+  font-size: 18px !important;
+  font-weight: bold !important;
+  color: #00d4ff !important;
+  margin-bottom: 8px !important;
+}
+
+.modal-body .collection-name {
+  font-size: 14px !important;
+  color: rgba(255, 255, 255, 0.95) !important;
+  font-weight: 600 !important;
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  max-width: 100% !important;
+  line-height: 1.3 !important;
+}
+
+/* Season info */
+#displayMode .season-info {
+  padding: 8px;
+  margin-bottom: 8px;
+  border-radius: 6px;
+}
+
+#displayMode .season-name {
+  font-size: 12px;
+  font-weight: bold;
+  color: #ffe66d;
+}
+
+#displayMode .season-end {
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 2px;
+}
+
+/* Event banner */
+#displayMode .seasonal-event-banner {
+  padding: 6px;
+  margin-bottom: 8px;
+  font-size: 11px;
+  border-radius: 6px;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Weekly progress */
+#displayMode .weekly-progress {
+  margin-top: 10px;
+}
+
+#displayMode .weekly-title {
+  font-size: 10px;
+  margin-bottom: 6px;
+}
+
+#displayMode .week-day {
+  width: 24px;
+  height: 24px;
+  font-size: 9px;
+}
+
+/* Collection grid */
+#displayMode .seasonal-collection {
+  margin-top: 10px;
+  padding: 8px;
+}
+
+#displayMode .collection-title {
+  font-size: 10px;
+  margin-bottom: 6px;
+}
+
+#displayMode .collection-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(45px, 1fr));
+  gap: 5px;
+}
+
+#displayMode .collection-item {
+  width: 100%;
+  height: 50px;
+  padding: 3px;
+}
+
+#displayMode .collection-butterfly {
+  width: 20px;
+  height: 20px;
+}
+
+#displayMode .collection-count {
+  font-size: 8px;
+}
+
+#displayMode .collection-name {
+  font-size: 7px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .challenges-preview-container {
+    bottom: 10px;
+    right: 10px;
+    max-width: 300px;
+  }
+
+  #displayMode .daily-challenges-panel,
+  #displayMode .seasonal-challenges-panel {
+    width: 250px !important;
+  }
+
+  #displayMode .daily-challenges-panel.expanded,
+  #displayMode .seasonal-challenges-panel.expanded {
+    width: 320px !important;
+  }
+}
+
+/* Hide panels in game mode */
+#gameMode .daily-challenges-panel,
+#gameMode .seasonal-challenges-panel {
+  display: none !important;
+}
+
+/* Options Modal Styles */
+.options-modal-content {
+  width: 400px !important;
+  max-width: 90vw;
+}
+
+.options-modal-body {
+  padding: 20px;
+}
+
+.options-modal-body .option-item {
+  background: rgba(0, 212, 255, 0.1);
+  border: 2px solid rgba(0, 212, 255, 0.3);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 15px;
+}
+
+.options-modal-body .option-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  cursor: default;
+}
+
+.options-modal-body .option-text {
+  font-size: 18px;
+  font-weight: bold;
+  color: #ffe66d;
+}
+
+.options-modal-body .toggle-music-btn {
+  background: linear-gradient(45deg, #00d4ff, #0099cc);
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+}
+
+.options-modal-body .toggle-music-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+}
+
+.options-modal-body .toggle-music-btn.muted {
+  background: linear-gradient(45deg, #ff6b6b, #ff4757);
+  box-shadow: 0 0 15px rgba(255, 107, 107, 0.3);
+}
+
+.options-modal-body .toggle-music-btn.muted:hover {
+  box-shadow: 0 0 20px rgba(255, 107, 107, 0.5);
+}

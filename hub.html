@@ -10,6 +10,10 @@
       href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Press+Start+2P&display=swap"
       rel="stylesheet"
     />
+    <!-- Butterfly Theme System -->
+    <script src="js/butterfly-theme.js"></script>
+    <link rel="stylesheet" href="css/theme-selector.css" />
+    <script src="js/theme-selector.js" defer></script>
     <style>
       * {
         margin: 0;
@@ -19,13 +23,17 @@
 
       body {
         font-family: "Orbitron", "Press Start 2P", "Arial Black", sans-serif;
-        background: linear-gradient(
-          180deg,
-          #0a0e27 0%,
-          #1a1f4d 30%,
-          #2d1b69 60%,
-          #1a1033 100%
+        background: var(
+          --bg-gradient,
+          linear-gradient(
+            180deg,
+            #0a0e27 0%,
+            #1a1f4d 30%,
+            #2d1b69 60%,
+            #1a1033 100%
+          )
         );
+        background-attachment: fixed;
         min-height: 100vh;
         display: flex;
         flex-direction: column;
@@ -149,6 +157,79 @@
         z-index: 10;
         box-shadow: 0 0 20px rgba(255, 105, 180, 0.4),
           0 0 40px rgba(65, 105, 225, 0.3), 0 4px 0 rgba(255, 0, 255, 0.3);
+      }
+
+      .header-actions {
+        position: absolute;
+        top: 1.5rem;
+        right: 2rem;
+        display: flex;
+        gap: 0.75rem;
+      }
+
+      .auth-link {
+        padding: 0.6rem 1.2rem;
+        border: 2px solid #00ffff;
+        color: #00ffff;
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        background: rgba(10, 14, 39, 0.6);
+        transition: all 0.3s ease;
+        box-shadow: 0 0 10px rgba(0, 255, 255, 0.4);
+      }
+
+      .auth-link:hover {
+        color: #0a0e27;
+        background: #00ffff;
+        box-shadow: 0 0 20px rgba(0, 255, 255, 0.7);
+      }
+
+      .user-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.5rem 0.9rem;
+        border: 2px solid #ff69b4;
+        background: rgba(5, 10, 40, 0.6);
+        box-shadow: 0 0 15px rgba(255, 105, 180, 0.4);
+        text-align: left;
+      }
+
+      .user-avatar {
+        width: 36px;
+        height: 36px;
+        image-rendering: pixelated;
+      }
+
+      .user-name {
+        font-size: 0.95rem;
+        font-weight: bold;
+        color: #00ffff;
+      }
+
+      .user-label {
+        font-size: 0.7rem;
+        color: #ff69b4;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
+
+      .sign-out-btn {
+        padding: 0.35rem 0.6rem;
+        border: 1px solid #ff00ff;
+        background: rgba(255, 0, 255, 0.15);
+        color: #fff;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .sign-out-btn:hover {
+        background: #ff00ff;
+        color: #0a0e27;
       }
 
       .header h1 {
@@ -354,9 +435,9 @@
         background: linear-gradient(135deg, #ff00ff, #00ffff, #ffff00, #ff00ff);
         background-size: 200% 200%;
         border: 2px solid #0ff;
+        border-radius: 20px;
         color: #000;
         padding: 0.8rem 2rem;
-        border-radius: 0px;
         font-size: 1rem;
         font-weight: bold;
         cursor: pointer;
@@ -556,6 +637,24 @@
     </div>
 
     <div class="header">
+      <div class="header-actions">
+        <a class="auth-link" id="authLink" href="html/butterfly-auth.html"
+          >Sign In / Up</a
+        >
+        <div class="user-badge" id="userBadge" hidden>
+          <img
+            src="assets/Butterfly18.png"
+            alt=""
+            class="user-avatar"
+            aria-hidden="true"
+          />
+          <div>
+            <div class="user-label">Logged in as</div>
+            <div class="user-name" id="userName">Keeper</div>
+          </div>
+          <button class="sign-out-btn" id="signOutBtn">Sign Out</button>
+        </div>
+      </div>
       <h1>
         <img
           src="assets/Butterfly15.png"
@@ -571,7 +670,7 @@
     </div>
 
     <div class="stats-panel">
-      <div class="stats-title">Your Butterfly Collection</div>
+      <div class="stats-title" id="statsOwner">Your Butterfly Collection</div>
       <div class="stats-grid">
         <div class="stat-item">
           <div class="stat-value" id="totalGames">0</div>
@@ -705,6 +804,122 @@
       <div class="game-card">
         <div class="game-icon">
           <img
+            src="assets/Butterfly4.png"
+            style="width: 60px; image-rendering: pixelated"
+            alt="Bible Console icon"
+          />
+        </div>
+        <h3 class="game-title">Bible Console</h3>
+        <p class="game-description">
+          Dive into Scripture with a sleek, modern reader! Stream any chapter
+          from the Berean Standard Bible, bookmark your favorite verses, and
+          track your spiritual journey—all beautifully synced with your Hub
+          profile. Your faith, digitized and elevated.
+        </p>
+        <ul class="game-features">
+          <li>Live API scripture streaming</li>
+          <li>Book + chapter navigator</li>
+          <li>Verse bookmarking + history</li>
+          <li>Reading progress tracker</li>
+          <li>Hub-authenticated access</li>
+        </ul>
+        <button
+          class="open-button"
+          onclick="openGame('html/butterfly-bible.html')"
+        >
+          Launch Console
+        </button>
+      </div>
+
+      <div class="game-card">
+        <div class="game-icon">
+          <img
+            src="assets/Butterfly3.png"
+            style="width: 60px; image-rendering: pixelated"
+            alt="Purble Place inspired icon"
+          />
+        </div>
+        <h3 class="game-title">Butterfly Pattern Lab</h3>
+        <p class="game-description">
+          Assemble neon butterfly orders in a Purble Place inspired arcade.
+          Match wings, patterns, glows, and crowns before the queue backs up.
+        </p>
+        <ul class="game-features">
+          <li>Randomized ticket queue</li>
+          <li>Trait-based difficulty scaling</li>
+          <li>Streak + score multipliers</li>
+          <li>Hint + clear tray controls</li>
+          <li>Local profile stats</li>
+        </ul>
+        <button
+          class="open-button"
+          onclick="openGame('html/butterfly-purble-place.html')"
+        >
+          Launch Lab
+        </button>
+      </div>
+
+      <div class="game-card">
+        <div class="game-icon">
+          <img
+            src="assets/Butterfly15.png"
+            style="width: 60px; image-rendering: pixelated"
+            alt="Butterfly Pomodoro icon"
+          />
+        </div>
+        <h3 class="game-title">Butterfly Pomodoro Lab</h3>
+        <p class="game-description">
+          Lock into dazzling Y2K focus loops with a neon timer, holographic
+          calendar, streak charts, and butterfly-themed achievements synced to
+          your Butterfly Hub profile.
+        </p>
+        <ul class="game-features">
+          <li>Custom Pomodoro presets</li>
+          <li>Task tagging + calendar logging</li>
+          <li>Session + streak analytics</li>
+          <li>Chart.js-powered dashboards</li>
+          <li>Profile-aware progress saving</li>
+        </ul>
+        <button
+          class="open-button"
+          onclick="openGame('html/butterfly-pomodoro.html')"
+        >
+          Launch Tracker
+        </button>
+      </div>
+
+      <div class="game-card">
+        <div class="game-icon">
+          <img
+            src="assets/Butterfly7.png"
+            style="width: 60px; image-rendering: pixelated"
+            alt="Butterfly+ Premium icon"
+          />
+        </div>
+        <h3 class="game-title">Butterfly+ Premium</h3>
+        <p class="game-description">
+          Unlock the full magic of Butterfly Hub! Access exclusive Y2K themes,
+          holographic skins, neon gradients, and aurora effects. Transform your
+          entire experience with 8 stunning cosmetic themes.
+        </p>
+        <ul class="game-features">
+          <li>8 gorgeous Y2K themes</li>
+          <li>Holographic & neon effects</li>
+          <li>Monthly or lifetime plans</li>
+          <li>Instant theme switching</li>
+          <li>Exclusive premium skins</li>
+        </ul>
+        <button
+          class="open-button"
+          onclick="openGame('html/butterfly-plus.html')"
+        >
+          Unlock Premium
+        </button>
+      </div>
+
+      <div class="game-card">
+        <div class="game-icon">
+          <img
             src="assets/Butterfly12.png"
             style="width: 60px; image-rendering: pixelated"
           />
@@ -732,6 +947,63 @@
     </div>
 
     <script>
+      const AUTH_PAGE = "html/butterfly-auth.html";
+
+      function getStoredUser() {
+        const stored = localStorage.getItem("butterflyUser");
+        if (!stored) return null;
+        try {
+          return JSON.parse(stored);
+        } catch (error) {
+          console.warn("Failed to parse butterflyUser", error);
+          return null;
+        }
+      }
+
+      function formatOwnerLabel(user) {
+        if (!user || !user.username) {
+          return "Your Butterfly Collection";
+        }
+        const name = user.username.trim();
+        if (!name) return "Your Butterfly Collection";
+        const possessive = name.endsWith("s") ? `${name}'` : `${name}'s`;
+        return `${possessive} Butterfly Collection`;
+      }
+
+      function syncUserBadge() {
+        const user = getStoredUser();
+        const badge = document.getElementById("userBadge");
+        const authLink = document.getElementById("authLink");
+        const userNameEl = document.getElementById("userName");
+        const statsOwner = document.getElementById("statsOwner");
+
+        if (user && badge) {
+          badge.removeAttribute("hidden");
+          if (authLink) authLink.style.display = "none";
+          if (userNameEl) {
+            userNameEl.textContent = user.username || "Butterfly Keeper";
+          }
+          if (statsOwner) {
+            statsOwner.textContent = formatOwnerLabel(user);
+          }
+        } else {
+          if (badge) badge.setAttribute("hidden", "hidden");
+          if (authLink) authLink.style.display = "inline-flex";
+          if (statsOwner) {
+            statsOwner.textContent = "Your Butterfly Collection";
+          }
+        }
+      }
+
+      const signOutBtn = document.getElementById("signOutBtn");
+      if (signOutBtn) {
+        signOutBtn.addEventListener("click", () => {
+          localStorage.removeItem("butterflyUser");
+          syncUserBadge();
+          window.location.href = AUTH_PAGE;
+        });
+      }
+
       // Load player statistics
       function loadPlayerStats() {
         // Get legacy records (old builds stored per-game scores)
@@ -779,6 +1051,7 @@
       // Initialize when page loads
       window.addEventListener("load", function () {
         loadPlayerStats();
+        syncUserBadge();
 
         // Check if we're returning from a game
         if (sessionStorage.getItem("returnedFromGame")) {

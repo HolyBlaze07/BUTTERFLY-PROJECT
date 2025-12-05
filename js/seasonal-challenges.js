@@ -116,17 +116,31 @@ const SEASONS = {
         rarity: "rare",
       },
       {
-        name: "Winter Aurora",
+        name: "Aurora",
         colors: ["#e0ffff", "#afeeee", "#87ceeb"],
         rarity: "legendary",
       },
     ],
     challenges: [
-      { type: "catch", target: 45, reward: 500, name: "Winter Collection" },
+      { type: "catch", target: 45, reward: 500, name: "Crystal Collection" },
       { type: "combo", target: 18, reward: 950, name: "Frost Combo" },
       { type: "speed", target: 25, reward: 850, name: "Ice Rush" },
     ],
     background: "winter-theme",
+    music: [
+      {
+        src: "assets/audio/winter-wonderland-178325.mp3",
+        credit: '"Winter Wonderland" (Pixabay)',
+      },
+      {
+        src: "assets/audio/winter-bells-440372.mp3",
+        credit: '"Winter Bells" (Pixabay)',
+      },
+      {
+        src: "assets/audio/child-of-winter-light-440370.mp3",
+        credit: '"Child of Winter Light" (Pixabay)',
+      },
+    ],
   },
   christmas: {
     name: "Christmas Magic",
@@ -235,6 +249,19 @@ let seasonalStats = {
   completedSeasons: [],
 };
 
+// Seasonal music state
+let allowSeasonMusic = true; // Enable seasonal music by default
+let seasonMusicPlayer = null;
+let currentMusicSeason = null;
+let seasonPlaylist = [];
+let seasonPlaylistIndex = 0;
+let seasonAudioUnlockPending = false;
+let pendingMusicSeason = null;
+let seasonAudioUnlockHandler = null;
+
+// Make seasonMusicPlayer globally accessible
+window.seasonMusicPlayer = null;
+
 // Initialize seasonal system
 function initSeasonalChallenges() {
   loadSeasonalData();
@@ -244,6 +271,9 @@ function initSeasonalChallenges() {
   updateSeasonalCollection();
   startSeasonalTimer();
 }
+
+// Make init function globally accessible
+window.initSeasonalChallenges = initSeasonalChallenges;
 
 // Detect current season based on date
 function detectCurrentSeason() {
@@ -316,7 +346,15 @@ function applySeasonalTheme(seasonKey) {
   });
 
   // Add current seasonal theme
-  body.classList.add(SEASONS[seasonKey].background);
+  if (SEASONS[seasonKey]?.background) {
+    body.classList.add(SEASONS[seasonKey].background);
+  }
+
+  if (allowSeasonMusic) {
+    playSeasonMusic(seasonKey);
+  } else {
+    pendingMusicSeason = seasonKey;
+  }
 }
 
 // Setup seasonal panel
@@ -328,13 +366,121 @@ function setupSeasonalPanel() {
   updateSeasonalCollection();
 }
 
+function playSeasonMusic(seasonKey) {
+  if (!seasonKey) {
+    stopSeasonMusic();
+    return;
+  }
+
+  const config = SEASONS[seasonKey];
+  if (!config || !Array.isArray(config.music) || !config.music.length) {
+    stopSeasonMusic();
+    return;
+  }
+
+  if (!seasonMusicPlayer) {
+    seasonMusicPlayer = new Audio();
+    seasonMusicPlayer.loop = false;
+    seasonMusicPlayer.volume = 0.45;
+    seasonMusicPlayer.addEventListener("ended", handleSeasonTrackEnded);
+    window.seasonMusicPlayer = seasonMusicPlayer; // Make globally accessible
+  }
+
+  if (seasonKey !== currentMusicSeason) {
+    seasonPlaylist = config.music.slice();
+    seasonPlaylistIndex = 0;
+    currentMusicSeason = seasonKey;
+  }
+
+  startSeasonTrack();
+}
+
+function stopSeasonMusic() {
+  if (seasonMusicPlayer) {
+    seasonMusicPlayer.pause();
+    seasonMusicPlayer.currentTime = 0;
+  }
+  currentMusicSeason = null;
+  seasonPlaylist = [];
+  seasonPlaylistIndex = 0;
+  updateSeasonalMusicCredit(null);
+}
+
+function startSeasonTrack() {
+  if (!seasonMusicPlayer || !seasonPlaylist.length) return;
+
+  const trackEntry =
+    seasonPlaylist[seasonPlaylistIndex % seasonPlaylist.length];
+  const trackSrc =
+    typeof trackEntry === "string" ? trackEntry : trackEntry?.src;
+  if (!trackSrc) return;
+
+  const currentTrack = seasonMusicPlayer.getAttribute("data-track");
+
+  // Only restart if it's a different track or if the player is not playing
+  if (currentTrack !== trackSrc || seasonMusicPlayer.paused) {
+    if (currentTrack !== trackSrc) {
+      seasonMusicPlayer.setAttribute("data-track", trackSrc);
+      seasonMusicPlayer.src = trackSrc;
+    }
+    seasonMusicPlayer.currentTime = 0;
+
+    updateSeasonalMusicCredit(trackEntry);
+
+    const playPromise = seasonMusicPlayer.play();
+    if (playPromise && typeof playPromise.catch === "function") {
+      playPromise.catch(() => scheduleSeasonAudioUnlock());
+    }
+  }
+}
+
+function handleSeasonTrackEnded() {
+  if (!seasonPlaylist.length) return;
+  seasonPlaylistIndex = (seasonPlaylistIndex + 1) % seasonPlaylist.length;
+  startSeasonTrack();
+}
+
+function scheduleSeasonAudioUnlock() {
+  if (seasonAudioUnlockPending) return;
+  seasonAudioUnlockPending = true;
+
+  seasonAudioUnlockHandler = () => {
+    document.removeEventListener("pointerdown", seasonAudioUnlockHandler);
+    seasonAudioUnlockPending = false;
+    seasonAudioUnlockHandler = null;
+    startSeasonTrack();
+  };
+
+  document.addEventListener("pointerdown", seasonAudioUnlockHandler, {
+    once: true,
+  });
+}
+
+function updateSeasonalMusicCredit(trackEntry) {
+  const creditText =
+    typeof trackEntry === "object" && trackEntry?.credit
+      ? trackEntry.credit
+      : "";
+  const creditBadge = document.getElementById("seasonalMusicCredit");
+  if (creditBadge) {
+    creditBadge.textContent = creditText;
+    creditBadge.style.display = creditText ? "block" : "none";
+  }
+
+  if (creditText) {
+    console.info(`[Seasonal Music] ${creditText}`);
+  }
+}
+
 // Update seasonal challenges
 function updateSeasonalChallenges() {
   if (!currentSeason) return;
 
   const season = SEASONS[currentSeason];
   const challengesList = document.getElementById("seasonalChallengesList");
-  if (!challengesList) return;
+  const challengesListPreview = document.getElementById(
+    "seasonalChallengesListPreview"
+  );
 
   // Load or create challenges for current season
   const storageKey = `seasonal_${currentSeason}_challenges`;
@@ -356,7 +502,7 @@ function updateSeasonalChallenges() {
   seasonalChallenges = challenges.items;
 
   // Render challenges
-  challengesList.innerHTML = seasonalChallenges
+  const challengesHTML = seasonalChallenges
     .map(
       (challenge, index) => `
     <div class="seasonal-challenge-item ${
@@ -383,8 +529,19 @@ function updateSeasonalChallenges() {
     )
     .join("");
 
+  if (challengesList) {
+    challengesList.innerHTML = challengesHTML;
+  }
+
+  if (challengesListPreview) {
+    challengesListPreview.innerHTML = challengesHTML;
+  }
+
   // Update season info
   const seasonInfo = document.querySelector(".season-info");
+  const seasonNamePreview = document.getElementById("seasonNamePreview");
+  const seasonEndPreview = document.getElementById("seasonEndPreview");
+
   if (seasonInfo) {
     seasonInfo.innerHTML = `
       <div class="season-name">${season.name}</div>
@@ -392,10 +549,26 @@ function updateSeasonalChallenges() {
     `;
   }
 
+  if (seasonNamePreview) {
+    seasonNamePreview.textContent = season.name;
+  }
+
+  if (seasonEndPreview) {
+    seasonEndPreview.textContent = `Ends: ${getSeasonEndDate()}`;
+  }
+
   // Update event banner
   const eventBanner = document.querySelector(".seasonal-event-banner");
+  const eventBannerPreview = document.getElementById(
+    "seasonalEventBannerPreview"
+  );
+
   if (eventBanner) {
     eventBanner.textContent = `🦋 ${season.name} Event Active! 🦋`;
+  }
+
+  if (eventBannerPreview) {
+    eventBannerPreview.textContent = `🦋 ${season.name} Event Active! 🦋`;
   }
 }
 
@@ -458,13 +631,15 @@ function updateSeasonalCollection() {
 
   const season = SEASONS[currentSeason];
   const collectionGrid = document.getElementById("seasonalCollectionGrid");
-  if (!collectionGrid) return;
+  const collectionGridPreview = document.getElementById(
+    "seasonalCollectionGridPreview"
+  );
 
   // Load collection progress
   const storageKey = `seasonal_${currentSeason}_collection`;
   const collection = JSON.parse(localStorage.getItem(storageKey) || "{}");
 
-  collectionGrid.innerHTML = season.butterflies
+  const collectionHTML = season.butterflies
     .map((butterfly, index) => {
       const caught = collection[butterfly.name] || 0;
       const unlocked = caught > 0;
@@ -482,6 +657,14 @@ function updateSeasonalCollection() {
     `;
     })
     .join("");
+
+  if (collectionGrid) {
+    collectionGrid.innerHTML = collectionHTML;
+  }
+
+  if (collectionGridPreview) {
+    collectionGridPreview.innerHTML = collectionHTML;
+  }
 }
 
 // Spawn seasonal butterfly in game
@@ -631,23 +814,31 @@ function startSeasonalTimer() {
 
 function updateSeasonalTimer() {
   const timerElement = document.getElementById("seasonalTimer");
-  if (!timerElement || !currentSeason) return;
+  const timerElementPreview = document.getElementById("seasonalTimerPreview");
+  if (!currentSeason) return;
 
   const season = SEASONS[currentSeason];
   const now = new Date();
   const year = now.getFullYear();
-  let endDate = new Date(
-    year,
-    season.dates.end.month - 1,
-    season.dates.end.day,
-    23,
-    59,
-    59
-  );
+  const currentMonth = now.getMonth() + 1;
 
-  // Handle year wrap
+  let endDate;
+
+  // Handle year wrap (e.g., winter goes from Dec to Feb)
   if (season.dates.start.month > season.dates.end.month) {
-    if (now.getMonth() + 1 < season.dates.end.month) {
+    // Season spans across new year
+    if (currentMonth >= season.dates.start.month) {
+      // We're in the start year (e.g., December), end date is next year
+      endDate = new Date(
+        year + 1,
+        season.dates.end.month - 1,
+        season.dates.end.day,
+        23,
+        59,
+        59
+      );
+    } else {
+      // We're in the end year (e.g., January/February), end date is this year
       endDate = new Date(
         year,
         season.dates.end.month - 1,
@@ -657,12 +848,23 @@ function updateSeasonalTimer() {
         59
       );
     }
+  } else {
+    // Normal season within same year
+    endDate = new Date(
+      year,
+      season.dates.end.month - 1,
+      season.dates.end.day,
+      23,
+      59,
+      59
+    );
   }
 
   const diff = endDate - now;
 
   if (diff <= 0) {
-    timerElement.textContent = "Season Ended";
+    if (timerElement) timerElement.textContent = "Season Ended";
+    if (timerElementPreview) timerElementPreview.textContent = "Season Ended";
     detectCurrentSeason(); // Check for new season
     updateSeasonalChallenges();
     updateSeasonalCollection();
@@ -673,7 +875,9 @@ function updateSeasonalTimer() {
   const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
   const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
 
-  timerElement.textContent = `${days}d ${hours}h ${minutes}m`;
+  const timeText = `${days}d ${hours}h ${minutes}m`;
+  if (timerElement) timerElement.textContent = timeText;
+  if (timerElementPreview) timerElementPreview.textContent = timeText;
 }
 
 // Load/save seasonal data

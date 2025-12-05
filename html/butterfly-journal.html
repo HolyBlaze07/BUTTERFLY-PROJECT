@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Butterfly Journal - Daily Entries & Mood Tracking</title>
+    <!-- Butterfly Theme System -->
+    <script src="../js/butterfly-theme.js"></script>
+    <link rel="stylesheet" href="../css/theme-selector.css" />
+    <script src="../js/theme-selector.js" defer></script>
     <style>
       * {
         margin: 0;
@@ -13,7 +17,11 @@
 
       body {
         font-family: "Georgia", serif;
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        background: var(
+          --bg-gradient,
+          linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)
+        );
+        background-attachment: fixed;
         min-height: 100vh;
         color: #2c3e50;
         line-height: 1.6;
@@ -359,6 +367,190 @@
         font-style: italic;
       }
 
+      /* Upgrade Modal Styles */
+      .upgrade-modal-backdrop {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(6px);
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .upgrade-modal-backdrop.active {
+        display: flex;
+      }
+
+      .upgrade-modal {
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.98) 0%,
+          rgba(250, 240, 255, 0.98) 100%
+        );
+        border-radius: 1.5rem;
+        padding: 2.5rem;
+        max-width: 520px;
+        width: 90%;
+        box-shadow: 0 0 40px rgba(139, 90, 140, 0.6),
+          0 0 80px rgba(168, 111, 168, 0.4), 0 20px 50px rgba(0, 0, 0, 0.3);
+        position: relative;
+        animation: modalSlideIn 0.4s ease-out;
+        border: 2px solid rgba(139, 90, 140, 0.3);
+      }
+
+      @keyframes modalSlideIn {
+        from {
+          transform: translateY(-30px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      .upgrade-modal-close {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: none;
+        border: none;
+        font-size: 1.8rem;
+        color: #6c757d;
+        cursor: pointer;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: all 0.2s ease;
+      }
+
+      .upgrade-modal-close:hover {
+        background: rgba(139, 90, 140, 0.1);
+        color: #8b5a8c;
+      }
+
+      .upgrade-modal-header {
+        text-align: center;
+        margin-bottom: 1.5rem;
+      }
+
+      .upgrade-modal-caterpillar {
+        font-size: 0.9rem;
+        color: #6c757d;
+        margin-bottom: 1rem;
+        line-height: 1.5;
+      }
+
+      .upgrade-modal-title {
+        font-size: 1.8rem;
+        color: #8b5a8c;
+        margin-bottom: 1rem;
+        font-weight: bold;
+        text-shadow: 0 0 20px rgba(139, 90, 140, 0.3);
+      }
+
+      .upgrade-modal-body {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+
+      .upgrade-modal-body p {
+        color: #495057;
+        line-height: 1.7;
+        margin-bottom: 1.5rem;
+      }
+
+      .upgrade-modal-perks {
+        text-align: left;
+        background: rgba(139, 90, 140, 0.05);
+        padding: 1.5rem;
+        border-radius: 1rem;
+        border: 1px solid rgba(139, 90, 140, 0.2);
+        margin-bottom: 1.5rem;
+      }
+
+      .upgrade-modal-perks p {
+        font-weight: bold;
+        color: #8b5a8c;
+        margin-bottom: 1rem;
+      }
+
+      .upgrade-modal-perks ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .upgrade-modal-perks li {
+        padding: 0.5rem 0;
+        color: #495057;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .upgrade-modal-buttons {
+        display: flex;
+        gap: 1rem;
+        flex-direction: column;
+      }
+
+      .upgrade-btn-primary {
+        background: linear-gradient(135deg, #8b5a8c, #a86fa8, #c084c4);
+        background-size: 200% 200%;
+        color: white;
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 2rem;
+        font-size: 1.1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(139, 90, 140, 0.4);
+        animation: gradientShift 3s ease infinite;
+      }
+
+      @keyframes gradientShift {
+        0%,
+        100% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+      }
+
+      .upgrade-btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 25px rgba(139, 90, 140, 0.6);
+      }
+
+      .upgrade-btn-secondary {
+        background: transparent;
+        color: #6c757d;
+        border: 2px solid #ddd;
+        padding: 0.8rem 2rem;
+        border-radius: 2rem;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .upgrade-btn-secondary:hover {
+        border-color: #8b5a8c;
+        color: #8b5a8c;
+        background: rgba(139, 90, 140, 0.05);
+      }
+
       @media (max-width: 768px) {
         .journal-interface {
           grid-template-columns: 1fr;
@@ -370,6 +562,14 @@
 
         .header h1 {
           font-size: 2rem;
+        }
+
+        .upgrade-modal {
+          padding: 2rem 1.5rem;
+        }
+
+        .upgrade-modal-title {
+          font-size: 1.5rem;
         }
       }
     </style>
@@ -584,7 +784,162 @@
       </div>
     </div>
 
+    <!-- Upgrade Modal -->
+    <div class="upgrade-modal-backdrop" id="upgradeModalBackdrop">
+      <div class="upgrade-modal">
+        <button
+          class="upgrade-modal-close"
+          onclick="closeUpgradeModal()"
+          aria-label="Close modal"
+        >
+          &times;
+        </button>
+
+        <div class="upgrade-modal-header">
+          <p class="upgrade-modal-caterpillar">
+            Write 6 entries as your caterpillar phase 🌱<br />
+            Then unlock unlimited entries and transform into Butterfly+ 🦋✨
+          </p>
+          <h2 class="upgrade-modal-title">
+            ✨ You've completed your 6 free entries! ✨
+          </h2>
+        </div>
+
+        <div class="upgrade-modal-body">
+          <p>
+            Your journal is growing beautifully, and your thoughts deserve a
+            safe, unlimited space.
+          </p>
+
+          <div class="upgrade-modal-perks">
+            <p>Unlock Butterfly+ to continue your journey:</p>
+            <ul>
+              <li>🦋 Unlimited journal entries</li>
+              <li>💫 Mood insights</li>
+              <li>🎨 Aesthetic Y2K skins</li>
+              <li>🚫 No ads</li>
+              <li>🌙 Offline mode</li>
+              <li>🎧 Spotify/Apple Music sync</li>
+            </ul>
+          </div>
+
+          <div class="upgrade-modal-buttons">
+            <button class="upgrade-btn-primary" onclick="upgradeToButterfly()">
+              Unlock Unlimited Journaling
+            </button>
+            <button class="upgrade-btn-secondary" onclick="closeUpgradeModal()">
+              Maybe Later
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script>
+      // ============================================
+      // USER MANAGEMENT & BUTTERFLY+ INTEGRATION
+      // ============================================
+      // Use existing USER_KEY from butterfly-theme.js if available
+      const JOURNAL_USER_KEY =
+        typeof USER_KEY !== "undefined" ? USER_KEY : "butterflyUser";
+      const MAX_FREE_ENTRIES = 6;
+
+      /**
+       * Get the current user from localStorage.
+       * If user doesn't exist, create a default free user.
+       */
+      function getUser() {
+        const stored = localStorage.getItem(JOURNAL_USER_KEY);
+        if (!stored) {
+          const defaultUser = {
+            username: "Butterfly Keeper",
+            plan: "free",
+            skin: "midnight-sky",
+            createdAt: new Date().toISOString(),
+          };
+          localStorage.setItem(JOURNAL_USER_KEY, JSON.stringify(defaultUser));
+          return defaultUser;
+        }
+        try {
+          return JSON.parse(stored);
+        } catch (error) {
+          console.error("Failed to parse user data", error);
+          return { plan: "free" };
+        }
+      }
+
+      /**
+       * Save user data to localStorage.
+       */
+      function saveUser(user) {
+        localStorage.setItem(JOURNAL_USER_KEY, JSON.stringify(user));
+      }
+
+      /**
+       * Check if user has a premium plan (monthly or lifetime).
+       */
+      function isPremiumUser() {
+        const user = getUser();
+        return user.plan === "monthly" || user.plan === "lifetime";
+      }
+
+      /**
+       * Open the upgrade modal.
+       */
+      function openUpgradeModal() {
+        const modal = document.getElementById("upgradeModalBackdrop");
+        if (modal) {
+          modal.classList.add("active");
+        }
+      }
+
+      /**
+       * Close the upgrade modal.
+       */
+      function closeUpgradeModal() {
+        const modal = document.getElementById("upgradeModalBackdrop");
+        if (modal) {
+          modal.classList.remove("active");
+        }
+      }
+
+      /**
+       * Upgrade user to Butterfly+ (monthly plan).
+       * In production, this would integrate with Stripe/payment system.
+       */
+      function upgradeToButterfly() {
+        // For now, simulate upgrade to monthly plan
+        const user = getUser();
+        user.plan = "monthly";
+        user.upgradedAt = new Date().toISOString();
+        saveUser(user);
+
+        // Show success notification
+        if (window.journal) {
+          journal.showNotification(
+            "🦋 Welcome to Butterfly+! Unlimited journaling unlocked!",
+            "success"
+          );
+        }
+
+        // Close modal
+        closeUpgradeModal();
+
+        // Optionally redirect to Butterfly+ page or show confetti
+        // window.location.href = "butterfly-plus.html";
+      }
+
+      // Close modal when clicking outside
+      document.addEventListener("click", function (e) {
+        const modal = document.getElementById("upgradeModalBackdrop");
+        if (e.target === modal) {
+          closeUpgradeModal();
+        }
+      });
+
+      // ============================================
+      // JOURNAL CLASS
+      // ============================================
       class ButterflyJournal {
         constructor() {
           this.entries =
@@ -639,6 +994,17 @@
 
           if (!this.currentMood) {
             alert("Please select your mood for today.");
+            return;
+          }
+
+          // ============================================
+          // CHECK ENTRY LIMIT FOR FREE USERS
+          // ============================================
+          const isPremium = isPremiumUser();
+
+          if (!isPremium && this.entries.length >= MAX_FREE_ENTRIES) {
+            // Show upgrade modal instead of saving
+            openUpgradeModal();
             return;
           }
 
@@ -786,7 +1152,13 @@
           const commonMood = this.getMostCommonMood();
           const monthEntries = this.getThisMonthEntries();
 
-          document.getElementById("totalEntries").textContent = totalEntries;
+          // Show entry count with limit indicator for free users
+          const isPremium = isPremiumUser();
+          const entryDisplay = isPremium
+            ? totalEntries
+            : `${totalEntries} / ${MAX_FREE_ENTRIES}`;
+
+          document.getElementById("totalEntries").textContent = entryDisplay;
           document.getElementById("currentStreak").textContent =
             currentStreak === 0
               ? "No streak"

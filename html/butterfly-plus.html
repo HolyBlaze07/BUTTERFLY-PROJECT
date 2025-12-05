@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Butterfly+ | Premium Membership & Skins</title>
+    <meta
+      name="description"
+      content="Unlock premium features, themes, and unlimited access with Butterfly+ membership."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Unbounded:wght@600&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* ===== THEME VARIABLES – Dynamically updated by JS ===== */
+      :root {
+        --bg-gradient: radial-gradient(circle at top, #2b2bff, #090012);
+        --card-bg: rgba(10, 12, 35, 0.9);
+        --card-border: rgba(255, 255, 255, 0.15);
+        --text-main: #ffffff;
+        --text-muted: rgba(255, 255, 255, 0.75);
+        --accent: #ff7cf8;
+        --accent-2: #52abf4;
+        --button-radius: 999px;
+        --glow-primary: rgba(255, 124, 248, 0.7);
+        --glow-secondary: rgba(82, 171, 244, 0.5);
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        font-family: "Space Grotesk", system-ui, -apple-system,
+          BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: var(--text-main);
+        background: var(--bg-gradient);
+        background-attachment: fixed;
+        overflow-x: hidden;
+      }
+
+      /* ===== BUTTERFLY ANIMATIONS ===== */
+      .butterfly-field {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .butterfly-field span {
+        position: absolute;
+        width: 48px;
+        height: 48px;
+        background-size: contain;
+        background-repeat: no-repeat;
+        animation: drift 18s linear infinite;
+        opacity: 0.7;
+        filter: drop-shadow(0 0 12px rgba(255, 0, 255, 0.8))
+          drop-shadow(0 0 8px rgba(0, 255, 255, 0.6));
+      }
+
+      @keyframes drift {
+        0% {
+          transform: translateY(0) scale(0.8);
+        }
+        50% {
+          transform: translateY(-40vh) scale(1.1);
+        }
+        100% {
+          transform: translateY(-100vh) scale(0.7);
+        }
+      }
+
+      /* ===== SPARKLE EFFECTS ===== */
+      @keyframes sparkle {
+        0%,
+        100% {
+          opacity: 0;
+          transform: scale(0);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      .sparkle {
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        background: white;
+        border-radius: 50%;
+        pointer-events: none;
+        animation: sparkle 1.5s ease-in-out infinite;
+      }
+
+      /* ===== MAIN LAYOUT ===== */
+      #app {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2.5rem 1.5rem 4rem;
+        position: relative;
+        z-index: 1;
+      }
+
+      /* ===== HEADER ===== */
+      .app-header {
+        text-align: center;
+        margin-bottom: 3rem;
+        animation: fadeInDown 0.6s ease-out;
+      }
+
+      @keyframes fadeInDown {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .hub-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.25rem;
+        margin-bottom: 1.5rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: var(--text-main);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+      }
+
+      .hub-link:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: var(--accent-2);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      }
+
+      .app-header h1 {
+        font-family: "Unbounded", cursive;
+        font-size: clamp(2.5rem, 5vw, 3.5rem);
+        margin: 0 0 0.5rem;
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-shadow: 0 0 40px var(--glow-primary);
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+      }
+
+      #planLabel {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        padding: 0.5rem 1.5rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.08);
+        display: inline-block;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+      }
+
+      #planLabel.premium {
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        color: white;
+        font-weight: 600;
+        box-shadow: 0 0 20px var(--glow-primary);
+      }
+
+      /* ===== SECTIONS ===== */
+      .section {
+        margin-top: 3rem;
+        animation: fadeInUp 0.6s ease-out;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .section h2 {
+        font-size: clamp(1.8rem, 4vw, 2.4rem);
+        margin-bottom: 2rem;
+        text-align: center;
+        position: relative;
+        padding-bottom: 0.75rem;
+      }
+
+      .section h2::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 3px;
+        background: linear-gradient(90deg, var(--accent), var(--accent-2));
+        border-radius: 2px;
+      }
+
+      /* ===== PRICING GRID ===== */
+      .pricing-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      .pricing-card {
+        background: var(--card-bg);
+        border-radius: 1.5rem;
+        padding: 2rem;
+        border: 2px solid var(--card-border);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(20px);
+        position: relative;
+        transition: all 0.3s ease;
+        overflow: hidden;
+      }
+
+      .pricing-card::before {
+        content: "";
+        position: absolute;
+        inset: -2px;
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        border-radius: 1.5rem;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: -1;
+      }
+
+      .pricing-card:hover::before {
+        opacity: 0.15;
+      }
+
+      .pricing-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), 0 0 40px var(--glow-primary);
+      }
+
+      .pricing-card.featured {
+        border-color: var(--accent);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 30px var(--glow-primary);
+      }
+
+      .badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        color: white;
+        padding: 0.4rem 0.9rem;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        box-shadow: 0 4px 12px var(--glow-primary);
+      }
+
+      .pricing-card h3 {
+        margin: 0 0 1rem;
+        font-size: 1.8rem;
+        font-weight: 700;
+      }
+
+      .price {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin: 1rem 0 1.5rem;
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .price span {
+        font-size: 1rem;
+        opacity: 0.8;
+      }
+
+      .pricing-card ul {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 2rem;
+      }
+
+      .pricing-card li {
+        padding: 0.6rem 0;
+        padding-left: 1.8rem;
+        position: relative;
+        font-size: 1rem;
+        opacity: 0.95;
+      }
+
+      .pricing-card li::before {
+        content: "✓";
+        position: absolute;
+        left: 0;
+        color: var(--accent-2);
+        font-weight: bold;
+        font-size: 1.2rem;
+      }
+
+      /* ===== BUTTONS ===== */
+      .btn {
+        border: none;
+        border-radius: var(--button-radius);
+        padding: 1rem 2rem;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        width: 100%;
+        font-family: inherit;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .btn.primary {
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        color: white;
+        box-shadow: 0 8px 20px var(--glow-primary);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .btn.primary::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, var(--accent-2), var(--accent));
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .btn.primary:hover::before {
+        opacity: 1;
+      }
+
+      .btn.primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 30px var(--glow-primary);
+      }
+
+      .btn.secondary {
+        background: transparent;
+        color: var(--accent-2);
+        border: 2px solid var(--accent-2);
+        box-shadow: 0 0 20px rgba(82, 171, 244, 0.2);
+      }
+
+      .btn.secondary:hover {
+        background: rgba(82, 171, 244, 0.1);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px var(--glow-secondary);
+      }
+
+      .btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        box-shadow: none;
+        transform: none !important;
+      }
+
+      .btn span {
+        position: relative;
+        z-index: 1;
+      }
+
+      .bible-note {
+        text-align: center;
+        font-size: 1rem;
+        opacity: 0.85;
+        padding: 1.5rem;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+      }
+
+      /* ===== SKINS GRID ===== */
+      .skins-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1.5rem;
+      }
+
+      .skin-card {
+        background: var(--card-bg);
+        border-radius: 1.2rem;
+        padding: 1.25rem;
+        border: 2px solid var(--card-border);
+        position: relative;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        backdrop-filter: blur(16px);
+        overflow: hidden;
+      }
+
+      .skin-card::before {
+        content: "";
+        position: absolute;
+        inset: -2px;
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        border-radius: 1.2rem;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: -1;
+      }
+
+      .skin-card:hover::before {
+        opacity: 0.2;
+      }
+
+      .skin-card:hover {
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 30px var(--glow-primary);
+      }
+
+      .skin-preview {
+        height: 140px;
+        border-radius: 1rem;
+        background-size: cover;
+        background-position: center;
+        margin-bottom: 1rem;
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .skin-preview::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          45deg,
+          transparent 40%,
+          rgba(255, 255, 255, 0.1) 50%,
+          transparent 60%
+        );
+        background-size: 200% 200%;
+        animation: shimmer 3s infinite;
+      }
+
+      @keyframes shimmer {
+        0% {
+          background-position: 200% 200%;
+        }
+        100% {
+          background-position: -200% -200%;
+        }
+      }
+
+      .skin-name {
+        font-weight: 700;
+        font-size: 1.1rem;
+        margin-bottom: 0.4rem;
+      }
+
+      .skin-description {
+        font-size: 0.9rem;
+        opacity: 0.75;
+        margin-bottom: 0.75rem;
+        line-height: 1.4;
+      }
+
+      .skin-tags {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .skin-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        font-size: 0.75rem;
+        padding: 0.3rem 0.7rem;
+        border-radius: 999px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .skin-tag.free {
+        background: rgba(82, 244, 171, 0.2);
+        border: 1px solid rgba(82, 244, 171, 0.4);
+        color: #52f4ab;
+      }
+
+      .skin-tag.premium {
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        color: white;
+        box-shadow: 0 0 15px var(--glow-primary);
+      }
+
+      .skin-tag.new {
+        background: rgba(255, 193, 7, 0.2);
+        border: 1px solid rgba(255, 193, 7, 0.5);
+        color: #ffc107;
+      }
+
+      .skin-card.active {
+        border-color: var(--accent-2);
+        box-shadow: 0 0 0 3px rgba(82, 171, 244, 0.3),
+          0 15px 35px rgba(0, 0, 0, 0.5), 0 0 40px var(--glow-secondary);
+      }
+
+      .skin-card.active::after {
+        content: "✓ Active";
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: var(--accent-2);
+        color: white;
+        padding: 0.3rem 0.8rem;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        box-shadow: 0 4px 12px var(--glow-secondary);
+      }
+
+      .lock-badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 0.3rem 0.8rem;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        z-index: 2;
+      }
+
+      /* ===== MODAL ===== */
+      .modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(10px);
+        z-index: 10000;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem;
+        animation: fadeIn 0.3s ease;
+      }
+
+      .modal.active {
+        display: flex;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .modal-content {
+        background: var(--card-bg);
+        border-radius: 1.5rem;
+        padding: 2.5rem;
+        max-width: 500px;
+        width: 100%;
+        border: 2px solid var(--accent);
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7), 0 0 60px var(--glow-primary);
+        animation: slideUp 0.4s ease;
+        position: relative;
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .modal-header {
+        text-align: center;
+        margin-bottom: 1.5rem;
+      }
+
+      .modal-header h3 {
+        font-size: 2rem;
+        margin: 0 0 0.5rem;
+      }
+
+      .modal-close {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        font-size: 1.5rem;
+        cursor: pointer;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        transition: all 0.2s ease;
+      }
+
+      .modal-close:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+      }
+
+      /* ===== RESPONSIVE ===== */
+      @media (max-width: 768px) {
+        #app {
+          padding: 1.5rem 1rem 3rem;
+        }
+
+        .pricing-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .skins-grid {
+          grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        }
+
+        .app-header h1 {
+          font-size: 2.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="butterfly-field" aria-hidden="true"></div>
+
+    <div id="app">
+      <header class="app-header">
+        <a class="hub-link" href="../hub.html">
+          <img
+            src="../assets/Butterfly6.png"
+            width="24"
+            height="24"
+            alt="Butterfly icon"
+          />
+          Back to Hub
+        </a>
+        <h1>🦋 Butterfly+</h1>
+        <p id="planLabel">Current Plan: Free</p>
+      </header>
+
+      <!-- ===== PRICING SECTION ===== -->
+      <section id="pricing" class="section">
+        <h2>Unlock Premium Features ✨</h2>
+        <div class="pricing-grid">
+          <article class="pricing-card">
+            <h3>Butterfly+ Monthly</h3>
+            <p class="price">$3.99<span>/month</span></p>
+            <ul>
+              <li>Unlimited journaling entries</li>
+              <li>Unlimited mood tracking</li>
+              <li>No advertisements</li>
+              <li>Premium Y2K skins & themes</li>
+              <li>Exclusive butterfly effects</li>
+              <li>Priority support</li>
+            </ul>
+            <button class="btn primary" id="monthlyBtn">
+              <span>Start Monthly Plan</span>
+            </button>
+          </article>
+
+          <article class="pricing-card featured">
+            <span class="badge">Best Value</span>
+            <h3>Lifetime Access</h3>
+            <p class="price">$39<span> one-time</span></p>
+            <ul>
+              <li>Everything in Monthly Plan</li>
+              <li>All future updates included</li>
+              <li>Lifetime holographic badge</li>
+              <li>Early access to new features</li>
+              <li>VIP community access</li>
+              <li>Forever, no renewals</li>
+            </ul>
+            <button class="btn secondary" id="lifetimeBtn">
+              <span>Unlock Forever</span>
+            </button>
+          </article>
+        </div>
+
+        <p class="bible-note">
+          ✝ Bible reading, devotionals, and scripture notes are always 100% free
+          for everyone.
+        </p>
+      </section>
+
+      <!-- ===== SKINS SECTION ===== -->
+      <section id="skins" class="section">
+        <h2>Choose Your Theme 🦋</h2>
+        <div id="skinsGrid" class="skins-grid">
+          <!-- JS renders skin cards here -->
+        </div>
+      </section>
+    </div>
+
+    <!-- ===== UPGRADE SUCCESS MODAL ===== -->
+    <div class="modal" id="upgradeModal">
+      <div class="modal-content">
+        <button class="modal-close" onclick="closeUpgradeModal()">×</button>
+        <div class="modal-header">
+          <h3>🎉 Welcome to Butterfly+!</h3>
+          <p style="opacity: 0.85; margin: 0">All premium skins unlocked</p>
+        </div>
+        <div style="text-align: center; margin: 2rem 0">
+          <p style="font-size: 1.1rem; opacity: 0.9">
+            You now have access to all premium themes and features. Enjoy your
+            enhanced Butterfly Hub experience!
+          </p>
+        </div>
+        <button class="btn primary" onclick="closeUpgradeModal()">
+          <span>Start Exploring</span>
+        </button>
+      </div>
+    </div>
+
+    <script src="../js/butterfly-plus.js"></script>
+  </body>
+</html>

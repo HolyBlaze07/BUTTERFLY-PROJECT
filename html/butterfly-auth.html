@@ -1,0 +1,1425 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Butterfly Hub - Sign In / Sign Up</title>
+
+    <!-- Butterfly Theme System -->
+    <script src="../js/butterfly-theme.js"></script>
+    <link rel="stylesheet" href="../css/theme-selector.css" />
+    <script src="../js/theme-selector.js" defer></script>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Arial", sans-serif;
+        background: var(
+          --bg-gradient,
+          linear-gradient(135deg, #0f0f23, #1a1a3d, #2d1b69)
+        );
+        background-attachment: fixed;
+        min-height: 100vh;
+        padding: 40px 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #fff;
+        overflow-x: hidden;
+        overflow-y: auto;
+      }
+
+      .auth-container {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 40px;
+        width: 100%;
+        max-width: 400px;
+        max-height: calc(100vh - 80px);
+        overflow-y: auto;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        position: relative;
+        overflow-x: hidden;
+      }
+
+      .auth-container::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(0, 212, 255, 0.1),
+          transparent
+        );
+        transition: left 0.5s;
+      }
+
+      .auth-container:hover::before {
+        left: 100%;
+      }
+
+      .auth-header {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .auth-header h1 {
+        font-size: 2.4rem;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        background: linear-gradient(45deg, #00d4ff, #ff6b6b, #4ecdc4);
+        background-size: 300% 300%;
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: gradient 3s ease-in-out infinite;
+      }
+
+      .pixel-butterfly-icon {
+        width: 28px;
+        height: 28px;
+        image-rendering: pixelated;
+      }
+
+      .auth-header p {
+        color: #ccc;
+        font-size: 1.05rem;
+      }
+
+      .form-tabs {
+        display: flex;
+        margin-bottom: 30px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 25px;
+        padding: 5px;
+      }
+
+      .tab-btn {
+        flex: 1;
+        padding: 12px;
+        border: none;
+        background: transparent;
+        color: #ccc;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+      }
+
+      .tab-btn.active {
+        background: linear-gradient(45deg, #00d4ff, #ff6b6b);
+        color: #fff;
+        box-shadow: 0 5px 15px rgba(0, 212, 255, 0.3);
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: #e0e0e0;
+        font-weight: 500;
+      }
+
+      .form-group input,
+      .form-group select {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+        background: rgba(10, 15, 35, 0.85);
+        color: #fff;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+      }
+
+      .form-group select option {
+        color: #0a0e27;
+        background: #f2d9ff;
+      }
+
+      .form-group input:focus,
+      .form-group select:focus {
+        outline: none;
+        border-color: #00d4ff;
+        background: rgba(255, 255, 255, 0.15);
+        box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+      }
+
+      .form-group input::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+      }
+
+      .btn {
+        width: 100%;
+        padding: 15px;
+        border: none;
+        border-radius: 25px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+      }
+
+      .btn-primary {
+        background: linear-gradient(45deg, #00d4ff, #ff6b6b);
+        color: #fff;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(0, 212, 255, 0.4);
+      }
+
+      .btn-secondary {
+        background: rgba(255, 255, 255, 0.2);
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+
+      .btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      .error-message,
+      .success-message {
+        padding: 10px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        border: 1px solid transparent;
+        display: none;
+      }
+
+      .error-message {
+        background: rgba(255, 107, 107, 0.2);
+        color: #ff6b6b;
+        border-color: rgba(255, 107, 107, 0.3);
+      }
+
+      .success-message {
+        background: rgba(76, 237, 196, 0.2);
+        color: #4ecdc4;
+        border-color: rgba(76, 237, 196, 0.3);
+      }
+
+      .form-section {
+        display: none;
+      }
+
+      .form-section.active {
+        display: block;
+      }
+
+      .social-login {
+        margin: 20px 0;
+        text-align: center;
+      }
+
+      .social-login p {
+        color: #ccc;
+        margin-bottom: 15px;
+        font-size: 0.9rem;
+      }
+
+      .social-buttons {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+      }
+
+      .social-btn {
+        padding: 10px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+        min-width: 70px;
+      }
+
+      .social-btn:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
+      }
+
+      .guest-login {
+        text-align: center;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .guest-login a {
+        color: #00d4ff;
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
+
+      .guest-login a:hover {
+        color: #4ecdc4;
+      }
+
+      .reset-modal-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(4, 6, 20, 0.85);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        z-index: 1000;
+      }
+
+      .reset-modal-backdrop[hidden] {
+        display: none !important;
+      }
+
+      .reset-modal {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 18px;
+        padding: 25px;
+        max-width: 420px;
+        width: 100%;
+        backdrop-filter: blur(15px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        position: relative;
+      }
+
+      .reset-modal h2 {
+        margin-bottom: 10px;
+        text-align: center;
+      }
+
+      .reset-modal p {
+        font-size: 0.9rem;
+        color: #d0d0ff;
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      .reset-close {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: transparent;
+        border: none;
+        color: #fff;
+        font-size: 1.2rem;
+        cursor: pointer;
+      }
+
+      .reset-status {
+        display: none;
+        margin-bottom: 15px;
+        padding: 10px;
+        border-radius: 8px;
+        font-size: 0.9rem;
+      }
+
+      .reset-status.error {
+        background: rgba(255, 107, 107, 0.2);
+        border: 1px solid rgba(255, 107, 107, 0.4);
+        color: #ffb6b6;
+      }
+
+      .reset-status.success {
+        background: rgba(76, 237, 196, 0.2);
+        border: 1px solid rgba(76, 237, 196, 0.4);
+        color: #b9ffe8;
+      }
+
+      .remember-forgot {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        font-size: 0.9rem;
+      }
+
+      .remember-forgot label {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+      }
+
+      .remember-forgot input[type="checkbox"] {
+        margin-right: 8px;
+        width: auto;
+      }
+
+      .forgot-password {
+        color: #00d4ff;
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
+
+      .forgot-password:hover {
+        color: #4ecdc4;
+      }
+
+      .floating-butterfly {
+        position: absolute;
+        opacity: 0.4;
+        animation: float 6s ease-in-out infinite;
+        pointer-events: none;
+        width: 80px;
+        height: 80px;
+        image-rendering: pixelated;
+      }
+
+      .butterfly-1 {
+        top: 10%;
+        left: 10%;
+        animation-delay: 0s;
+      }
+
+      .butterfly-2 {
+        top: 20%;
+        right: 10%;
+        animation-delay: 2s;
+      }
+
+      .butterfly-3 {
+        bottom: 20%;
+        left: 20%;
+        animation-delay: 4s;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px) rotate(0deg);
+        }
+        25% {
+          transform: translateY(-20px) rotate(5deg);
+        }
+        50% {
+          transform: translateY(-10px) rotate(-5deg);
+        }
+        75% {
+          transform: translateY(-15px) rotate(3deg);
+        }
+      }
+
+      @keyframes gradient {
+        0%,
+        100% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .auth-container {
+          padding: 30px 20px;
+          margin: 20px;
+        }
+
+        .auth-header h1 {
+          font-size: 2rem;
+        }
+
+        .form-tabs {
+          flex-direction: column;
+        }
+
+        .social-buttons {
+          flex-wrap: wrap;
+        }
+      }
+
+      .password-strength {
+        height: 4px;
+        border-radius: 2px;
+        margin-top: 5px;
+        transition: all 0.3s ease;
+      }
+
+      .password-strength.weak {
+        background: #ff6b6b;
+        width: 33%;
+      }
+
+      .password-strength.medium {
+        background: #ffa726;
+        width: 66%;
+      }
+
+      .password-strength.strong {
+        background: #4ecdc4;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <img
+      src="../assets/Butterfly1.png"
+      alt=""
+      class="floating-butterfly butterfly-1"
+      aria-hidden="true"
+    />
+    <img
+      src="../assets/Butterfly5.png"
+      alt=""
+      class="floating-butterfly butterfly-2"
+      aria-hidden="true"
+    />
+    <img
+      src="../assets/Butterfly10.png"
+      alt=""
+      class="floating-butterfly butterfly-3"
+      aria-hidden="true"
+    />
+
+    <div class="auth-container">
+      <div class="auth-header">
+        <h1>
+          <img
+            src="../assets/Butterfly15.png"
+            alt=""
+            class="pixel-butterfly-icon"
+            aria-hidden="true"
+          />
+          Butterfly Hub
+        </h1>
+        <p>Sign in to access your butterfly collection, games, and more!</p>
+      </div>
+
+      <div class="form-tabs">
+        <button class="tab-btn active" onclick="showForm(event, 'signin')">
+          Sign In
+        </button>
+        <button class="tab-btn" onclick="showForm(event, 'signup')">
+          Sign Up
+        </button>
+      </div>
+
+      <div id="signin-form" class="form-section active">
+        <div class="error-message" id="signin-error"></div>
+        <div class="success-message" id="signin-success"></div>
+
+        <form id="signinForm">
+          <div class="form-group">
+            <label for="signin-method">Sign in with Email or Username</label>
+            <select id="signin-method">
+              <option value="email">Email</option>
+              <option value="username">Username</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="signin-identifier" id="signin-identifier-label"
+              >Email Address</label
+            >
+            <input
+              type="text"
+              id="signin-identifier"
+              required
+              placeholder="Enter your email"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="signin-password">Password</label>
+            <input
+              type="password"
+              id="signin-password"
+              required
+              placeholder="Enter your password"
+            />
+          </div>
+
+          <div class="remember-forgot">
+            <label>
+              <input type="checkbox" id="remember-me" /> Remember me
+            </label>
+            <a href="#" class="forgot-password" id="forgot-password-link"
+              >Forgot password?</a
+            >
+          </div>
+
+          <button type="submit" class="btn btn-primary">
+            <img
+              src="../assets/Butterfly4.png"
+              alt=""
+              class="pixel-butterfly-icon"
+              aria-hidden="true"
+            />
+            Sign In
+          </button>
+        </form>
+
+        <!--
+        <div class="social-login">
+          <p>Or continue with</p>
+          <div class="social-buttons">
+            <button type="button" class="social-btn" data-provider="Google">
+              Google
+            </button>
+            <button type="button" class="social-btn" data-provider="Facebook">
+              Facebook
+            </button>
+            <button type="button" class="social-btn" data-provider="Twitter">
+              Twitter
+            </button>
+            <button type="button" class="social-btn" data-provider="Apple">
+              Apple
+            </button>
+          </div>
+        </div>
+        -->
+      </div>
+
+      <div id="signup-form" class="form-section">
+        <div class="error-message" id="signup-error"></div>
+        <div class="success-message" id="signup-success"></div>
+
+        <form id="signupForm">
+          <div class="form-group">
+            <label for="signup-username">Username</label>
+            <input
+              type="text"
+              id="signup-username"
+              required
+              placeholder="Choose a username"
+              minlength="3"
+              maxlength="20"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="signup-email">Email Address</label>
+            <input
+              type="email"
+              id="signup-email"
+              required
+              placeholder="Enter your email"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="signup-password">Password</label>
+            <input
+              type="password"
+              id="signup-password"
+              required
+              placeholder="Create a password"
+              minlength="6"
+            />
+            <div class="password-strength" id="password-strength"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="signup-confirm-password">Confirm Password</label>
+            <input
+              type="password"
+              id="signup-confirm-password"
+              required
+              placeholder="Confirm your password"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="signup-age">Age</label>
+            <select id="signup-age" required>
+              <option value="">Select your age</option>
+              <option value="13-17">13-17</option>
+              <option value="18-24">18-24</option>
+              <option value="25-34">25-34</option>
+              <option value="35-44">35-44</option>
+              <option value="45-54">45-54</option>
+              <option value="55+">55+</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="terms-label">
+              <input type="checkbox" id="terms-agreement" required /> I agree to
+              the
+              <a href="#" id="terms-link">Terms of Service</a>
+              and
+              <a href="#" id="privacy-link">Privacy Policy</a>
+            </label>
+          </div>
+
+          <button type="submit" class="btn btn-primary">
+            <img
+              src="../assets/Butterfly6.png"
+              alt=""
+              class="pixel-butterfly-icon"
+              aria-hidden="true"
+            />
+            Create Account
+          </button>
+        </form>
+      </div>
+
+      <div class="guest-login">
+        <p>
+          Just want to explore?
+          <a href="#" id="guest-login-link">Continue as Guest</a>
+        </p>
+      </div>
+    </div>
+
+    <div class="reset-modal-backdrop" id="resetModal" hidden>
+      <div class="reset-modal">
+        <button
+          type="button"
+          class="reset-close"
+          id="closeResetModal"
+          aria-label="Close"
+        >
+          &times;
+        </button>
+        <h2>Password Reset</h2>
+        <p>Enter your email or username and choose a new password.</p>
+        <div class="reset-status" id="resetStatus"></div>
+        <form id="resetForm">
+          <div class="form-group">
+            <label for="reset-identifier">Email or Username</label>
+            <input
+              type="text"
+              id="reset-identifier"
+              placeholder="myemail@example.com"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="reset-password">New Password</label>
+            <input
+              type="password"
+              id="reset-password"
+              minlength="6"
+              placeholder="Create a new password"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="reset-confirm-password">Confirm Password</label>
+            <input
+              type="password"
+              id="reset-confirm-password"
+              placeholder="Re-enter your new password"
+              required
+            />
+          </div>
+          <button type="submit" class="btn btn-primary">Update Password</button>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      const HUB_PATH = "../hub.html";
+      const AUTH_PATH = "butterfly-auth.html";
+      const OAUTH_CONFIG = {
+        Google: {
+          authUrl: "https://accounts.google.com/o/oauth2/v2/auth",
+          clientId: "YOUR_GOOGLE_CLIENT_ID",
+          scope: "openid email profile",
+          redirectPath: "/oauth/callback/google",
+        },
+        Facebook: {
+          authUrl: "https://www.facebook.com/v18.0/dialog/oauth",
+          clientId: "YOUR_FACEBOOK_APP_ID",
+          scope: "public_profile,email",
+          redirectPath: "/oauth/callback/facebook",
+        },
+        Twitter: {
+          authUrl: "https://twitter.com/i/oauth2/authorize",
+          clientId: "YOUR_TWITTER_CLIENT_ID",
+          scope: "tweet.read users.read offline.access",
+          redirectPath: "/oauth/callback/twitter",
+        },
+        Apple: {
+          authUrl: "https://appleid.apple.com/auth/authorize",
+          clientId: "YOUR_APPLE_SERVICE_ID",
+          scope: "name email",
+          redirectPath: "/oauth/callback/apple",
+          extraParams: { response_mode: "form_post" },
+        },
+      };
+
+      class ButterflyAuth {
+        constructor() {
+          this.currentUser = null;
+          this.init();
+        }
+
+        init() {
+          this.checkExistingSession();
+          this.setupEventListeners();
+        }
+
+        checkExistingSession() {
+          const savedUser = localStorage.getItem("butterflyUser");
+          if (savedUser) {
+            const user = JSON.parse(savedUser);
+            if (user.rememberMe && this.isSessionValid(user)) {
+              this.currentUser = user;
+              this.redirectToHub();
+            }
+          }
+        }
+
+        isSessionValid(user) {
+          if (!user.lastLogin) return false;
+          const lastLogin = new Date(user.lastLogin);
+          const now = new Date();
+          const daysSinceLogin = (now - lastLogin) / (1000 * 60 * 60 * 24);
+          return daysSinceLogin < 30;
+        }
+
+        setupEventListeners() {
+          const usernameInput = document.getElementById("signup-username");
+          usernameInput.addEventListener("input", (e) => {
+            localStorage.setItem("butterflyTempUsername", e.target.value);
+          });
+
+          const savedUsername = localStorage.getItem("butterflyTempUsername");
+          if (savedUsername) {
+            usernameInput.value = savedUsername;
+          }
+        }
+
+        signIn(identifier, password, rememberMe = false, method = "email") {
+          const users = JSON.parse(
+            localStorage.getItem("butterflyUsers") || "[]"
+          );
+          const user = users.find((u) =>
+            method === "username"
+              ? u.username === identifier
+              : u.email === identifier
+          );
+
+          if (!user) {
+            throw new Error(
+              method === "username"
+                ? "No account found with this username."
+                : "No account found with this email address."
+            );
+          }
+
+          if (user.password !== btoa(password)) {
+            throw new Error("Incorrect password. Please try again.");
+          }
+
+          user.lastLogin = new Date().toISOString();
+          user.rememberMe = rememberMe;
+          localStorage.setItem("butterflyUsers", JSON.stringify(users));
+
+          this.currentUser = user;
+          localStorage.setItem("butterflyUser", JSON.stringify(user));
+          return user;
+        }
+
+        signUp(userData) {
+          const users = JSON.parse(
+            localStorage.getItem("butterflyUsers") || "[]"
+          );
+
+          if (users.some((u) => u.email === userData.email)) {
+            throw new Error("An account with this email already exists.");
+          }
+
+          if (users.some((u) => u.username === userData.username)) {
+            throw new Error(
+              "This username is already taken. Please choose another."
+            );
+          }
+
+          const newUser = {
+            id: Date.now(),
+            username: userData.username,
+            email: userData.email,
+            password: btoa(userData.password),
+            age: userData.age,
+            createdAt: new Date().toISOString(),
+            lastLogin: new Date().toISOString(),
+            rememberMe: true,
+            stats: {
+              totalGames: 0,
+              totalScore: 0,
+              butterfliesCaught: 0,
+              bestCombo: 0,
+              journalEntries: 0,
+              currentStreak: 0,
+            },
+            settings: {
+              theme: "butterfly",
+              notifications: true,
+              soundEnabled: true,
+            },
+          };
+
+          users.push(newUser);
+          localStorage.setItem("butterflyUsers", JSON.stringify(users));
+          localStorage.removeItem("butterflyTempUsername");
+          return newUser;
+        }
+
+        findUserByIdentifier(identifier) {
+          const normalized = identifier.trim().toLowerCase();
+          const users = JSON.parse(
+            localStorage.getItem("butterflyUsers") || "[]"
+          );
+          const userIndex = users.findIndex(
+            (u) =>
+              u.email.toLowerCase() === normalized ||
+              u.username.toLowerCase() === normalized
+          );
+
+          return {
+            user: userIndex !== -1 ? users[userIndex] : null,
+            users,
+            userIndex,
+          };
+        }
+
+        resetPassword(identifier, newPassword) {
+          const trimmed = (identifier || "").trim();
+          if (!trimmed) {
+            throw new Error("Please enter your email or username.");
+          }
+
+          const { user, users, userIndex } = this.findUserByIdentifier(trimmed);
+
+          if (!user || userIndex === -1) {
+            throw new Error("No account found with that email or username.");
+          }
+
+          user.password = btoa(newPassword);
+          user.lastPasswordReset = new Date().toISOString();
+          users[userIndex] = user;
+          localStorage.setItem("butterflyUsers", JSON.stringify(users));
+
+          if (this.currentUser && this.currentUser.id === user.id) {
+            this.currentUser.password = user.password;
+            this.currentUser.lastPasswordReset = user.lastPasswordReset;
+            localStorage.setItem(
+              "butterflyUser",
+              JSON.stringify(this.currentUser)
+            );
+          }
+
+          return user;
+        }
+
+        socialLogin(provider) {
+          const socialUser = {
+            id: Date.now(),
+            username: `${provider.toLowerCase()}User${Math.floor(
+              Math.random() * 1000
+            )}`,
+            email: `${provider.toLowerCase()}user@example.com`,
+            provider,
+            createdAt: new Date().toISOString(),
+            lastLogin: new Date().toISOString(),
+            rememberMe: true,
+            stats: {
+              totalGames: 0,
+              totalScore: 0,
+              butterfliesCaught: 0,
+              bestCombo: 0,
+              journalEntries: 0,
+              currentStreak: 0,
+            },
+            settings: {
+              theme: "butterfly",
+              notifications: true,
+              soundEnabled: true,
+            },
+          };
+
+          this.currentUser = socialUser;
+          localStorage.setItem("butterflyUser", JSON.stringify(socialUser));
+
+          const users = JSON.parse(
+            localStorage.getItem("butterflyUsers") || "[]"
+          );
+          users.push(socialUser);
+          localStorage.setItem("butterflyUsers", JSON.stringify(users));
+          return socialUser;
+        }
+
+        guestLogin() {
+          const guestUser = {
+            id: `guest_${Date.now()}`,
+            username: `Guest${Math.floor(Math.random() * 1000)}`,
+            email: "guest@butterflyhub.com",
+            isGuest: true,
+            createdAt: new Date().toISOString(),
+            lastLogin: new Date().toISOString(),
+            rememberMe: false,
+            stats: {
+              totalGames: 0,
+              totalScore: 0,
+              butterfliesCaught: 0,
+              bestCombo: 0,
+              journalEntries: 0,
+              currentStreak: 0,
+            },
+            settings: {
+              theme: "butterfly",
+              notifications: true,
+              soundEnabled: true,
+            },
+          };
+
+          this.currentUser = guestUser;
+          localStorage.setItem("butterflyUser", JSON.stringify(guestUser));
+          return guestUser;
+        }
+
+        signOut() {
+          this.currentUser = null;
+          localStorage.removeItem("butterflyUser");
+          window.location.href = AUTH_PATH;
+        }
+
+        redirectToHub() {
+          window.location.href = HUB_PATH;
+        }
+
+        updateUserStats(newStats) {
+          if (!this.currentUser) return;
+          Object.assign(this.currentUser.stats, newStats);
+          localStorage.setItem(
+            "butterflyUser",
+            JSON.stringify(this.currentUser)
+          );
+
+          const users = JSON.parse(
+            localStorage.getItem("butterflyUsers") || "[]"
+          );
+          const userIndex = users.findIndex(
+            (u) => u.id === this.currentUser.id
+          );
+          if (userIndex !== -1) {
+            users[userIndex] = this.currentUser;
+            localStorage.setItem("butterflyUsers", JSON.stringify(users));
+          }
+        }
+
+        getCurrentUser() {
+          return this.currentUser;
+        }
+
+        isAuthenticated() {
+          return this.currentUser !== null;
+        }
+      }
+
+      const auth = new ButterflyAuth();
+
+      if (auth.isAuthenticated()) {
+        auth.redirectToHub();
+      }
+
+      const signinForm = document.getElementById("signinForm");
+      const signupForm = document.getElementById("signupForm");
+      const socialButtons = document.querySelectorAll(".social-btn");
+      const guestLink = document.getElementById("guest-login-link");
+      const forgotPasswordLink = document.getElementById(
+        "forgot-password-link"
+      );
+      const termsLink = document.getElementById("terms-link");
+      const privacyLink = document.getElementById("privacy-link");
+      const passwordInput = document.getElementById("signup-password");
+      const passwordStrengthBar = document.getElementById("password-strength");
+      const signinMethodSelect = document.getElementById("signin-method");
+      const signinIdentifierInput =
+        document.getElementById("signin-identifier");
+      const signinIdentifierLabel = document.getElementById(
+        "signin-identifier-label"
+      );
+      const resetModal = document.getElementById("resetModal");
+      const resetForm = document.getElementById("resetForm");
+      const resetStatus = document.getElementById("resetStatus");
+      const resetIdentifierInput = document.getElementById("reset-identifier");
+      const resetPasswordField = document.getElementById("reset-password");
+      const resetConfirmPasswordField = document.getElementById(
+        "reset-confirm-password"
+      );
+      const closeResetModalButton = document.getElementById("closeResetModal");
+
+      function getRedirectUri(path) {
+        if (!path) return window.location.href;
+        const origin = window.location.origin;
+        if (!origin || origin === "null") {
+          return path; // When running from file:// provide relative path placeholder
+        }
+        return `${origin}${path}`;
+      }
+
+      function buildOAuthUrl(provider) {
+        const config = OAUTH_CONFIG[provider];
+        if (!config) return null;
+        const redirectUri = getRedirectUri(config.redirectPath);
+        const state =
+          (crypto.randomUUID && crypto.randomUUID()) || Date.now().toString();
+        localStorage.setItem(`butterflyOAuth:${provider}:state`, state);
+
+        const params = new URLSearchParams({
+          response_type: "code",
+          client_id: config.clientId,
+          redirect_uri: redirectUri,
+          scope: config.scope,
+          state,
+        });
+
+        if (config.extraParams) {
+          Object.entries(config.extraParams).forEach(([key, value]) => {
+            params.set(key, value);
+          });
+        }
+
+        return `${config.authUrl}?${params.toString()}`;
+      }
+
+      function simulateSocialLogin(provider) {
+        try {
+          const user = auth.socialLogin(provider.toLowerCase());
+          showMessage(
+            "signin-success",
+            `Welcome ${user.username}! Redirecting...`
+          );
+          setTimeout(() => auth.redirectToHub(), 1500);
+        } catch (error) {
+          showMessage("signin-error", "Social login failed. Please try again.");
+        }
+      }
+
+      function beginOAuthLogin(provider) {
+        const config = OAUTH_CONFIG[provider];
+        if (!config) {
+          simulateSocialLogin(provider);
+          return;
+        }
+
+        if (!config.clientId || config.clientId.startsWith("YOUR_")) {
+          alert(
+            `Add your ${provider} OAuth client ID in butterfly-auth.html to launch the official login flow.`
+          );
+          simulateSocialLogin(provider);
+          return;
+        }
+
+        const url = buildOAuthUrl(provider);
+        if (!url) {
+          simulateSocialLogin(provider);
+          return;
+        }
+
+        window.location.href = url;
+      }
+      function showForm(event, type) {
+        document.querySelectorAll(".form-section").forEach((section) => {
+          section.classList.remove("active");
+        });
+
+        document.querySelectorAll(".tab-btn").forEach((btn) => {
+          btn.classList.remove("active");
+        });
+
+        document.getElementById(`${type}-form`).classList.add("active");
+        event.currentTarget.classList.add("active");
+        clearMessages();
+      }
+
+      function clearMessages() {
+        document
+          .querySelectorAll(".error-message, .success-message")
+          .forEach((element) => {
+            element.style.display = "none";
+            element.textContent = "";
+          });
+      }
+
+      function showMessage(elementId, message) {
+        const element = document.getElementById(elementId);
+        element.textContent = message;
+        element.style.display = "block";
+      }
+
+      function openResetModal(prefillIdentifier = "") {
+        if (!resetModal || !resetForm || !resetIdentifierInput) return;
+        resetForm.reset();
+        resetModal.hidden = false;
+        document.body.style.overflow = "hidden";
+        hideResetStatus();
+        if (prefillIdentifier) {
+          resetIdentifierInput.value = prefillIdentifier;
+        }
+        resetIdentifierInput.focus();
+      }
+
+      function closeResetModal() {
+        if (!resetModal) return;
+        resetModal.hidden = true;
+        document.body.style.overflow = "";
+      }
+
+      function hideResetStatus() {
+        if (!resetStatus) return;
+        resetStatus.style.display = "none";
+        resetStatus.textContent = "";
+        resetStatus.classList.remove("success", "error");
+      }
+
+      function showResetStatus(message, type) {
+        if (!resetStatus) return;
+        hideResetStatus();
+        resetStatus.textContent = message;
+        if (type) {
+          resetStatus.classList.add(type);
+        }
+        resetStatus.style.display = "block";
+      }
+
+      function checkPasswordStrength(password) {
+        if (password.length < 6) {
+          passwordStrengthBar.className = "password-strength weak";
+        } else if (
+          password.length < 10 ||
+          !/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password)
+        ) {
+          passwordStrengthBar.className = "password-strength medium";
+        } else {
+          passwordStrengthBar.className = "password-strength strong";
+        }
+      }
+
+      function updateSigninIdentifierUI() {
+        if (!signinMethodSelect || !signinIdentifierLabel) return;
+        const method = signinMethodSelect.value;
+        if (method === "username") {
+          signinIdentifierLabel.textContent = "Username";
+          signinIdentifierInput.placeholder = "Enter your username";
+        } else {
+          signinIdentifierLabel.textContent = "Email Address";
+          signinIdentifierInput.placeholder = "Enter your email";
+        }
+      }
+
+      if (signinMethodSelect) {
+        signinMethodSelect.addEventListener("change", updateSigninIdentifierUI);
+        updateSigninIdentifierUI();
+      }
+
+      signinForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        clearMessages();
+
+        const method = signinMethodSelect.value;
+        const identifier = signinIdentifierInput.value.trim();
+        const password = document.getElementById("signin-password").value;
+        const rememberMe = document.getElementById("remember-me").checked;
+
+        if (!identifier) {
+          showMessage(
+            "signin-error",
+            method === "username"
+              ? "Please enter your username."
+              : "Please enter your email address."
+          );
+          return;
+        }
+
+        try {
+          auth.signIn(identifier, password, rememberMe, method);
+          showMessage(
+            "signin-success",
+            "Welcome back! Redirecting to Butterfly Hub..."
+          );
+          setTimeout(() => auth.redirectToHub(), 1500);
+        } catch (error) {
+          showMessage("signin-error", error.message);
+        }
+      });
+
+      signupForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        clearMessages();
+
+        const username = document.getElementById("signup-username").value;
+        const email = document.getElementById("signup-email").value;
+        const password = document.getElementById("signup-password").value;
+        const confirmPassword = document.getElementById(
+          "signup-confirm-password"
+        ).value;
+        const age = document.getElementById("signup-age").value;
+        const termsAgreed = document.getElementById("terms-agreement").checked;
+
+        if (password !== confirmPassword) {
+          showMessage("signup-error", "Passwords do not match!");
+          return;
+        }
+
+        if (!termsAgreed) {
+          showMessage(
+            "signup-error",
+            "You must agree to the Terms of Service and Privacy Policy."
+          );
+          return;
+        }
+
+        try {
+          auth.signUp({ username, email, password, age });
+          showMessage(
+            "signup-success",
+            "Account created successfully! Redirecting..."
+          );
+          setTimeout(() => auth.redirectToHub(), 1500);
+        } catch (error) {
+          showMessage("signup-error", error.message);
+        }
+      });
+
+      if (socialButtons.length > 0) {
+        socialButtons.forEach((button) => {
+          button.addEventListener("click", () => {
+            const provider = button.dataset.provider;
+            clearMessages();
+            beginOAuthLogin(provider);
+          });
+        });
+      }
+
+      guestLink.addEventListener("click", (event) => {
+        event.preventDefault();
+        auth.guestLogin();
+        window.location.href = HUB_PATH;
+      });
+
+      forgotPasswordLink.addEventListener("click", (event) => {
+        event.preventDefault();
+        const prefillValue = signinIdentifierInput.value.trim();
+        openResetModal(prefillValue);
+      });
+
+      termsLink.addEventListener("click", (event) => {
+        event.preventDefault();
+        alert(
+          "Terms of Service: This is a demo application. In a real app, this would show the full terms of service."
+        );
+      });
+
+      privacyLink.addEventListener("click", (event) => {
+        event.preventDefault();
+        alert(
+          "Privacy Policy: This demo stores data locally in your browser. No data is sent to external servers."
+        );
+      });
+
+      passwordInput.addEventListener("input", (event) => {
+        checkPasswordStrength(event.target.value);
+      });
+
+      if (closeResetModalButton) {
+        closeResetModalButton.addEventListener("click", (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          closeResetModal();
+        });
+      }
+
+      document.addEventListener("click", (event) => {
+        const closeButton = event.target.closest(".reset-close");
+        if (closeButton) {
+          event.preventDefault();
+          closeResetModal();
+        }
+      });
+
+      if (resetModal) {
+        resetModal.addEventListener("click", (event) => {
+          if (event.target === resetModal) {
+            closeResetModal();
+          }
+        });
+      }
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && resetModal && !resetModal.hidden) {
+          closeResetModal();
+        }
+      });
+
+      if (resetForm) {
+        resetForm.addEventListener("submit", (event) => {
+          event.preventDefault();
+          hideResetStatus();
+
+          const identifier = resetIdentifierInput.value.trim();
+          const newPassword = resetPasswordField.value;
+          const confirmPassword = resetConfirmPasswordField.value;
+
+          if (!identifier) {
+            showResetStatus(
+              "Please enter the email or username on your account.",
+              "error"
+            );
+            return;
+          }
+
+          if (newPassword.length < 6) {
+            showResetStatus(
+              "Passwords need to be at least 6 characters.",
+              "error"
+            );
+            return;
+          }
+
+          if (newPassword !== confirmPassword) {
+            showResetStatus("Passwords do not match.", "error");
+            return;
+          }
+
+          try {
+            auth.resetPassword(identifier, newPassword);
+            showResetStatus(
+              "Password updated! You can sign in with the new password now.",
+              "success"
+            );
+            setTimeout(() => {
+              closeResetModal();
+              resetForm.reset();
+            }, 1800);
+          } catch (error) {
+            showResetStatus(error.message, "error");
+          }
+        });
+      }
+    </script>
+  </body>
+</html>

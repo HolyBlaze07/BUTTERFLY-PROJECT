@@ -57,8 +57,9 @@ body.newyear-theme {
   display: none;
 }
 
+/* Panels are hidden in game mode by default */
 #gameMode .seasonal-challenges-panel {
-  display: block;
+  display: none;
 }
 
 .seasonal-title {

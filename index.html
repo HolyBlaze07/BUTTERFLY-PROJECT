@@ -10,17 +10,33 @@
       href="assets/butterfly.png"
       alt="butterfly icon"
     />
+    <!-- Butterfly Theme System -->
+    <script src="js/butterfly-theme.js"></script>
+    <link rel="stylesheet" href="css/theme-selector.css" />
+    <script src="js/theme-selector.js" defer></script>
     <link rel="stylesheet" href="css/styles.css" />
     <link rel="stylesheet" href="css/game.css" />
     <link rel="stylesheet" href="css/seasonal.css" />
+    <link rel="stylesheet" href="css/challenges-preview.css" />
   </head>
   <body>
     <!-- Display Mode -->
     <div id="displayMode" class="mode-section active">
       <!-- Mode Toggle Button -->
       <button id="modeToggle" class="mode-toggle">Play Game</button>
+
+      <!-- Options Button -->
+      <button class="options-btn" onclick="openOptionsModal()" title="Options">
+        Options
+      </button>
+
       <button class="hub-button" onclick="window.location.href='hub.html'">
-        🦋 Back to Hub
+        <img
+          src="assets/butterfly.png"
+          alt="butterfly"
+          class="hub-button-icon"
+        />
+        Back to Hub
       </button>
 
       <div class="stars" id="stars"></div>
@@ -51,6 +67,22 @@
           </div>
         </div>
       </div>
+
+      <!-- Challenges Container -->
+      <div class="challenges-preview-container">
+        <!-- Daily Challenges Preview Panel (Trigger) -->
+        <div
+          class="daily-challenges-panel"
+          onclick="openDailyChallengesModal()"
+        >
+          <div class="challenges-title">🗓️ Daily Challenges</div>
+        </div>
+
+        <!-- Seasonal Events Preview Panel (Trigger) -->
+        <div class="seasonal-challenges-panel" onclick="openSeasonalModal()">
+          <div class="seasonal-title">🎉 Seasonal Event</div>
+        </div>
+      </div>
     </div>
 
     <!-- Game Mode -->
@@ -67,14 +99,19 @@
           <div>Butterflies: <span id="butterflyCount">0</span></div>
         </div>
 
-        <!-- Restart Game Button -->
-        <button
-          class="restart-game-btn"
-          onclick="restartGame()"
-          title="Restart Game"
-        >
-          Restart Game
-        </button>
+        <!-- Game Control Buttons -->
+        <div class="game-control-buttons">
+          <button
+            class="restart-game-btn"
+            onclick="restartGame()"
+            title="Restart Game"
+          >
+            🔄 Restart
+          </button>
+          <button class="exit-game-btn" onclick="exitGame()" title="Exit Game">
+            ✖ Exit
+          </button>
+        </div>
 
         <!-- Worldwide Records Panel -->
         <div class="records-panel">
@@ -110,14 +147,17 @@
               </div>
             </div>
 
-            <div style="margin-top: 15px">
-              <input
-                type="text"
-                class="name-input"
-                id="playerName"
-                placeholder="Enter your name"
-                maxlength="20"
-              />
+            <div class="score-submit-row">
+              <div class="name-field-wrapper">
+                <input
+                  type="text"
+                  class="name-input"
+                  id="playerName"
+                  placeholder="Enter your name"
+                  maxlength="20"
+                />
+                <div id="playerNameDisplay" class="name-display" hidden></div>
+              </div>
               <button class="submit-score-btn" onclick="submitScore()">
                 Submit Score
               </button>
@@ -182,80 +222,16 @@
             View Leaderboard
           </button>
         </div>
-        <!-- Daily Challenges Panel -->
-        <div class="daily-challenges-panel">
-          <div class="challenges-title">
-            🗓️ Daily Challenges
-            <button
-              class="panel-toggle-btn"
-              onclick="togglePanel('challenges')"
-              title="Minimize"
-            >
-              −
-            </button>
-          </div>
-          <div class="challenges-content">
-            <div class="daily-streak" id="dailyStreak">
-              <div class="streak-number" id="streakNumber">0</div>
-              <div class="streak-text">Day Streak</div>
-            </div>
 
-            <div class="daily-timer">
-              <div class="timer-label">New Challenges In</div>
-              <div class="timer-countdown" id="timerCountdown">23:59:59</div>
-            </div>
-
-            <div id="dailyChallenges">
-              <!-- Challenges will be populated here -->
-            </div>
-
-            <div class="weekly-progress">
-              <div class="weekly-title">Weekly Progress</div>
-              <div class="week-days" id="weekDays">
-                <!-- Days will be populated here -->
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Seasonal Challenges Panel -->
-        <div class="seasonal-challenges-panel">
-          <div class="seasonal-title">
-            🎉 Seasonal Event
-            <button
-              class="panel-toggle-btn"
-              onclick="togglePanel('seasonal')"
-              title="Minimize"
-            >
-              −
-            </button>
-          </div>
-          <div class="challenges-content">
-            <div class="season-info">
-              <div class="season-name">Spring Bloom</div>
-              <div class="season-end">Ends: May 31</div>
-            </div>
-
-            <div class="seasonal-event-banner">
-              🦋 Spring Bloom Event Active! 🦋
-            </div>
-
-            <div class="seasonal-timer">
-              <div class="timer-label">Event Ends In</div>
-              <div class="timer-countdown" id="seasonalTimer">30d 12h 45m</div>
-            </div>
-
-            <div class="seasonal-challenges-list" id="seasonalChallengesList">
-              <!-- Seasonal challenges will be populated here -->
-            </div>
-
-            <div class="seasonal-collection">
-              <div class="collection-title">🦋 Collection</div>
-              <div class="collection-grid" id="seasonalCollectionGrid">
-                <!-- Collection items will be populated here -->
-              </div>
-            </div>
-          </div>
+        <!-- Hidden elements for data sync -->
+        <div style="display: none">
+          <div id="dailyChallenges"></div>
+          <div id="streakNumber"></div>
+          <div id="timerCountdown"></div>
+          <div id="weekDays"></div>
+          <div id="seasonalChallengesList"></div>
+          <div id="seasonalTimer"></div>
+          <div id="seasonalCollectionGrid"></div>
         </div>
 
         <div id="butterflyContainer"></div>
@@ -313,5 +289,295 @@
     <script src="js/daily-challenges.js"></script>
     <script src="js/seasonal-challenges.js"></script>
     <script src="js/mode-toggle.js"></script>
+    <script>
+      // Initialize preview panels after everything loads
+      function syncPreviewPanels() {
+        // Sync daily challenges preview
+        setTimeout(() => {
+          const mainContainer = document.getElementById("dailyChallenges");
+          const previewContainer = document.getElementById(
+            "dailyChallengesPreview"
+          );
+          if (mainContainer && previewContainer) {
+            previewContainer.innerHTML = mainContainer.innerHTML;
+          }
+
+          // Sync streak display
+          const mainStreak = document.getElementById("streakNumber");
+          const previewStreak = document.getElementById("streakNumberPreview");
+          if (mainStreak && previewStreak) {
+            previewStreak.textContent = mainStreak.textContent;
+          }
+
+          // Sync timer
+          const mainTimer = document.getElementById("timerCountdown");
+          const previewTimer = document.getElementById("timerCountdownPreview");
+          if (mainTimer && previewTimer) {
+            previewTimer.textContent = mainTimer.textContent;
+          }
+
+          // Sync weekly progress
+          const mainWeekDays = document.getElementById("weekDays");
+          const previewWeekDays = document.getElementById("weekDaysPreview");
+          if (mainWeekDays && previewWeekDays) {
+            previewWeekDays.innerHTML = mainWeekDays.innerHTML;
+          }
+        }, 500);
+
+        // Sync seasonal challenges preview
+        setTimeout(() => {
+          if (
+            window.seasonalSystem &&
+            typeof window.seasonalSystem.getSeasonData === "function"
+          ) {
+            const seasonData = window.seasonalSystem.getSeasonData();
+
+            if (seasonData) {
+              // Update season info
+              const nameEl = document.getElementById("seasonNamePreview");
+              const endEl = document.getElementById("seasonEndPreview");
+              const bannerEl = document.getElementById(
+                "seasonalEventBannerPreview"
+              );
+
+              if (nameEl) nameEl.textContent = seasonData.name;
+              if (endEl) {
+                const end = seasonData.dates.end;
+                const monthNames = [
+                  "Jan",
+                  "Feb",
+                  "Mar",
+                  "Apr",
+                  "May",
+                  "Jun",
+                  "Jul",
+                  "Aug",
+                  "Sep",
+                  "Oct",
+                  "Nov",
+                  "Dec",
+                ];
+                endEl.textContent = `Ends: ${monthNames[end.month - 1]} ${
+                  end.day
+                }`;
+              }
+              if (bannerEl)
+                bannerEl.textContent = `🦋 ${seasonData.name} Event Active! 🦋`;
+
+              // Copy seasonal challenges list
+              const mainList = document.getElementById(
+                "seasonalChallengesList"
+              );
+              const previewList = document.getElementById(
+                "seasonalChallengesListPreview"
+              );
+              if (mainList && previewList) {
+                previewList.innerHTML = mainList.innerHTML;
+              }
+
+              // Copy timer
+              const mainSeasonTimer = document.getElementById("seasonalTimer");
+              const previewSeasonTimer = document.getElementById(
+                "seasonalTimerPreview"
+              );
+              if (mainSeasonTimer && previewSeasonTimer) {
+                previewSeasonTimer.textContent = mainSeasonTimer.textContent;
+              }
+
+              // Copy collection grid
+              const mainCollection = document.getElementById(
+                "seasonalCollectionGrid"
+              );
+              const previewCollection = document.getElementById(
+                "seasonalCollectionGridPreview"
+              );
+              if (mainCollection && previewCollection) {
+                previewCollection.innerHTML = mainCollection.innerHTML;
+              }
+            }
+          }
+        }, 500);
+      }
+
+      // Sync timers every second
+      setInterval(() => {
+        const mainTimer = document.getElementById("timerCountdown");
+        const previewTimer = document.getElementById("timerCountdownPreview");
+        if (mainTimer && previewTimer) {
+          previewTimer.textContent = mainTimer.textContent;
+        }
+
+        const mainSeasonTimer = document.getElementById("seasonalTimer");
+        const previewSeasonTimer = document.getElementById(
+          "seasonalTimerPreview"
+        );
+        if (mainSeasonTimer && previewSeasonTimer) {
+          previewSeasonTimer.textContent = mainSeasonTimer.textContent;
+        }
+      }, 1000);
+
+      // Initialize seasonal system on page load for preview modals
+      document.addEventListener("DOMContentLoaded", function () {
+        if (window.initSeasonalChallenges) {
+          window.initSeasonalChallenges();
+        }
+      });
+
+      // Initialize on page load
+      document.addEventListener("DOMContentLoaded", syncPreviewPanels);
+
+      // Re-sync when returning to display mode
+      window.addEventListener("modeChanged", syncPreviewPanels);
+
+      // Add click handlers for expand/collapse panels
+      document.addEventListener("DOMContentLoaded", function () {
+        const dailyPanel = document.querySelector(
+          "#displayMode .daily-challenges-panel"
+        );
+        const seasonalPanel = document.querySelector(
+          "#displayMode .seasonal-challenges-panel"
+        );
+
+        if (dailyPanel) {
+          dailyPanel.addEventListener("click", function (e) {
+            // Don't toggle if clicking the minimize button
+            if (e.target.classList.contains("panel-toggle-btn")) return;
+            this.classList.toggle("expanded");
+          });
+        }
+
+        if (seasonalPanel) {
+          seasonalPanel.addEventListener("click", function (e) {
+            // Don't toggle if clicking the minimize button
+            if (e.target.classList.contains("panel-toggle-btn")) return;
+            this.classList.toggle("expanded");
+          });
+        }
+      });
+    </script>
+
+    <!-- Daily Challenges Modal (at body level for proper z-index) -->
+    <div
+      class="challenges-modal"
+      id="dailyChallengesModal"
+      onclick="closeDailyChallengesModal(event)"
+    >
+      <div class="modal-content" onclick="event.stopPropagation()">
+        <button class="modal-close" onclick="closeDailyChallengesModal(event)">
+          ✕
+        </button>
+        <div class="modal-header">
+          <h2>🗓️ Daily Challenges</h2>
+        </div>
+        <div class="modal-body">
+          <div class="challenges-content" id="challenges-preview-content">
+            <div class="daily-streak" id="dailyStreakPreview">
+              <div class="streak-number" id="streakNumberPreview">0</div>
+              <div class="streak-text">Day Streak</div>
+            </div>
+
+            <div class="daily-timer">
+              <div class="timer-label">New Challenges In</div>
+              <div class="timer-countdown" id="timerCountdownPreview">
+                23:59:59
+              </div>
+            </div>
+
+            <div id="dailyChallengesPreview">
+              <!-- Challenges will be populated here -->
+            </div>
+
+            <div class="weekly-progress">
+              <div class="weekly-title">Weekly Progress</div>
+              <div class="week-days" id="weekDaysPreview">
+                <!-- Days will be populated here -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seasonal Event Modal (at body level for proper z-index) -->
+    <div
+      class="challenges-modal"
+      id="seasonalModal"
+      onclick="closeSeasonalModal(event)"
+    >
+      <div class="modal-content" onclick="event.stopPropagation()">
+        <button class="modal-close" onclick="closeSeasonalModal(event)">
+          ✕
+        </button>
+        <div class="modal-header">
+          <h2>🎉 Seasonal Event</h2>
+        </div>
+        <div class="modal-body">
+          <div class="challenges-content" id="seasonal-preview-content">
+            <div class="season-info">
+              <div class="season-name" id="seasonNamePreview">Loading...</div>
+              <div class="season-end" id="seasonEndPreview">...</div>
+            </div>
+
+            <div class="seasonal-event-banner" id="seasonalEventBannerPreview">
+              🦋 Event Active! 🦋
+            </div>
+
+            <div class="seasonal-timer">
+              <div class="timer-label">Event Ends In</div>
+              <div class="timer-countdown" id="seasonalTimerPreview">...</div>
+            </div>
+
+            <div
+              class="seasonal-challenges-list"
+              id="seasonalChallengesListPreview"
+            >
+              <!-- Seasonal challenges will be populated here -->
+            </div>
+
+            <div class="seasonal-collection">
+              <div class="collection-title">🦋 Collection</div>
+              <div class="collection-grid" id="seasonalCollectionGridPreview">
+                <!-- Collection items will be populated here -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Options Modal -->
+    <div
+      class="challenges-modal"
+      id="optionsModal"
+      onclick="closeOptionsModal(event)"
+    >
+      <div
+        class="modal-content options-modal-content"
+        onclick="event.stopPropagation()"
+      >
+        <button class="modal-close" onclick="closeOptionsModal(event)">
+          ✕
+        </button>
+        <div class="modal-header">
+          <h2>⚙️ Options</h2>
+        </div>
+        <div class="modal-body">
+          <div class="options-modal-body">
+            <div class="option-item">
+              <label class="option-label">
+                <span class="option-text">🔊 Music</span>
+                <button
+                  class="toggle-music-btn"
+                  id="toggleMusicBtn"
+                  onclick="toggleMusic()"
+                >
+                  <span id="musicStatus">🔊 ON</span>
+                </button>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

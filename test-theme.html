@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Theme Test</title>
+    <script src="js/butterfly-theme.js"></script>
+    <style>
+      body {
+        background: var(--bg-gradient);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-family: Arial, sans-serif;
+      }
+
+      .test-box {
+        padding: 3rem;
+        border: 3px solid var(--accent);
+        border-radius: 1rem;
+        box-shadow: 0 0 30px var(--glow-primary);
+        background: rgba(0, 0, 0, 0.3);
+        text-align: center;
+      }
+
+      button {
+        margin: 0.5rem;
+        padding: 1rem 2rem;
+        background: var(--accent);
+        color: white;
+        border: none;
+        border-radius: 2rem;
+        cursor: pointer;
+        font-size: 1rem;
+      }
+
+      button:hover {
+        box-shadow: 0 0 20px var(--glow-primary);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="test-box">
+      <h1>🦋 Theme System Test</h1>
+      <p>Current theme: <strong id="currentTheme">Loading...</strong></p>
+      <p>CSS Variables:</p>
+      <div
+        id="cssVars"
+        style="font-size: 0.9rem; opacity: 0.8; margin: 1rem 0"
+      ></div>
+
+      <div>
+        <button onclick="testTheme('default')">Default</button>
+        <button onclick="testTheme('cotton-candy')">Cotton Candy</button>
+        <button onclick="testTheme('moonlight')">Moonlight</button>
+        <button onclick="testTheme('holo-prism')">Holographic</button>
+      </div>
+
+      <div style="margin-top: 2rem">
+        <button onclick="checkLocalStorage()">Check localStorage</button>
+        <button onclick="clearStorage()">Clear Storage</button>
+      </div>
+
+      <div
+        id="output"
+        style="
+          margin-top: 2rem;
+          padding: 1rem;
+          background: rgba(0, 0, 0, 0.5);
+          border-radius: 0.5rem;
+          max-width: 500px;
+        "
+      ></div>
+    </div>
+
+    <script>
+      const USER_KEY = "butterflyUser";
+
+      function testTheme(skinId) {
+        console.log("Testing theme:", skinId);
+
+        // Get current user
+        let user = getUser();
+        console.log("Current user:", user);
+
+        // Update active skin
+        user.activeSkin = skinId;
+
+        // Add to owned skins if not there
+        if (!user.ownedSkins.includes(skinId)) {
+          user.ownedSkins.push(skinId);
+        }
+
+        // Save
+        localStorage.setItem(USER_KEY, JSON.stringify(user));
+        console.log("Saved user:", user);
+
+        // Apply theme
+        if (window.ButterflyTheme) {
+          window.ButterflyTheme.reload();
+          updateDisplay();
+        }
+      }
+
+      function getUser() {
+        const stored = localStorage.getItem(USER_KEY);
+        if (!stored) {
+          return {
+            plan: "free",
+            ownedSkins: ["default", "cotton-candy", "moonlight"],
+            activeSkin: "default",
+          };
+        }
+        return JSON.parse(stored);
+      }
+
+      function checkLocalStorage() {
+        const user = getUser();
+        const output = document.getElementById("output");
+        output.innerHTML = `<pre>${JSON.stringify(user, null, 2)}</pre>`;
+      }
+
+      function clearStorage() {
+        localStorage.removeItem(USER_KEY);
+        location.reload();
+      }
+
+      function updateDisplay() {
+        const user = getUser();
+        document.getElementById("currentTheme").textContent = user.activeSkin;
+
+        const root = document.documentElement;
+        const bgGradient =
+          getComputedStyle(root).getPropertyValue("--bg-gradient");
+        const accent = getComputedStyle(root).getPropertyValue("--accent");
+        const accent2 = getComputedStyle(root).getPropertyValue("--accent-2");
+
+        document.getElementById("cssVars").innerHTML = `
+                --bg-gradient: ${bgGradient}<br>
+                --accent: ${accent}<br>
+                --accent-2: ${accent2}
+            `;
+      }
+
+      // Initial display
+      setTimeout(updateDisplay, 100);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,1898 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Butterfly Pomodoro Tracker | Butterfly Hub</title>
+    <meta
+      name="description"
+      content="Cycle through neon focus sessions, log butterfly tasks, and visualize your streaks inside the Butterfly Hub Pomodoro tracker."
+    />
+    <meta
+      name="keywords"
+      content="butterfly hub, pomodoro timer, y2k productivity, focus tracker, streak calendar"
+    />
+    <meta name="author" content="Butterfly Hub" />
+    <meta name="theme-color" content="#ff6bd6" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Butterfly Pomodoro Tracker" />
+
+    <!-- Butterfly Theme System -->
+    <script src="../js/butterfly-theme.js"></script>
+    <link rel="stylesheet" href="../css/theme-selector.css" />
+    <script src="../js/theme-selector.js" defer></script>
+
+    <meta
+      property="og:description"
+      content="Stay in your flow state with a retro-futuristic Butterfly Hub Pomodoro console."
+    />
+    <meta property="og:image" content="../assets/Butterfly15.png" />
+    <meta property="og:url" content="butterfly-pomodoro.html" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/png" href="../assets/Butterfly15.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Press+Start+2P&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Butterfly Pomodoro Tracker",
+        "description": "Neon focus sessions, butterfly tasks, and streak analytics inside Butterfly Hub.",
+        "applicationCategory": "ProductivityApplication",
+        "operatingSystem": "Web Browser",
+        "url": "butterfly-pomodoro.html"
+      }
+    </script>
+    <style>
+      :root {
+        /* Theme System Variables (overridden by butterfly-theme.js) */
+        --bg-gradient: radial-gradient(
+          circle at top,
+          #1c2541,
+          #0b132b,
+          #000000
+        );
+        --accent: #52abf4;
+        --accent-2: #52abf4;
+        --glow-primary: rgba(82, 171, 244, 0.7);
+        --glow-secondary: rgba(82, 171, 244, 0.5);
+
+        /* Pomodoro-specific variables */
+        --bg-dark: #06011c;
+        --bg-deep: #1c0342;
+        --accent-pink: var(--accent);
+        --accent-cyan: var(--accent-2);
+        --accent-lime: #d0ff7e;
+        --text-primary: #fffefc;
+        --text-subtle: rgba(255, 255, 255, 0.75);
+        --panel-glow: var(--glow-secondary);
+        --radius-pill: 999px;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Orbitron", "Trebuchet MS", sans-serif;
+        background: var(--bg-gradient);
+        background-attachment: fixed;
+        color: var(--text-primary);
+        min-height: 100vh;
+        padding-bottom: 4rem;
+        overflow-x: hidden;
+      }
+
+      .scanlines::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image: linear-gradient(
+          rgba(255, 255, 255, 0.04) 50%,
+          transparent 50%
+        );
+        background-size: 100% 3px;
+        opacity: 0.25;
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      .grid-overlay::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image: repeating-linear-gradient(
+            0deg,
+            rgba(255, 255, 255, 0.05) 0,
+            transparent 1px,
+            transparent 80px
+          ),
+          repeating-linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.04) 0,
+            transparent 1px,
+            transparent 80px
+          );
+        opacity: 0.25;
+        mix-blend-mode: screen;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .site-header {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        background: rgba(12, 2, 33, 0.75);
+        backdrop-filter: blur(14px);
+        border-bottom: 2px solid rgba(255, 255, 255, 0.05);
+        padding: 1.5rem clamp(1.25rem, 5vw, 4rem);
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 1rem 2rem;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        text-decoration: none;
+        color: var(--text-primary);
+      }
+
+      .logo-icon {
+        width: 56px;
+        height: 56px;
+        object-fit: contain;
+        image-rendering: pixelated;
+        filter: drop-shadow(0 0 12px var(--panel-glow));
+      }
+
+      .logo-text {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.2;
+      }
+
+      .logo-label {
+        font-family: "Press Start 2P", cursive;
+        font-size: 0.7rem;
+        color: var(--accent-cyan);
+        letter-spacing: 1px;
+      }
+
+      .logo-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+      }
+
+      .tagline {
+        flex: 1;
+        min-width: 200px;
+        color: var(--text-subtle);
+        font-size: 0.95rem;
+      }
+
+      .user-chip {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.65rem 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: var(--radius-pill);
+        background: rgba(255, 255, 255, 0.04);
+        box-shadow: 0 0 12px rgba(255, 107, 214, 0.25);
+      }
+
+      .chip-icon {
+        width: 42px;
+        height: 42px;
+        image-rendering: pixelated;
+      }
+
+      .chip-label {
+        font-size: 0.7rem;
+        color: var(--accent-cyan);
+        letter-spacing: 1px;
+      }
+
+      .chip-name {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--accent-lime);
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: clamp(1rem, 5vw, 3rem);
+        position: relative;
+        z-index: 2;
+      }
+
+      .header-card {
+        margin: 2rem 0 2.5rem;
+        padding: 2rem;
+        border-radius: 24px;
+        background: linear-gradient(
+          135deg,
+          rgba(19, 5, 56, 0.9),
+          rgba(54, 12, 87, 0.9)
+        );
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 20px 60px rgba(5, 0, 20, 0.65);
+      }
+
+      .header-card h1 {
+        font-size: clamp(2rem, 4vw, 3rem);
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        color: var(--accent-pink);
+        text-shadow: 0 0 20px rgba(255, 107, 214, 0.7);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .hero-icons {
+        display: flex;
+        gap: 0.65rem;
+      }
+
+      .hero-icons img {
+        width: 36px;
+        height: 36px;
+        image-rendering: pixelated;
+      }
+
+      .header-card p {
+        max-width: 640px;
+        color: var(--text-subtle);
+        line-height: 1.6;
+      }
+
+      .nav-tabs {
+        margin: 2rem 0;
+        padding: 0.5rem;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.08);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.35rem;
+        justify-content: center;
+      }
+
+      .nav-tab {
+        padding: 0.65rem 1.5rem;
+        border-radius: var(--radius-pill);
+        border: 1px solid transparent;
+        background: transparent;
+        color: var(--text-primary);
+        font-weight: 600;
+        letter-spacing: 1px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+      }
+
+      .nav-tab.active {
+        background: linear-gradient(
+          135deg,
+          var(--accent-pink),
+          var(--accent-cyan)
+        );
+        color: #050012;
+        border-color: rgba(255, 255, 255, 0.4);
+        box-shadow: 0 0 20px rgba(255, 107, 214, 0.5);
+      }
+
+      .content-section {
+        display: none;
+        animation: fadeIn 0.4s ease forwards;
+      }
+
+      .content-section.active {
+        display: block;
+      }
+
+      .back-link {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 1.5rem;
+      }
+
+      .hub-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.6rem 1.4rem;
+        border-radius: var(--radius-pill);
+        text-decoration: none;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: var(--text-primary);
+        font-size: 0.85rem;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        transition: all 0.25s ease;
+      }
+
+      .hub-button img {
+        width: 28px;
+        height: 28px;
+        image-rendering: pixelated;
+      }
+
+      .hub-button:hover {
+        border-color: var(--accent-cyan);
+        color: var(--accent-cyan);
+        box-shadow: 0 0 15px rgba(93, 231, 255, 0.4);
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .panel {
+        border-radius: 24px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(7, 1, 30, 0.85);
+        box-shadow: 0 15px 40px rgba(4, 0, 12, 0.75);
+        padding: clamp(1.25rem, 3vw, 2.5rem);
+        margin-bottom: 2rem;
+      }
+
+      .panel h2 {
+        font-size: 1.2rem;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: var(--accent-cyan);
+        margin-bottom: 1rem;
+      }
+
+      .time-selector,
+      .timer-controls,
+      .time-selector .custom-time {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        justify-content: center;
+      }
+
+      .time-btn {
+        padding: 0.75rem 1.25rem;
+        border-radius: var(--radius-pill);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--text-primary);
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .time-btn.active {
+        border-color: var(--accent-pink);
+        background: rgba(255, 107, 214, 0.15);
+        box-shadow: 0 0 15px rgba(255, 107, 214, 0.45);
+      }
+
+      .custom-time input {
+        width: 70px;
+        padding: 0.6rem;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        background: rgba(255, 255, 255, 0.02);
+        color: var(--text-primary);
+        text-align: center;
+      }
+
+      .task-selector,
+      .task-section {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .task-selector {
+        flex-wrap: wrap;
+      }
+
+      .task-dropdown,
+      .task-input {
+        flex: 1;
+        min-width: 200px;
+        padding: 0.85rem 1rem;
+        border-radius: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.04);
+        color: var(--text-primary);
+      }
+
+      .add-task-btn {
+        padding: 0.85rem 1.5rem;
+        border-radius: var(--radius-pill);
+        border: none;
+        background: linear-gradient(
+          135deg,
+          var(--accent-pink),
+          var(--accent-cyan)
+        );
+        color: #050012;
+        font-weight: 700;
+        cursor: pointer;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: transform 0.25s ease;
+      }
+
+      .add-task-btn:hover {
+        transform: translateY(-2px);
+      }
+
+      .timer-display {
+        font-size: clamp(3rem, 12vw, 5rem);
+        text-align: center;
+        margin: 2rem 0;
+        font-family: "Press Start 2P", cursive;
+        color: var(--accent-lime);
+        text-shadow: 0 0 15px rgba(208, 255, 126, 0.8);
+      }
+
+      .timer-controls .control-btn {
+        padding: 0.85rem 1.5rem;
+        border-radius: 16px;
+        border: none;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .btn-play {
+        background: var(--accent-lime);
+        color: #050012;
+      }
+
+      .btn-pause {
+        background: var(--accent-cyan);
+        color: #050012;
+      }
+
+      .btn-done {
+        background: var(--accent-pink);
+        color: #050012;
+      }
+
+      .btn-skip {
+        background: rgba(255, 255, 255, 0.15);
+        color: var(--text-primary);
+      }
+
+      .control-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      }
+
+      .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        gap: 0.65rem;
+      }
+
+      .calendar-day,
+      .calendar-day-header {
+        padding: 0.65rem;
+        border-radius: 12px;
+        text-align: center;
+      }
+
+      .calendar-day {
+        background: rgba(255, 255, 255, 0.05);
+        cursor: pointer;
+        min-height: 70px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.95rem;
+        transition: border 0.3s ease;
+        border: 1px solid transparent;
+      }
+
+      .calendar-day.today {
+        border-color: var(--accent-pink);
+      }
+
+      .calendar-day.has-task {
+        border-color: var(--accent-cyan);
+      }
+
+      .calendar-day:hover {
+        border-color: rgba(255, 255, 255, 0.4);
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.25rem;
+        margin-bottom: 2rem;
+      }
+
+      .stat-card {
+        padding: 1.5rem;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        text-align: center;
+      }
+
+      .stat-value {
+        font-size: 2.25rem;
+        color: var(--accent-pink);
+        margin-bottom: 0.5rem;
+      }
+
+      .stat-label {
+        color: var(--text-subtle);
+        letter-spacing: 1px;
+        font-size: 0.85rem;
+      }
+
+      .chart-container {
+        height: 360px;
+        padding: 1rem;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        margin-bottom: 1.5rem;
+      }
+
+      .achievements-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1rem;
+      }
+
+      .achievement-card {
+        padding: 1.25rem;
+        border-radius: 18px;
+        border: 1px dashed rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.03);
+        text-align: center;
+      }
+
+      .achievement-card.unlocked {
+        border-color: var(--accent-lime);
+        background: rgba(208, 255, 126, 0.08);
+      }
+
+      .achievement-icon img {
+        width: 48px;
+        height: 48px;
+        image-rendering: pixelated;
+        margin-bottom: 0.75rem;
+      }
+
+      .achievement-title {
+        font-weight: 700;
+        margin-bottom: 0.35rem;
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(10px);
+        z-index: 20;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+      }
+
+      .modal.open {
+        display: flex;
+      }
+
+      .modal-content {
+        width: min(500px, 100%);
+        background: rgba(10, 0, 28, 0.95);
+        border-radius: 24px;
+        padding: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 25px 80px rgba(0, 0, 0, 0.7);
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+
+      .close-btn {
+        background: none;
+        border: none;
+        color: var(--text-primary);
+        font-size: 2rem;
+        cursor: pointer;
+      }
+
+      .form-group {
+        margin-bottom: 1rem;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 0.4rem;
+        color: var(--text-subtle);
+        font-size: 0.85rem;
+      }
+
+      .form-group input,
+      .form-group textarea,
+      .form-group select {
+        width: 100%;
+        padding: 0.75rem 0.9rem;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.04);
+        color: var(--text-primary);
+      }
+
+      .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.75rem;
+        margin-top: 1.5rem;
+      }
+
+      .btn-secondary,
+      .btn-primary {
+        padding: 0.75rem 1.5rem;
+        border-radius: var(--radius-pill);
+        border: none;
+        cursor: pointer;
+        text-transform: uppercase;
+        font-weight: 600;
+      }
+
+      .btn-secondary {
+        background: rgba(255, 255, 255, 0.08);
+        color: var(--text-primary);
+      }
+
+      .btn-primary {
+        background: linear-gradient(
+          135deg,
+          var(--accent-cyan),
+          var(--accent-pink)
+        );
+        color: #050012;
+      }
+
+      footer {
+        text-align: center;
+        color: var(--text-subtle);
+        font-size: 0.8rem;
+        margin-top: 3rem;
+      }
+
+      @media (max-width: 768px) {
+        .timer-controls {
+          flex-direction: column;
+        }
+
+        .calendar-day {
+          min-height: 60px;
+        }
+
+        .site-header {
+          position: static;
+        }
+      }
+    </style>
+  </head>
+  <body class="scanlines grid-overlay">
+    <header class="site-header">
+      <a class="logo" href="../hub.html">
+        <img
+          src="../assets/Butterfly15.png"
+          alt="Butterfly Hub logo"
+          class="logo-icon"
+        />
+        <div class="logo-text">
+          <span class="logo-label">Butterfly Hub</span>
+          <span class="logo-title">Pomodoro Tracker</span>
+        </div>
+      </a>
+      <p class="tagline">
+        Retro-futuristic focus loops for collectors, coders, and cosmic
+        dreamers.
+      </p>
+      <div class="user-chip" id="userChip" hidden>
+        <img
+          src="../assets/Butterfly18.png"
+          alt="Signed in user"
+          class="chip-icon"
+        />
+        <div>
+          <div class="chip-label">Signed in as</div>
+          <div class="chip-name" id="chipName">Butterfly Keeper</div>
+        </div>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="header-card" aria-labelledby="pomodoro-title">
+        <h1 id="pomodoro-title">
+          Neon Focus Console
+          <span class="hero-icons">
+            <img src="../assets/Butterfly4.png" alt="" aria-hidden="true" />
+            <img src="../assets/Butterfly8.png" alt="" aria-hidden="true" />
+            <img src="../assets/Butterfly12.png" alt="" aria-hidden="true" />
+          </span>
+        </h1>
+        <p>
+          Dial in your custom Pomodoro cadence, log themed butterfly tasks, pin
+          sessions on the holographic calendar, and watch streak charts glow.
+          Everything saves locally per Butterfly Hub profile, so your stats stay
+          with you.
+        </p>
+      </section>
+
+      <div class="back-link">
+        <a class="hub-button" href="../hub.html">
+          <img
+            src="../assets/Butterfly6.png"
+            alt="Return icon"
+            aria-hidden="true"
+          />
+          <span>Back to Hub</span>
+        </a>
+      </div>
+
+      <div class="nav-tabs" role="tablist">
+        <button
+          class="nav-tab active"
+          type="button"
+          onclick="switchTab('timer', this)"
+          aria-controls="timer-section"
+        >
+          Timer
+        </button>
+        <button
+          class="nav-tab"
+          type="button"
+          onclick="switchTab('tasks', this)"
+          aria-controls="tasks-section"
+        >
+          Tasks
+        </button>
+        <button
+          class="nav-tab"
+          type="button"
+          onclick="switchTab('calendar', this)"
+          aria-controls="calendar-section"
+        >
+          Calendar
+        </button>
+        <button
+          class="nav-tab"
+          type="button"
+          onclick="switchTab('achievements', this)"
+          aria-controls="achievements-section"
+        >
+          Achievements
+        </button>
+        <button
+          class="nav-tab"
+          type="button"
+          onclick="switchTab('stats', this)"
+          aria-controls="stats-section"
+        >
+          Statistics
+        </button>
+      </div>
+
+      <section
+        id="timer-section"
+        class="content-section active"
+        aria-live="polite"
+      >
+        <div class="panel">
+          <h2>Focus Timer</h2>
+          <div class="time-selector">
+            <button
+              class="time-btn active"
+              type="button"
+              onclick="setPresetTime(25, this)"
+            >
+              25 min
+            </button>
+            <button
+              class="time-btn"
+              type="button"
+              onclick="setPresetTime(15, this)"
+            >
+              15 min
+            </button>
+            <button
+              class="time-btn"
+              type="button"
+              onclick="setPresetTime(45, this)"
+            >
+              45 min
+            </button>
+            <div class="custom-time">
+              <input
+                type="number"
+                id="custom-minutes"
+                min="1"
+                max="120"
+                value="25"
+                onchange="updateCustomTime()"
+                aria-label="Custom focus minutes"
+              />
+              <span>minutes</span>
+            </div>
+          </div>
+
+          <div class="task-section">
+            <div class="task-selector">
+              <select
+                id="task-dropdown"
+                class="task-dropdown"
+                onchange="selectTask()"
+              >
+                <option value="">Select a task...</option>
+                <option value="study">Study Session</option>
+                <option value="work">Work Project</option>
+                <option value="read">Reading Ritual</option>
+                <option value="exercise">Movement Break</option>
+                <option value="meditate">Mindful Reset</option>
+                <option value="creative">Creative Burst</option>
+              </select>
+              <input
+                type="text"
+                id="custom-task"
+                class="task-input"
+                placeholder="Or name your own task"
+              />
+              <button
+                class="add-task-btn"
+                type="button"
+                onclick="addCustomTask()"
+              >
+                Add Task
+              </button>
+            </div>
+            <div
+              id="current-task"
+              style="font-size: 1.1rem; color: var(--accent-cyan)"
+            ></div>
+          </div>
+
+          <div class="timer-display" id="timer-display" aria-live="assertive">
+            25:00
+          </div>
+
+          <div class="timer-controls">
+            <button
+              class="control-btn btn-play"
+              id="play-btn"
+              type="button"
+              onclick="startTimer()"
+            >
+              Play
+            </button>
+            <button
+              class="control-btn btn-pause"
+              id="pause-btn"
+              type="button"
+              onclick="pauseTimer()"
+              style="display: none"
+            >
+              Pause
+            </button>
+            <button
+              class="control-btn btn-done"
+              id="done-btn"
+              type="button"
+              onclick="completeTask()"
+              style="display: none"
+            >
+              Done
+            </button>
+            <button
+              class="control-btn btn-skip"
+              id="skip-btn"
+              type="button"
+              onclick="skipToBreak()"
+              style="display: none"
+            >
+              Break
+            </button>
+          </div>
+
+          <label
+            style="
+              display: inline-flex;
+              gap: 0.5rem;
+              align-items: center;
+              justify-content: center;
+            "
+          >
+            <input type="checkbox" id="sound-toggle" checked />
+            Sound Effects
+          </label>
+        </div>
+      </section>
+
+      <section id="tasks-section" class="content-section" aria-hidden="true">
+        <div class="panel">
+          <h2>Task Management</h2>
+          <div id="task-list">
+            Create tasks via the focus console above to see them here.
+          </div>
+        </div>
+      </section>
+
+      <section id="calendar-section" class="content-section" aria-hidden="true">
+        <div class="panel">
+          <h2>Focus Calendar</h2>
+          <div class="calendar-container">
+            <div
+              class="calendar-header"
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 1rem;
+              "
+            >
+              <button class="nav-tab" type="button" onclick="previousMonth()">
+                Prev
+              </button>
+              <h3 id="calendar-month">Loading…</h3>
+              <button class="nav-tab" type="button" onclick="nextMonth()">
+                Next
+              </button>
+            </div>
+            <div class="calendar-grid" id="calendar-grid"></div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="achievements-section"
+        class="content-section"
+        aria-hidden="true"
+      >
+        <div class="panel">
+          <h2>Achievements</h2>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-value" id="total-sessions">0</div>
+              <div class="stat-label">Total Sessions</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="total-focus-time">0h</div>
+              <div class="stat-label">Focus Hours</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="current-streak">0</div>
+              <div class="stat-label">Day Streak</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="completion-rate">0%</div>
+              <div class="stat-label">Completion Rate</div>
+            </div>
+          </div>
+          <div class="chart-container">
+            <canvas
+              id="progress-chart"
+              aria-label="Daily session history"
+              role="img"
+            ></canvas>
+          </div>
+          <div class="achievements-grid" id="achievements-grid"></div>
+        </div>
+      </section>
+
+      <section id="stats-section" class="content-section" aria-hidden="true">
+        <div class="panel">
+          <h2>Weekly Stats</h2>
+          <div class="chart-container">
+            <canvas
+              id="weekly-chart"
+              aria-label="Weekly focus time bar chart"
+              role="img"
+            ></canvas>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      &copy; <span id="footerYear"></span> Butterfly Hub · Focus boldly.
+    </footer>
+
+    <div id="task-modal" class="modal" role="dialog" aria-modal="true">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Create Butterfly Task</h3>
+          <button
+            class="close-btn"
+            type="button"
+            onclick="closeTaskModal()"
+            aria-label="Close modal"
+          >
+            &times;
+          </button>
+        </div>
+        <form id="task-form">
+          <div class="form-group">
+            <label for="modal-task-name">Task Name</label>
+            <input type="text" id="modal-task-name" required />
+          </div>
+          <div class="form-group">
+            <label for="modal-task-color">Color Theme</label>
+            <select id="modal-task-color">
+              <option value="#ff6bd6">Butterfly Pink</option>
+              <option value="#5de7ff">Butterfly Cyan</option>
+              <option value="#d0ff7e">Butterfly Lime</option>
+              <option value="#a16bff">Butterfly Violet</option>
+              <option value="#ffb347">Butterfly Amber</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>
+              <input type="checkbox" id="modal-anytime" checked /> Anytime
+            </label>
+          </div>
+          <div id="modal-time-section" style="display: none">
+            <div class="form-group">
+              <label for="modal-start-time">Start Time</label>
+              <input type="time" id="modal-start-time" />
+            </div>
+            <div class="form-group">
+              <label for="modal-end-time">End Time</label>
+              <input type="time" id="modal-end-time" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="modal-repeat">Repeat</label>
+            <select id="modal-repeat">
+              <option value="none">No Repeat</option>
+              <option value="daily">Every Day</option>
+              <option value="weekly">Every Week</option>
+              <option value="monthly">Every Month</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="modal-tags">Tags</label>
+            <input
+              type="text"
+              id="modal-tags"
+              placeholder="focus, calm, deep work"
+            />
+          </div>
+          <div class="form-group">
+            <label for="modal-notes">Notes</label>
+            <textarea id="modal-notes" rows="3"></textarea>
+          </div>
+          <div class="form-actions">
+            <button
+              class="btn-secondary"
+              type="button"
+              onclick="closeTaskModal()"
+            >
+              Cancel
+            </button>
+            <button class="btn-primary" type="submit">Create Task</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      const AUTH_PAGE = "butterfly-auth.html";
+      const sessionKey = "butterflySessions";
+      const tasksKey = "butterflyTasks";
+      const calendarKey = "butterflyCalendar";
+      const achievementsKey = "butterflyAchievements";
+      const currentTaskKey = "butterflyCurrentTask";
+      const completedTasksKey = "butterflyCompletedTasks";
+
+      let focusDuration = 25 * 60;
+      let breakDuration = 5 * 60;
+      let currentTime = focusDuration;
+      let isRunning = false;
+      let isBreak = false;
+      let timer = null;
+      let currentTask = null;
+      let currentUser = null;
+      let selectedCalendarDate = null;
+      let progressChartInstance = null;
+      let weeklyChartInstance = null;
+
+      const sessions = JSON.parse(localStorage.getItem(sessionKey) || "[]");
+      const tasks = JSON.parse(localStorage.getItem(tasksKey) || "[]");
+      const calendarEvents = JSON.parse(
+        localStorage.getItem(calendarKey) || "[]"
+      );
+      let achievements = JSON.parse(
+        localStorage.getItem(achievementsKey) || "[]"
+      );
+
+      document.addEventListener("DOMContentLoaded", () => {
+        currentUser = getStoredUser();
+        if (!currentUser) {
+          window.location.href = AUTH_PAGE;
+          return;
+        }
+
+        hydrateUserChip();
+        initializeTimer();
+        initializeCalendar();
+        initializeAchievements();
+        updateStatistics();
+        checkAchievements();
+        hydrateFooter();
+
+        const anytimeToggle = document.getElementById("modal-anytime");
+        if (anytimeToggle) {
+          anytimeToggle.addEventListener("change", toggleAnytimeFields);
+        }
+
+        const taskForm = document.getElementById("task-form");
+        if (taskForm) {
+          taskForm.addEventListener("submit", handleTaskFormSubmit);
+        }
+      });
+
+      function hydrateFooter() {
+        const yearEl = document.getElementById("footerYear");
+        if (yearEl) {
+          yearEl.textContent = new Date().getFullYear();
+        }
+      }
+
+      function getStoredUser() {
+        try {
+          const raw = localStorage.getItem("butterflyUser");
+          return raw ? JSON.parse(raw) : null;
+        } catch (error) {
+          console.warn("Unable to parse butterflyUser", error);
+          return null;
+        }
+      }
+
+      function hydrateUserChip() {
+        const chip = document.getElementById("userChip");
+        const nameEl = document.getElementById("chipName");
+        if (!chip || !nameEl) return;
+        const displayName =
+          currentUser.username || currentUser.email || "Butterfly Keeper";
+        nameEl.textContent = displayName;
+        chip.hidden = false;
+      }
+
+      function initializeTimer() {
+        loadCurrentTask();
+        updateTimerDisplay();
+      }
+
+      function setPresetTime(minutes, button) {
+        focusDuration = minutes * 60;
+        if (!isBreak) {
+          currentTime = focusDuration;
+          updateTimerDisplay();
+        }
+        document
+          .querySelectorAll(".time-btn")
+          .forEach((btn) => btn.classList.remove("active"));
+        if (button) {
+          button.classList.add("active");
+        }
+        const customInput = document.getElementById("custom-minutes");
+        if (customInput) {
+          customInput.value = minutes;
+        }
+      }
+
+      function updateCustomTime() {
+        const minutes = parseInt(
+          document.getElementById("custom-minutes").value,
+          10
+        );
+        if (Number.isNaN(minutes) || minutes < 1 || minutes > 120) return;
+        focusDuration = minutes * 60;
+        if (!isBreak) {
+          currentTime = focusDuration;
+          updateTimerDisplay();
+        }
+        document
+          .querySelectorAll(".time-btn")
+          .forEach((btn) => btn.classList.remove("active"));
+      }
+
+      function updateTimerDisplay() {
+        const minutes = Math.floor(currentTime / 60)
+          .toString()
+          .padStart(2, "0");
+        const seconds = (currentTime % 60).toString().padStart(2, "0");
+        const display = document.getElementById("timer-display");
+        if (display) {
+          display.textContent = `${minutes}:${seconds}`;
+        }
+      }
+
+      function playTickSound() {
+        const audioContext = new (window.AudioContext ||
+          window.webkitAudioContext)();
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        oscillator.frequency.value = 820;
+        oscillator.type = "triangle";
+        gainNode.gain.setValueAtTime(0.08, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(
+          0.01,
+          audioContext.currentTime + 0.1
+        );
+        oscillator.start();
+        oscillator.stop(audioContext.currentTime + 0.1);
+      }
+
+      function playCompletionSound() {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(523.25, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(
+          783.99,
+          ctx.currentTime + 0.4
+        );
+        gain.gain.setValueAtTime(0.25, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.6);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.6);
+      }
+
+      function startTimer() {
+        if (currentTime <= 0) return;
+        if (timer) clearInterval(timer);
+        isRunning = true;
+        toggleTimerButtons(true);
+        timer = setInterval(() => {
+          currentTime -= 1;
+          updateTimerDisplay();
+          if (
+            currentTime % 60 === 0 &&
+            document.getElementById("sound-toggle").checked
+          ) {
+            playTickSound();
+          }
+          if (currentTime <= 0) {
+            completeSession();
+          }
+        }, 1000);
+      }
+
+      function pauseTimer() {
+        isRunning = false;
+        clearInterval(timer);
+        toggleTimerButtons(false);
+      }
+
+      function toggleTimerButtons(running) {
+        document.getElementById("play-btn").style.display = running
+          ? "none"
+          : "inline-block";
+        document.getElementById("pause-btn").style.display = running
+          ? "inline-block"
+          : "none";
+        document.getElementById("done-btn").style.display = running
+          ? "inline-block"
+          : "none";
+        document.getElementById("skip-btn").style.display = running
+          ? "inline-block"
+          : "none";
+      }
+
+      function completeSession() {
+        clearInterval(timer);
+        isRunning = false;
+        if (document.getElementById("sound-toggle").checked) {
+          playCompletionSound();
+        }
+        recordSession();
+        if (!isBreak) {
+          isBreak = true;
+          currentTime = breakDuration;
+          updateTimerDisplay();
+          toggleTimerButtons(false);
+          setTimeout(() => {
+            if (document.getElementById("sound-toggle").checked) {
+              playTickSound();
+            }
+            startTimer();
+          }, 1200);
+        } else {
+          isBreak = false;
+          currentTime = focusDuration;
+          updateTimerDisplay();
+          toggleTimerButtons(false);
+        }
+        updateStatistics();
+        checkAchievements();
+      }
+
+      function completeTask() {
+        clearInterval(timer);
+        isRunning = false;
+        recordCompletedTask();
+        isBreak = false;
+        currentTime = focusDuration;
+        updateTimerDisplay();
+        document.getElementById("current-task").textContent = "";
+        toggleTimerButtons(false);
+        currentTask = null;
+        localStorage.removeItem(currentTaskKey);
+        updateStatistics();
+        checkAchievements();
+      }
+
+      function skipToBreak() {
+        isBreak = true;
+        currentTime = breakDuration;
+        updateTimerDisplay();
+        if (!isRunning) {
+          startTimer();
+        }
+      }
+
+      function recordSession() {
+        if (!currentUser) return;
+        const session = {
+          id: Date.now(),
+          task: currentTask,
+          duration: isBreak ? breakDuration : focusDuration,
+          isBreak,
+          completedAt: new Date().toISOString(),
+          userId: currentUser.id,
+        };
+        sessions.push(session);
+        localStorage.setItem(sessionKey, JSON.stringify(sessions));
+      }
+
+      function recordCompletedTask() {
+        if (!currentTask) return;
+        const completedTasks = JSON.parse(
+          localStorage.getItem(completedTasksKey) || "[]"
+        );
+        completedTasks.push({
+          ...currentTask,
+          completedAt: new Date().toISOString(),
+          actualDuration: focusDuration - currentTime,
+        });
+        localStorage.setItem(completedTasksKey, JSON.stringify(completedTasks));
+      }
+
+      function selectTask() {
+        const dropdown = document.getElementById("task-dropdown");
+        const value = dropdown.value;
+        if (!value) return;
+        const label = dropdown.options[dropdown.selectedIndex].text;
+        currentTask = {
+          id: Date.now(),
+          name: label,
+          type: value,
+          createdAt: new Date().toISOString(),
+        };
+        persistCurrentTask();
+        document.getElementById(
+          "current-task"
+        ).textContent = `Current Task: ${label}`;
+      }
+
+      function addCustomTask() {
+        const input = document.getElementById("custom-task");
+        const name = input.value.trim();
+        if (!name) return;
+        currentTask = {
+          id: Date.now(),
+          name,
+          type: "custom",
+          createdAt: new Date().toISOString(),
+        };
+        tasks.push(currentTask);
+        localStorage.setItem(tasksKey, JSON.stringify(tasks));
+        persistCurrentTask();
+        document.getElementById(
+          "current-task"
+        ).textContent = `Current Task: ${name}`;
+        input.value = "";
+      }
+
+      function persistCurrentTask() {
+        if (!currentTask) return;
+        localStorage.setItem(currentTaskKey, JSON.stringify(currentTask));
+      }
+
+      function loadCurrentTask() {
+        try {
+          const stored = JSON.parse(localStorage.getItem(currentTaskKey));
+          if (stored) {
+            currentTask = stored;
+            document.getElementById(
+              "current-task"
+            ).textContent = `Current Task: ${currentTask.name}`;
+          }
+        } catch (error) {
+          console.warn("Failed to load task", error);
+        }
+      }
+
+      function initializeCalendar() {
+        const now = new Date();
+        renderCalendar(now.getFullYear(), now.getMonth());
+      }
+
+      function renderCalendar(year, month) {
+        const firstDay = new Date(year, month, 1);
+        const startDate = new Date(firstDay);
+        startDate.setDate(startDate.getDate() - firstDay.getDay());
+        const calendarGrid = document.getElementById("calendar-grid");
+        const monthNames = [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "November",
+          "December",
+        ];
+        document.getElementById(
+          "calendar-month"
+        ).textContent = `${monthNames[month]} ${year}`;
+        calendarGrid.innerHTML = "";
+        const dayHeaders = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        dayHeaders.forEach((day) => {
+          const header = document.createElement("div");
+          header.className = "calendar-day-header";
+          header.textContent = day;
+          calendarGrid.appendChild(header);
+        });
+        const today = new Date();
+        for (let i = 0; i < 42; i += 1) {
+          const date = new Date(startDate);
+          date.setDate(startDate.getDate() + i);
+          const dayElement = document.createElement("button");
+          dayElement.type = "button";
+          dayElement.className = "calendar-day";
+          dayElement.textContent = date.getDate();
+          if (date.toDateString() === today.toDateString()) {
+            dayElement.classList.add("today");
+          }
+          if (date.getMonth() !== month) {
+            dayElement.style.opacity = 0.35;
+            dayElement.disabled = true;
+          } else {
+            const hasEvents = calendarEvents.some((event) => {
+              const eventDate = new Date(event.date);
+              return (
+                eventDate.toDateString() === date.toDateString() &&
+                event.userId === currentUser.id
+              );
+            });
+            if (hasEvents) {
+              dayElement.classList.add("has-task");
+            }
+            dayElement.addEventListener("click", () => openTaskModal(date));
+          }
+          calendarGrid.appendChild(dayElement);
+        }
+      }
+
+      function previousMonth() {
+        const [monthName, year] = document
+          .getElementById("calendar-month")
+          .textContent.split(" ");
+        const monthIndex = new Date(`${monthName} 1, ${year}`).getMonth();
+        const newDate = new Date(parseInt(year, 10), monthIndex - 1, 1);
+        renderCalendar(newDate.getFullYear(), newDate.getMonth());
+      }
+
+      function nextMonth() {
+        const [monthName, year] = document
+          .getElementById("calendar-month")
+          .textContent.split(" ");
+        const monthIndex = new Date(`${monthName} 1, ${year}`).getMonth();
+        const newDate = new Date(parseInt(year, 10), monthIndex + 1, 1);
+        renderCalendar(newDate.getFullYear(), newDate.getMonth());
+      }
+
+      function openTaskModal(date) {
+        selectedCalendarDate = date;
+        const modal = document.getElementById("task-modal");
+        if (modal) {
+          modal.classList.add("open");
+        }
+      }
+
+      function closeTaskModal() {
+        const modal = document.getElementById("task-modal");
+        if (modal) {
+          modal.classList.remove("open");
+          modal.querySelector("form").reset();
+          const timeSection = document.getElementById("modal-time-section");
+          if (timeSection) timeSection.style.display = "none";
+        }
+      }
+
+      function toggleAnytimeFields(event) {
+        const timeSection = document.getElementById("modal-time-section");
+        if (!timeSection) return;
+        timeSection.style.display = event.target.checked ? "none" : "block";
+      }
+
+      function handleTaskFormSubmit(event) {
+        event.preventDefault();
+        if (!selectedCalendarDate) selectedCalendarDate = new Date();
+        createCalendarTask(selectedCalendarDate);
+      }
+
+      function createCalendarTask(date) {
+        const task = {
+          id: Date.now(),
+          name: document.getElementById("modal-task-name").value,
+          color: document.getElementById("modal-task-color").value,
+          date: date.toISOString(),
+          anytime: document.getElementById("modal-anytime").checked,
+          startTime: document.getElementById("modal-start-time").value,
+          endTime: document.getElementById("modal-end-time").value,
+          repeat: document.getElementById("modal-repeat").value,
+          tags: document
+            .getElementById("modal-tags")
+            .value.split(",")
+            .map((tag) => tag.trim())
+            .filter(Boolean),
+          notes: document.getElementById("modal-notes").value,
+          userId: currentUser.id,
+        };
+        calendarEvents.push(task);
+        localStorage.setItem(calendarKey, JSON.stringify(calendarEvents));
+        closeTaskModal();
+        initializeCalendar();
+      }
+
+      function updateStatistics() {
+        if (!currentUser) return;
+        const userSessions = sessions.filter(
+          (s) => s.userId === currentUser.id && !s.isBreak
+        );
+        const totalSessions = userSessions.length;
+        const totalEntries = sessions.filter(
+          (s) => s.userId === currentUser.id
+        ).length;
+        const totalFocusTime =
+          userSessions.reduce((sum, s) => sum + s.duration, 0) / 3600;
+        const completionRate =
+          totalEntries > 0
+            ? Math.round((totalSessions / totalEntries) * 100)
+            : 0;
+        document.getElementById("total-sessions").textContent = totalSessions;
+        document.getElementById(
+          "total-focus-time"
+        ).textContent = `${totalFocusTime.toFixed(1)}h`;
+        document.getElementById(
+          "completion-rate"
+        ).textContent = `${completionRate}%`;
+        document.getElementById("current-streak").textContent =
+          calculateStreak();
+        updateCharts();
+      }
+
+      function calculateStreak() {
+        const userSessions = sessions.filter(
+          (s) => s.userId === currentUser.id && !s.isBreak
+        );
+        if (userSessions.length === 0) return 0;
+        let streak = 0;
+        const today = new Date();
+        let cursor = new Date(today);
+        while (true) {
+          const hasSession = userSessions.some((session) => {
+            const sessionDate = new Date(session.completedAt);
+            return sessionDate.toDateString() === cursor.toDateString();
+          });
+          if (hasSession) {
+            streak += 1;
+            cursor.setDate(cursor.getDate() - 1);
+          } else {
+            break;
+          }
+        }
+        return streak;
+      }
+
+      function initializeAchievements() {
+        if (achievements.length === 0) {
+          achievements = [
+            {
+              id: "first-session",
+              title: "First Flight",
+              description: "Complete your first focus session",
+              icon: "../assets/Butterfly4.png",
+              requirement: 1,
+              type: "sessions",
+              unlocked: false,
+            },
+            {
+              id: "focus-novice",
+              title: "Focus Novice",
+              description: "Complete 5 focus sessions",
+              icon: "../assets/Butterfly8.png",
+              requirement: 5,
+              type: "sessions",
+              unlocked: false,
+            },
+            {
+              id: "streak-3",
+              title: "Consistent Flyer",
+              description: "Maintain a 3-day streak",
+              icon: "../assets/Butterfly12.png",
+              requirement: 3,
+              type: "streak",
+              unlocked: false,
+            },
+            {
+              id: "focus-master",
+              title: "Focus Master",
+              description: "Complete 25 focus sessions",
+              icon: "../assets/Butterfly15.png",
+              requirement: 25,
+              type: "sessions",
+              unlocked: false,
+            },
+          ];
+          localStorage.setItem(achievementsKey, JSON.stringify(achievements));
+        }
+        renderAchievements();
+      }
+
+      function renderAchievements() {
+        const container = document.getElementById("achievements-grid");
+        container.innerHTML = "";
+        achievements.forEach((achievement) => {
+          const card = document.createElement("div");
+          card.className = `achievement-card ${
+            achievement.unlocked ? "unlocked" : ""
+          }`;
+          card.innerHTML = `
+            <div class="achievement-icon"><img src="${
+              achievement.icon
+            }" alt="" /></div>
+            <div class="achievement-title">${achievement.title}</div>
+            <div class="achievement-description">${
+              achievement.description
+            }</div>
+            <div style="margin-top:10px; color:${
+              achievement.unlocked ? "var(--accent-lime)" : "var(--text-subtle)"
+            };">
+              ${achievement.unlocked ? "Unlocked" : "Locked"}
+            </div>
+          `;
+          container.appendChild(card);
+        });
+      }
+
+      function checkAchievements() {
+        const userSessions = sessions.filter(
+          (s) => s.userId === currentUser.id && !s.isBreak
+        );
+        const sessionCount = userSessions.length;
+        const streak = calculateStreak();
+        let updated = false;
+        achievements.forEach((achievement) => {
+          if (!achievement.unlocked) {
+            const meetsRequirement =
+              (achievement.type === "sessions" &&
+                sessionCount >= achievement.requirement) ||
+              (achievement.type === "streak" &&
+                streak >= achievement.requirement);
+            if (meetsRequirement) {
+              achievement.unlocked = true;
+              updated = true;
+            }
+          }
+        });
+        if (updated) {
+          localStorage.setItem(achievementsKey, JSON.stringify(achievements));
+          renderAchievements();
+        }
+      }
+
+      function updateCharts() {
+        updateProgressChart();
+        updateWeeklyChart();
+      }
+
+      function updateProgressChart() {
+        const canvas = document.getElementById("progress-chart");
+        if (!canvas) return;
+        const ctx = canvas.getContext("2d");
+        const userSessions = sessions.filter(
+          (s) => s.userId === currentUser.id && !s.isBreak
+        );
+        const sessionsByDate = {};
+        userSessions.forEach((session) => {
+          const date = new Date(session.completedAt).toDateString();
+          sessionsByDate[date] = (sessionsByDate[date] || 0) + 1;
+        });
+        const labels = Object.keys(sessionsByDate)
+          .sort((a, b) => new Date(a) - new Date(b))
+          .slice(-7);
+        const data = labels.map((date) => sessionsByDate[date]);
+        if (progressChartInstance) {
+          progressChartInstance.destroy();
+        }
+        progressChartInstance = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels,
+            datasets: [
+              {
+                label: "Daily Sessions",
+                data,
+                borderColor: "#ff6bd6",
+                backgroundColor: "rgba(255, 107, 214, 0.15)",
+                tension: 0.4,
+                fill: true,
+              },
+            ],
+          },
+          options: chartOptions(),
+        });
+      }
+
+      function updateWeeklyChart() {
+        const canvas = document.getElementById("weekly-chart");
+        if (!canvas) return;
+        const ctx = canvas.getContext("2d");
+        const userSessions = sessions.filter(
+          (s) => s.userId === currentUser.id && !s.isBreak
+        );
+        const weekDays = [
+          "Sunday",
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+        ];
+        const weeklyData = Array(7).fill(0);
+        userSessions.forEach((session) => {
+          const dayIndex = new Date(session.completedAt).getDay();
+          weeklyData[dayIndex] += session.duration / 60;
+        });
+        if (weeklyChartInstance) {
+          weeklyChartInstance.destroy();
+        }
+        weeklyChartInstance = new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: weekDays,
+            datasets: [
+              {
+                label: "Focus Minutes",
+                data: weeklyData,
+                backgroundColor: "rgba(93, 231, 255, 0.8)",
+                borderColor: "#5de7ff",
+                borderWidth: 1,
+              },
+            ],
+          },
+          options: chartOptions(),
+        });
+      }
+
+      function chartOptions() {
+        return {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              labels: {
+                color: "rgba(255,255,255,0.8)",
+              },
+            },
+          },
+          scales: {
+            x: {
+              ticks: { color: "rgba(255,255,255,0.7)" },
+              grid: { color: "rgba(255,255,255,0.1)" },
+            },
+            y: {
+              ticks: { color: "rgba(255,255,255,0.7)" },
+              grid: { color: "rgba(255,255,255,0.1)" },
+            },
+          },
+        };
+      }
+
+      function switchTab(tabName, button) {
+        document
+          .querySelectorAll(".nav-tab")
+          .forEach((tab) => tab.classList.remove("active"));
+        if (button) {
+          button.classList.add("active");
+        }
+        document.querySelectorAll(".content-section").forEach((section) => {
+          section.classList.remove("active");
+          section.setAttribute("aria-hidden", "true");
+        });
+        const activeSection = document.getElementById(`${tabName}-section`);
+        if (activeSection) {
+          activeSection.classList.add("active");
+          activeSection.removeAttribute("aria-hidden");
+        }
+        if (tabName === "stats") {
+          setTimeout(updateCharts, 150);
+        }
+      }
+
+      window.addEventListener("click", (event) => {
+        const modal = document.getElementById("task-modal");
+        if (
+          modal &&
+          modal.classList.contains("open") &&
+          event.target === modal
+        ) {
+          closeTaskModal();
+        }
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+          const modal = document.getElementById("task-modal");
+          if (modal && modal.classList.contains("open")) {
+            closeTaskModal();
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

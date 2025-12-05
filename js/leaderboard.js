@@ -12,6 +12,55 @@ let playerStats = JSON.parse(localStorage.getItem("butterflyStats")) || {
   achievements: [],
 };
 
+function getStoredUser() {
+  try {
+    const value = localStorage.getItem("butterflyUser");
+    return value ? JSON.parse(value) : null;
+  } catch (error) {
+    console.warn("Unable to parse butterflyUser", error);
+    return null;
+  }
+}
+
+function getActivePlayerName() {
+  const storedUser = getStoredUser();
+  if (storedUser && !storedUser.isGuest) {
+    return {
+      name:
+        storedUser.username ||
+        storedUser.email ||
+        `Keeper-${storedUser.id || "0000"}`,
+      fromStored: true,
+    };
+  }
+
+  const nameInput = document.getElementById("playerName");
+  return {
+    name: nameInput ? nameInput.value.trim() : "",
+    fromStored: false,
+  };
+}
+
+function syncPlayerNameUI() {
+  const nameInput = document.getElementById("playerName");
+  const nameDisplay = document.getElementById("playerNameDisplay");
+  const storedUser = getStoredUser();
+
+  if (!nameInput || !nameDisplay) return;
+
+  if (storedUser && !storedUser.isGuest) {
+    const displayName =
+      storedUser.username || storedUser.email || "Butterfly Keeper";
+    nameInput.style.display = "none";
+    nameDisplay.innerHTML = `Logged in as <span>${displayName}</span>`;
+    nameDisplay.removeAttribute("hidden");
+  } else {
+    nameInput.style.display = "block";
+    nameDisplay.setAttribute("hidden", "hidden");
+    nameDisplay.textContent = "";
+  }
+}
+
 // Initialize worldwide records if empty
 if (worldRecords.length === 0) {
   worldRecords = [
@@ -45,9 +94,11 @@ if (worldRecords.length === 0) {
 }
 
 function submitScore() {
-  const playerName = document.getElementById("playerName").value.trim();
+  const { name: playerName, fromStored } = getActivePlayerName();
   if (!playerName) {
-    alert("Please enter your name!");
+    alert(
+      "Please enter your name or sign in to Butterfly Hub before submitting a score."
+    );
     return;
   }
 
@@ -72,7 +123,10 @@ function submitScore() {
 
   alert("Score submitted successfully! 🎉");
   displayWorldwideRecords();
-  document.getElementById("playerName").value = "";
+  if (!fromStored) {
+    const nameInput = document.getElementById("playerName");
+    if (nameInput) nameInput.value = "";
+  }
 }
 
 function displayWorldwideRecords() {
@@ -212,4 +266,11 @@ function showLeaderboard() {
 setTimeout(() => {
   displayWorldwideRecords();
   updateStats();
+  syncPlayerNameUI();
 }, 100);
+
+window.addEventListener("storage", (event) => {
+  if (event.key === "butterflyUser") {
+    syncPlayerNameUI();
+  }
+});

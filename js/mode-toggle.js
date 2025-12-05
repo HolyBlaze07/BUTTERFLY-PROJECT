@@ -100,6 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
 }); // Toggle panel minimize/expand
 function togglePanel(panelName) {
   let panelClass;
+  let contentId;
 
   // Map panel names to their CSS class names
   if (panelName === "records") {
@@ -108,16 +109,85 @@ function togglePanel(panelName) {
     panelClass = "daily-challenges-panel";
   } else if (panelName === "seasonal") {
     panelClass = "seasonal-challenges-panel";
+  } else if (panelName === "challenges-preview") {
+    contentId = "challenges-preview-content";
+  } else if (panelName === "seasonal-preview") {
+    contentId = "seasonal-preview-content";
   } else {
     panelClass = `${panelName}-panel`;
   }
 
-  const panel = document.querySelector(`.${panelClass}`);
+  let panel;
+  if (contentId) {
+    const content = document.getElementById(contentId);
+    if (content) {
+      panel = content.closest(
+        ".daily-challenges-panel, .seasonal-challenges-panel"
+      );
+    }
+  } else {
+    panel = document.querySelector(`.${panelClass}`);
+  }
+
   if (!panel) return;
 
   const isMinimized = panel.classList.toggle("minimized");
   const toggleBtn = panel.querySelector(".panel-toggle-btn");
   if (toggleBtn) {
     toggleBtn.textContent = isMinimized ? "+" : "−";
+  }
+}
+
+// Daily challenges modal functions
+function openDailyChallengesModal() {
+  const modal = document.getElementById("dailyChallengesModal");
+  if (modal) {
+    modal.classList.add("active");
+  }
+}
+
+function closeDailyChallengesModal(event) {
+  if (event) {
+    event.stopPropagation();
+  }
+  const modal = document.getElementById("dailyChallengesModal");
+  if (modal) {
+    modal.classList.remove("active");
+  }
+}
+
+// Seasonal event modal functions
+function openSeasonalModal() {
+  const modal = document.getElementById("seasonalModal");
+  if (modal) {
+    modal.classList.add("active");
+  }
+}
+
+function closeSeasonalModal(event) {
+  if (event) {
+    event.stopPropagation();
+  }
+  const modal = document.getElementById("seasonalModal");
+  if (modal) {
+    modal.classList.remove("active");
+  }
+}
+
+// Options modal functions
+function openOptionsModal() {
+  const modal = document.getElementById("optionsModal");
+  if (modal) {
+    modal.classList.add("active");
+  }
+}
+
+function closeOptionsModal(event) {
+  if (event) {
+    event.stopPropagation();
+  }
+  const modal = document.getElementById("optionsModal");
+  if (modal) {
+    modal.classList.remove("active");
   }
 }

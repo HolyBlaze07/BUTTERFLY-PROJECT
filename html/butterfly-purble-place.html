@@ -1,0 +1,1503 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Butterfly Pattern Lab | Purble Place Remix</title>
+    <meta
+      name="description"
+      content="Assemble neon butterfly orders in this Purble Place inspired logic game inside Butterfly Hub."
+    />
+    <meta property="og:title" content="Butterfly Pattern Lab" />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:description"
+      content="Race against time to match butterfly orders in a Purble Place inspired arcade."
+    />
+    <meta property="og:image" content="../assets/Butterfly4.png" />
+
+    <!-- Butterfly Theme System -->
+    <script src="../js/butterfly-theme.js"></script>
+    <link rel="stylesheet" href="../css/theme-selector.css" />
+    <script src="../js/theme-selector.js" defer></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Space+Grotesk:wght@500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #04030d;
+        --panel: rgba(16, 11, 38, 0.82);
+        --panel-bright: rgba(35, 20, 72, 0.92);
+        --text: #f7f8ff;
+        --muted: #a5a1ce;
+        --accent: #ff9ae6;
+        --accent-2: #8dffeb;
+        --accent-3: #ffe066;
+        --border: rgba(255, 255, 255, 0.1);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Outfit", "Space Grotesk", system-ui;
+        background: var(
+          --bg-gradient,
+          radial-gradient(circle at 10% 20%, #0c0820, transparent 45%),
+          radial-gradient(circle at 80% 0%, #052236, transparent 35%),
+          linear-gradient(180deg, #02010b 0%, #060112 40%, #030008 100%)
+        );
+        background-attachment: fixed;
+        color: var(--text);
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      .lab-interior {
+        position: relative;
+        min-height: 100vh;
+        padding: clamp(1.5rem, 4vw, 3rem) 0 4rem;
+        overflow: hidden;
+      }
+
+      .lab-interior::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 35%;
+        background: repeating-linear-gradient(
+            -75deg,
+            rgba(15, 9, 25, 0.8) 0px,
+            rgba(15, 9, 25, 0.8) 12px,
+            rgba(8, 4, 15, 0.8) 12px,
+            rgba(8, 4, 15, 0.8) 24px
+          ),
+          linear-gradient(0deg, rgba(7, 3, 12, 0.95), rgba(12, 7, 20, 0.9));
+        border-top: 2px solid rgba(255, 255, 255, 0.06);
+        box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.6) inset;
+        z-index: 0;
+      }
+
+      .interior-backdrop {
+        position: absolute;
+        inset: 0 0 25%;
+        background: linear-gradient(
+          180deg,
+          #251545 0%,
+          #1a0f32 70%,
+          transparent
+        );
+        border-bottom: 2px solid rgba(255, 255, 255, 0.05);
+        z-index: 0;
+        pointer-events: none;
+      }
+
+      .ceiling-trim {
+        position: absolute;
+        top: clamp(0.5rem, 2vw, 1.25rem);
+        left: 0;
+        right: 0;
+        height: 12px;
+        background: linear-gradient(90deg, #ff89f9, #8dffeb, #ffe066, #ff89f9);
+        opacity: 0.25;
+        box-shadow: 0 4px 25px rgba(0, 0, 0, 0.4);
+      }
+
+      .building-windows {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+        gap: 1rem;
+        padding: clamp(1rem, 4vw, 2.5rem) clamp(1rem, 6vw, 5rem) 0;
+      }
+
+      .window-pane {
+        height: 90px;
+        border-radius: 18px;
+        background: radial-gradient(
+            circle at 30% 30%,
+            rgba(255, 255, 255, 0.6),
+            rgba(255, 255, 255, 0.1)
+          ),
+          linear-gradient(
+            180deg,
+            rgba(87, 192, 255, 0.55),
+            rgba(33, 107, 199, 0.45)
+          );
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 15px 30px rgba(4, 0, 10, 0.7);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .window-pane::after,
+      .window-pane::before {
+        content: "";
+        position: absolute;
+        background: rgba(255, 255, 255, 0.2);
+      }
+
+      .window-pane::before {
+        width: 2px;
+        top: 12px;
+        bottom: 12px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .window-pane::after {
+        height: 2px;
+        left: 12px;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
+      .service-counter {
+        position: relative;
+        margin: 0 auto 1.5rem;
+        max-width: 1150px;
+        border-radius: 32px;
+        padding: 1rem 1.5rem;
+        background: linear-gradient(
+          120deg,
+          rgba(19, 12, 32, 0.9),
+          rgba(30, 16, 63, 0.85)
+        );
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.55),
+          inset 0 0 20px rgba(255, 255, 255, 0.05);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        z-index: 1;
+      }
+
+      .service-counter--rear {
+        transform: translateY(0.5rem);
+        opacity: 0.95;
+      }
+
+      .service-counter--front {
+        margin-top: 2rem;
+        padding: 1.5rem;
+        border-width: 2px;
+        z-index: 3;
+      }
+
+      .counter-label {
+        margin: 0;
+        font-size: 0.85rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--accent-2);
+      }
+
+      .counter-text {
+        margin: 0.35rem 0 0;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      .counter-display {
+        display: flex;
+        gap: 0.4rem;
+        margin-top: 0.6rem;
+      }
+
+      .counter-display span {
+        width: 48px;
+        height: 38px;
+        border-radius: 12px;
+        background: linear-gradient(180deg, #120924, #1e0f3d);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        box-shadow: inset 0 0 12px rgba(4, 255, 238, 0.25);
+      }
+
+      .counter-lights {
+        display: inline-flex;
+        gap: 0.5rem;
+      }
+
+      .counter-lights span {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: radial-gradient(circle, #ffe066 0%, #ff5ed2 70%);
+        box-shadow: 0 0 12px rgba(255, 110, 210, 0.8);
+        opacity: 0.8;
+      }
+
+      .counter-lights--cyan span {
+        background: radial-gradient(circle, #8dffeb 0%, #27f7ff 70%);
+        box-shadow: 0 0 12px rgba(39, 247, 255, 0.8);
+      }
+
+      .nebula {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background: url("../assets/Butterfly12.png") no-repeat 15% 10%,
+          url("../assets/Butterfly8.png") no-repeat 75% 20%,
+          url("../assets/Butterfly6.png") no-repeat 5% 70%;
+        background-size: 90px 90px, 80px 80px, 70px 70px;
+        opacity: 0.08;
+      }
+
+      main {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: clamp(1rem, 5vw, 3rem);
+        position: relative;
+        z-index: 2;
+      }
+
+      header {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 28px;
+        padding: clamp(1rem, 3vw, 2rem);
+        margin-bottom: 1.5rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        align-items: center;
+      }
+
+      header h1 {
+        margin: 0;
+        font-size: clamp(1.6rem, 3vw, 2.4rem);
+        font-family: "Space Grotesk", sans-serif;
+      }
+
+      header p {
+        margin: 0;
+        color: var(--muted);
+      }
+
+      .hub-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.55rem 1.1rem;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        background: rgba(255, 255, 255, 0.03);
+        color: var(--text);
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      .status-bar {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .stat-panel {
+        background: var(--panel);
+        border-radius: 22px;
+        border: 1px solid var(--border);
+        padding: 1rem;
+      }
+
+      .stat-label {
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        color: var(--muted);
+        letter-spacing: 0.08em;
+      }
+
+      .stat-value {
+        font-size: 1.8rem;
+        font-weight: 600;
+      }
+
+      .lives {
+        display: flex;
+        gap: 0.4rem;
+        align-items: center;
+        font-size: 1.2rem;
+      }
+
+      .game-grid {
+        display: grid;
+        grid-template-columns: minmax(220px, 0.8fr) minmax(280px, 1fr) minmax(
+            300px,
+            1.2fr
+          );
+        gap: 1rem;
+      }
+
+      .parts-workshop {
+        margin-top: 1rem;
+      }
+
+      .panel {
+        background: var(--panel-bright);
+        border-radius: 26px;
+        border: 1px solid var(--border);
+        padding: 1.25rem;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .assembly-station {
+        background: linear-gradient(
+          135deg,
+          rgba(30, 16, 63, 0.95),
+          rgba(19, 12, 32, 0.9)
+        );
+        border: 2px solid rgba(255, 154, 230, 0.3);
+        box-shadow: 0 0 40px rgba(255, 154, 230, 0.2);
+      }
+
+      h2 {
+        margin: 0 0 1rem;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.2em;
+        color: var(--accent-2);
+      }
+
+      .queue-track {
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+      }
+
+      .queue-card {
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 18px;
+        padding: 0.8rem;
+        background: rgba(255, 255, 255, 0.03);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.9rem;
+      }
+
+      .queue-card.current {
+        border-color: var(--accent);
+        background: rgba(255, 154, 230, 0.12);
+      }
+
+      .order-card {
+        border-radius: 24px;
+        padding: 1rem;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 154, 230, 0.18),
+          rgba(141, 255, 235, 0.2)
+        );
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .order-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+      }
+
+      .order-attributes {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 0.6rem;
+      }
+
+      .order-attribute {
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        padding: 0.6rem;
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      .order-attribute span {
+        display: block;
+        font-size: 0.75rem;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .order-attribute strong {
+        font-size: 1rem;
+      }
+
+      .butterfly-preview {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 2rem 1rem;
+        min-height: 350px;
+      }
+
+      .butterfly-base {
+        position: relative;
+        width: 200px;
+        height: 200px;
+        background: radial-gradient(
+          circle,
+          rgba(255, 255, 255, 0.05),
+          transparent
+        );
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+        transition: transform 0.3s ease;
+      }
+
+      .butterfly-base:hover {
+        transform: scale(1.05);
+      }
+
+      .butterfly-layer {
+        position: absolute;
+        width: 180px;
+        height: 180px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        opacity: 0;
+        transform: scale(0.5) rotate(-10deg);
+      }
+
+      .butterfly-layer.attached {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+      }
+
+      .butterfly-base.shake {
+        animation: shake 0.5s ease;
+      }
+
+      @keyframes shake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        25% {
+          transform: translateX(-6px);
+        }
+        50% {
+          transform: translateX(6px);
+        }
+        75% {
+          transform: translateX(-4px);
+        }
+      }
+
+      .preview-shape {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.4));
+      }
+
+      .preview-shape.glow {
+        width: 150px;
+        height: 150px;
+        opacity: 0.45;
+        filter: blur(8px) drop-shadow(0 0 20px rgba(255, 255, 255, 0.35));
+      }
+
+      .preview-shape.crown {
+        width: 80px;
+        height: 80px;
+        border-radius: 40% 40% 10% 10% / 60% 60% 40% 40%;
+        box-shadow: 0 -6px 18px rgba(0, 0, 0, 0.4) inset;
+      }
+
+      .sparkle-container {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+
+      .sparkle {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        background: radial-gradient(circle, #fff, transparent);
+        border-radius: 50%;
+        animation: sparkle-pop 0.6s ease-out forwards;
+        pointer-events: none;
+      }
+
+      @keyframes sparkle-pop {
+        0% {
+          transform: translate(0, 0) scale(0);
+          opacity: 1;
+        }
+        100% {
+          transform: translate(var(--tx), var(--ty)) scale(1);
+          opacity: 0;
+        }
+      }
+
+      .assembly-label {
+        text-align: center;
+        font-size: 0.85rem;
+        color: var(--muted);
+        margin-top: 0.5rem;
+      }
+
+      .assembly-progress {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1rem;
+        justify-content: center;
+      }
+
+      .progress-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        transition: all 0.3s ease;
+      }
+
+      .progress-dot.complete {
+        background: var(--accent-2);
+        box-shadow: 0 0 12px var(--accent-2);
+      }
+
+      .assembly-panel {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .part-selector {
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 22px;
+        padding: 0.85rem;
+        background: rgba(10, 8, 28, 0.6);
+      }
+
+      .part-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.95rem;
+        margin-bottom: 0.6rem;
+      }
+
+      .options-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+        gap: 0.5rem;
+      }
+
+      .option-button {
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 16px;
+        padding: 0.6rem;
+        background: rgba(255, 255, 255, 0.03);
+        color: inherit;
+        text-align: left;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-weight: 500;
+        transition: transform 0.2s ease, border 0.2s ease, box-shadow 0.2s ease;
+        position: relative;
+      }
+
+      .option-button:hover {
+        transform: translateY(-3px);
+        border-color: rgba(141, 255, 235, 0.4);
+        box-shadow: 0 8px 20px rgba(141, 255, 235, 0.2);
+      }
+
+      .option-button:active {
+        transform: translateY(-1px) scale(0.98);
+      }
+
+      .option-swatch {
+        width: 30px;
+        height: 30px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        flex-shrink: 0;
+      }
+
+      .option-asset {
+        width: 38px;
+        height: 38px;
+        border-radius: 14px;
+        background: rgba(5, 3, 18, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 4px;
+        object-fit: contain;
+        image-rendering: pixelated;
+        flex-shrink: 0;
+        filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.35));
+      }
+
+      .option-button.attached,
+      .option-button.active {
+        border-color: var(--accent-2);
+        background: rgba(141, 255, 235, 0.15);
+        transform: translateY(-2px);
+        box-shadow: 0 0 20px rgba(141, 255, 235, 0.4);
+      }
+
+      .option-button.attached::after {
+        content: "\2713";
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        width: 20px;
+        height: 20px;
+        background: var(--accent-2);
+        color: #000;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.7rem;
+        font-weight: 700;
+        box-shadow: 0 0 10px var(--accent-2);
+      }
+
+      .action-bar {
+        margin-top: 1.5rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+      }
+
+      button.cta {
+        padding: 0.85rem 1.5rem;
+        border: none;
+        border-radius: 999px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .cta-primary {
+        background: linear-gradient(120deg, var(--accent), var(--accent-2));
+        color: #0e0620;
+      }
+
+      .cta-secondary {
+        background: rgba(255, 255, 255, 0.08);
+        color: var(--text);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+      }
+
+      .message-bar {
+        margin-top: 1rem;
+        padding: 0.75rem 1rem;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.08);
+        font-weight: 500;
+      }
+
+      .butterfly-base.success {
+        animation: success-pulse 0.6s ease-in-out;
+      }
+
+      @keyframes success-pulse {
+        0%,
+        100% {
+          box-shadow: 0 0 20px rgba(141, 255, 235, 0.4);
+        }
+        50% {
+          box-shadow: 0 0 45px rgba(141, 255, 235, 0.85);
+        }
+      }
+
+      .butterfly-base.flying {
+        animation: fly-away 0.9s ease-in forwards;
+      }
+
+      @keyframes fly-away {
+        0% {
+          transform: scale(1) translateY(0) rotate(0deg);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(0.3) translateY(-200px) rotate(12deg);
+          opacity: 0;
+        }
+      }
+
+      @media (max-width: 980px) {
+        .game-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .service-counter {
+          flex-direction: column;
+          text-align: center;
+        }
+
+        .counter-display {
+          justify-content: center;
+          flex-wrap: wrap;
+        }
+
+        .building-windows {
+          grid-template-columns: repeat(2, minmax(90px, 1fr));
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="nebula" aria-hidden="true"></div>
+    <div class="lab-interior">
+      <div class="interior-backdrop" aria-hidden="true">
+        <div class="ceiling-trim"></div>
+        <div class="building-windows">
+          <span class="window-pane"></span>
+          <span class="window-pane"></span>
+          <span class="window-pane"></span>
+          <span class="window-pane"></span>
+          <span class="window-pane"></span>
+          <span class="window-pane"></span>
+        </div>
+      </div>
+
+      <div class="service-counter service-counter--rear" aria-hidden="true">
+        <div>
+          <p class="counter-label">Mixing Counter</p>
+          <p class="counter-text">Wing stencils line the illuminated glass.</p>
+          <div class="counter-display">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+        <div class="counter-lights counter-lights--cyan">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+
+      <main>
+        <header>
+          <a class="hub-link" href="../hub.html">
+            <img
+              src="../assets/Butterfly6.png"
+              width="26"
+              height="26"
+              alt=""
+              aria-hidden="true"
+            />
+            Back to Hub
+          </a>
+          <div>
+            <h1>Butterfly Pattern Lab</h1>
+            <p>
+              Fulfill dazzling butterfly orders inspired by the Purble Place
+              bakery. Match wings, patterns, neon glows, and crowns before the
+              queue backs up.
+            </p>
+          </div>
+        </header>
+
+        <section class="status-bar">
+          <div class="stat-panel">
+            <p class="stat-label">Score</p>
+            <p class="stat-value" id="scoreValue">0</p>
+          </div>
+          <div class="stat-panel">
+            <p class="stat-label">Streak</p>
+            <p class="stat-value" id="streakValue">0</p>
+          </div>
+          <div class="stat-panel">
+            <p class="stat-label">Level</p>
+            <p class="stat-value" id="levelValue">1</p>
+          </div>
+          <div class="stat-panel">
+            <p class="stat-label">Lives</p>
+            <div class="lives" id="livesValue">🦋🦋🦋</div>
+          </div>
+        </section>
+
+        <section class="game-grid">
+          <aside class="panel">
+            <h2>Order Queue</h2>
+            <div class="queue-track" id="queueTrack"></div>
+          </aside>
+
+          <article class="panel">
+            <h2>Current Order</h2>
+            <div class="order-card">
+              <div class="order-title" id="orderName">Waiting for order…</div>
+              <div class="order-attributes" id="orderAttributes"></div>
+              <div class="message-bar" id="orderPrompt">
+                Press Serve once your build matches the ticket.
+              </div>
+            </div>
+          </article>
+
+          <article class="panel assembly-station">
+            <h2>Assembly Station</h2>
+            <div class="butterfly-preview" id="butterflyPreview">
+              <div class="butterfly-base" id="butterflyBase">
+                <div class="butterfly-layer" id="previewWings"></div>
+                <div class="butterfly-layer" id="previewPattern"></div>
+                <div class="butterfly-layer" id="previewGlow"></div>
+                <div class="butterfly-layer" id="previewCrown"></div>
+                <div class="sparkle-container" id="sparkles"></div>
+              </div>
+              <div class="assembly-label">
+                Attach parts below to mirror the highlighted ticket
+              </div>
+              <div class="assembly-progress" id="assemblyProgress"></div>
+            </div>
+          </article>
+        </section>
+
+        <section class="panel parts-workshop">
+          <h2>Parts Workshop</h2>
+          <div class="assembly-panel" id="assemblyPanel"></div>
+        </section>
+
+        <div class="action-bar">
+          <button class="cta cta-primary" id="serveBtn">Serve Order</button>
+          <button class="cta cta-secondary" id="resetBtn">Clear Tray</button>
+          <button class="cta cta-secondary" id="hintBtn">Hint</button>
+        </div>
+
+        <div class="message-bar" id="statusMessage">
+          Connect each selector to mirror the highlighted ticket. Higher levels
+          add more traits and sharper score bonuses.
+        </div>
+      </main>
+
+      <div class="service-counter service-counter--front">
+        <div>
+          <p class="counter-label">Pick-Up Counter</p>
+          <p class="counter-text">
+            Completed butterflies wait here before you serve the ticket.
+          </p>
+        </div>
+        <div class="counter-lights">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const PARTS = {
+        wings: [
+          {
+            id: "opal",
+            label: "Opal Wings",
+            swatch: "linear-gradient(135deg, #ffd1ff, #9be2ff)",
+            emoji: "🪽",
+            asset: "../assets/Butterfly15.png",
+          },
+          {
+            id: "midnight",
+            label: "Midnight Wings",
+            swatch: "linear-gradient(135deg, #1f005c, #32008a)",
+            emoji: "🦋",
+            asset: "../assets/Butterfly9.png",
+          },
+          {
+            id: "citrus",
+            label: "Citrus Wings",
+            swatch: "linear-gradient(135deg, #ff7c44, #ffe478)",
+            emoji: "🦋",
+            asset: "../assets/Butterfly5.png",
+          },
+          {
+            id: "jade",
+            label: "Jade Wings",
+            swatch: "linear-gradient(135deg, #00ffbf, #00c6ff)",
+            emoji: "🪽",
+            asset: "../assets/Butterfly18.png",
+          },
+        ],
+        pattern: [
+          {
+            id: "holo",
+            label: "Hologram Ripple",
+            swatch: "linear-gradient(135deg, #8f00ff, #ff3cac)",
+            emoji: "〰️",
+          },
+          {
+            id: "starlit",
+            label: "Starlit Mosaic",
+            swatch: "linear-gradient(135deg, #1b2735, #09a8fa)",
+            emoji: "✨",
+          },
+          {
+            id: "petal",
+            label: "Petal Lattice",
+            swatch: "linear-gradient(135deg, #ff7eb3, #ff65a3)",
+            emoji: "🌸",
+          },
+          {
+            id: "aurora",
+            label: "Aurora Pulse",
+            swatch: "linear-gradient(135deg, #00e1ff, #7c5bff)",
+            emoji: "🌈",
+          },
+        ],
+        glow: [
+          {
+            id: "violet",
+            label: "Ultra Violet Glow",
+            swatch: "#a855f7",
+            emoji: "💜",
+          },
+          {
+            id: "plasma",
+            label: "Plasma Cyan Glow",
+            swatch: "#4ffcff",
+            emoji: "💠",
+          },
+          {
+            id: "sunrise",
+            label: "Sunrise Amber Glow",
+            swatch: "#ffb347",
+            emoji: "🌅",
+          },
+          {
+            id: "garden",
+            label: "Garden Lime Glow",
+            swatch: "#c6ff00",
+            emoji: "🌿",
+          },
+        ],
+        crown: [
+          {
+            id: "crystal",
+            label: "Crystal Crest",
+            swatch: "#d7fbff",
+            emoji: "👑",
+          },
+          {
+            id: "nebula",
+            label: "Nebula Halo",
+            swatch: "#5b5bff",
+            emoji: "🪐",
+          },
+          {
+            id: "sunflare",
+            label: "Sunflare Loop",
+            swatch: "#ffcf33",
+            emoji: "☀️",
+          },
+          { id: "petite", label: "Petite Bow", swatch: "#ff90e8", emoji: "🎀" },
+        ],
+      };
+
+      const STORAGE_KEY = "butterflyPurbleStats";
+      const MAX_LIVES = 3;
+      const QUEUE_SIZE = 4;
+
+      const selectors = {
+        queueTrack: document.getElementById("queueTrack"),
+        orderName: document.getElementById("orderName"),
+        orderAttributes: document.getElementById("orderAttributes"),
+        orderPrompt: document.getElementById("orderPrompt"),
+        assemblyPanel: document.getElementById("assemblyPanel"),
+        scoreValue: document.getElementById("scoreValue"),
+        streakValue: document.getElementById("streakValue"),
+        levelValue: document.getElementById("levelValue"),
+        livesValue: document.getElementById("livesValue"),
+        statusMessage: document.getElementById("statusMessage"),
+        serveBtn: document.getElementById("serveBtn"),
+        resetBtn: document.getElementById("resetBtn"),
+        hintBtn: document.getElementById("hintBtn"),
+        butterflyPreview: document.getElementById("butterflyPreview"),
+        butterflyBase: document.getElementById("butterflyBase"),
+        previewWings: document.getElementById("previewWings"),
+        previewPattern: document.getElementById("previewPattern"),
+        previewGlow: document.getElementById("previewGlow"),
+        previewCrown: document.getElementById("previewCrown"),
+        sparkles: document.getElementById("sparkles"),
+        assemblyProgress: document.getElementById("assemblyProgress"),
+      };
+
+      const state = {
+        user: null,
+        queue: [],
+        currentOrder: null,
+        selections: {},
+        score: 0,
+        streak: 0,
+        level: 1,
+        lives: MAX_LIVES,
+        totalServed: 0,
+      };
+
+      let audioCtx = null;
+
+      document.addEventListener("DOMContentLoaded", () => {
+        enforceAuth();
+        hydrateStats();
+        buildAssemblyPanel();
+        initProgressDots();
+        seedQueue();
+        bindActions();
+        refreshUI();
+        updateProgressDots();
+      });
+
+      function enforceAuth() {
+        const hubProfile = localStorage.getItem("butterflyHubCurrentUser");
+        const legacyProfile = localStorage.getItem("butterflyUser");
+        const raw = hubProfile || legacyProfile;
+        if (!raw) {
+          window.location.href = "butterfly-auth.html";
+          return;
+        }
+        try {
+          state.user = JSON.parse(raw);
+        } catch (error) {
+          console.warn("Unable to parse profile", error);
+          window.location.href = "butterfly-auth.html";
+        }
+      }
+
+      function hydrateStats() {
+        const payload = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+        if (payload.bestScore) {
+          state.score = payload.lastScore || 0;
+        }
+      }
+
+      function persistStats() {
+        const payload = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+        payload.lastScore = state.score;
+        payload.bestScore = Math.max(payload.bestScore || 0, state.score);
+        payload.lastPlayed = Date.now();
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+      }
+
+      function buildAssemblyPanel() {
+        selectors.assemblyPanel.innerHTML = "";
+        Object.entries(PARTS).forEach(([partKey, partOptions]) => {
+          const wrapper = document.createElement("div");
+          wrapper.className = "part-selector";
+          wrapper.dataset.part = partKey;
+
+          const header = document.createElement("div");
+          header.className = "part-header";
+          header.innerHTML = `<strong>${partKey.toUpperCase()}</strong><span id="selected-${partKey}" class="selected-label">None</span>`;
+          wrapper.appendChild(header);
+
+          const grid = document.createElement("div");
+          grid.className = "options-grid";
+
+          partOptions.forEach((option) => {
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "option-button";
+            btn.dataset.part = partKey;
+            btn.dataset.value = option.id;
+            const preview = option.asset
+              ? `<img src="${option.asset}" alt="${option.label}" class="option-asset" />`
+              : `<span class="option-swatch" style="background:${option.swatch}"></span>`;
+            btn.innerHTML = `
+              ${preview}
+              <div>
+                <strong>${option.label}</strong>
+                <div style="font-size:0.8rem; color:var(--muted)">${option.emoji}</div>
+              </div>`;
+            btn.addEventListener("click", () => selectPart(partKey, option.id));
+            grid.appendChild(btn);
+          });
+
+          wrapper.appendChild(grid);
+          selectors.assemblyPanel.appendChild(wrapper);
+        });
+      }
+
+      function selectPart(partKey, optionId) {
+        state.selections[partKey] = optionId;
+        document
+          .querySelectorAll(`.option-button[data-part="${partKey}"]`)
+          .forEach((btn) => {
+            const isMatch = btn.dataset.value === optionId;
+            btn.classList.toggle("active", isMatch);
+            btn.classList.toggle("attached", isMatch);
+          });
+        const option = PARTS[partKey].find((opt) => opt.id === optionId);
+        const label = document.getElementById(`selected-${partKey}`);
+        if (option && label) {
+          label.textContent = option.label;
+        }
+
+        updateButterflyPreview(partKey, option);
+        playAttachSound();
+        createSparkles();
+        updateProgressDots();
+      }
+
+      function initProgressDots() {
+        if (!selectors.assemblyProgress) return;
+        selectors.assemblyProgress.innerHTML = "";
+        getActiveParts().forEach((part) => {
+          const dot = document.createElement("span");
+          dot.className = "progress-dot";
+          dot.dataset.part = part;
+          selectors.assemblyProgress.appendChild(dot);
+        });
+      }
+
+      function updateProgressDots() {
+        if (!selectors.assemblyProgress) return;
+        selectors.assemblyProgress
+          .querySelectorAll(".progress-dot")
+          .forEach((dot) => {
+            const part = dot.dataset.part;
+            dot.classList.toggle("complete", Boolean(state.selections[part]));
+          });
+      }
+
+      function updateButterflyPreview(partKey, option) {
+        const layerMap = {
+          wings: selectors.previewWings,
+          pattern: selectors.previewPattern,
+          glow: selectors.previewGlow,
+          crown: selectors.previewCrown,
+        };
+        const layer = layerMap[partKey];
+        if (!layer) return;
+
+        layer.innerHTML = "";
+        layer.classList.remove("attached");
+        if (!option) return;
+
+        if (option.asset) {
+          const img = document.createElement("img");
+          img.src = option.asset;
+          img.alt = option.label;
+          img.loading = "lazy";
+          img.style.maxWidth = "100%";
+          img.style.maxHeight = "100%";
+          img.style.filter = "drop-shadow(0 0 20px rgba(255,255,255,0.5))";
+          layer.appendChild(img);
+        } else {
+          const swatch = document.createElement("div");
+          swatch.className = "preview-shape";
+          if (partKey === "glow") {
+            swatch.classList.add("glow");
+          }
+          if (partKey === "crown") {
+            swatch.classList.add("crown");
+          }
+          swatch.style.background = option.swatch;
+          layer.appendChild(swatch);
+        }
+
+        requestAnimationFrame(() => layer.classList.add("attached"));
+      }
+
+      function clearPreviewLayers() {
+        [
+          selectors.previewWings,
+          selectors.previewPattern,
+          selectors.previewGlow,
+          selectors.previewCrown,
+        ].forEach((layer) => {
+          if (!layer) return;
+          layer.innerHTML = "";
+          layer.classList.remove("attached");
+        });
+      }
+
+      function createSparkles() {
+        if (!selectors.sparkles) return;
+        for (let i = 0; i < 5; i += 1) {
+          const sparkle = document.createElement("span");
+          sparkle.className = "sparkle";
+          sparkle.style.left = `${Math.random() * 100}%`;
+          sparkle.style.top = `${Math.random() * 100}%`;
+          sparkle.style.setProperty("--tx", `${(Math.random() - 0.5) * 40}px`);
+          sparkle.style.setProperty("--ty", `${(Math.random() - 0.5) * 40}px`);
+          selectors.sparkles.appendChild(sparkle);
+          setTimeout(() => sparkle.remove(), 600);
+        }
+      }
+
+      function playAttachSound() {
+        try {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (!AudioContext) return;
+          audioCtx = audioCtx || new AudioContext();
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = "triangle";
+          osc.frequency.value = 440 + Math.random() * 80;
+          gain.gain.value = 0.08;
+          osc.connect(gain).connect(audioCtx.destination);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.12);
+        } catch (error) {
+          console.warn("Audio unavailable", error);
+        }
+      }
+
+      function celebrateButterfly() {
+        if (!selectors.butterflyBase) return;
+        selectors.butterflyBase.classList.add("success");
+        setTimeout(
+          () => selectors.butterflyBase.classList.remove("success"),
+          600
+        );
+      }
+
+      function shakeButterflyBase() {
+        if (!selectors.butterflyBase) return;
+        selectors.butterflyBase.classList.add("shake");
+        setTimeout(
+          () => selectors.butterflyBase.classList.remove("shake"),
+          500
+        );
+      }
+
+      function seedQueue() {
+        state.queue = Array.from({ length: QUEUE_SIZE }, () => buildOrder());
+        advanceOrder();
+      }
+
+      function buildOrder() {
+        const difficultyKeys = getActiveParts();
+        const order = {
+          id: Date.now() + Math.random(),
+          name: generateOrderName(),
+        };
+        difficultyKeys.forEach((key) => {
+          const opts = PARTS[key];
+          order[key] = opts[Math.floor(Math.random() * opts.length)].id;
+        });
+        return order;
+      }
+
+      function getActiveParts() {
+        if (state.level >= 4) return ["wings", "pattern", "glow", "crown"];
+        if (state.level >= 3) return ["wings", "pattern", "glow"];
+        if (state.level >= 2) return ["wings", "pattern"];
+        return ["wings"];
+      }
+
+      function generateOrderName() {
+        const names = [
+          "Nebula Drift",
+          "Opal Bloom",
+          "Zenith Arc",
+          "Luxe Flutter",
+          "Hyperwing",
+          "Solar Bloom",
+        ];
+        return names[Math.floor(Math.random() * names.length)];
+      }
+
+      function advanceOrder() {
+        state.currentOrder = state.queue.shift();
+        state.queue.push(buildOrder());
+        state.selections = {};
+        document
+          .querySelectorAll(".option-button")
+          .forEach((btn) => btn.classList.remove("active", "attached"));
+        document
+          .querySelectorAll(".selected-label")
+          .forEach((lbl) => (lbl.textContent = "None"));
+        clearPreviewLayers();
+        refreshUI();
+        updateProgressDots();
+      }
+
+      function refreshUI() {
+        selectors.queueTrack.innerHTML = "";
+        state.queue.forEach((order, index) => {
+          const card = document.createElement("div");
+          card.className = "queue-card" + (index === 0 ? " current" : "");
+          card.innerHTML = `<span>${order.name}</span><small>${
+            Object.keys(order).length - 2
+          } traits</small>`;
+          selectors.queueTrack.appendChild(card);
+        });
+
+        renderOrderCard();
+        selectors.scoreValue.textContent = state.score;
+        selectors.streakValue.textContent = state.streak;
+        selectors.levelValue.textContent = state.level;
+        selectors.livesValue.textContent = "🦋".repeat(state.lives);
+      }
+
+      function renderOrderCard() {
+        if (!state.currentOrder) return;
+        selectors.orderName.textContent = state.currentOrder.name;
+        selectors.orderAttributes.innerHTML = "";
+        const parts = Object.keys(state.currentOrder).filter(
+          (key) => PARTS[key]
+        );
+        parts.forEach((key) => {
+          const option = PARTS[key].find(
+            (opt) => opt.id === state.currentOrder[key]
+          );
+          const div = document.createElement("div");
+          div.className = "order-attribute";
+          div.innerHTML = `<span>${key}</span><strong>${
+            option ? option.label : "—"
+          }</strong>`;
+          selectors.orderAttributes.appendChild(div);
+        });
+      }
+
+      function bindActions() {
+        selectors.serveBtn.addEventListener("click", handleServe);
+        selectors.resetBtn.addEventListener("click", () => {
+          state.selections = {};
+          document
+            .querySelectorAll(".option-button")
+            .forEach((btn) => btn.classList.remove("active", "attached"));
+          document
+            .querySelectorAll(".selected-label")
+            .forEach((lbl) => (lbl.textContent = "None"));
+          clearPreviewLayers();
+          updateProgressDots();
+          selectors.statusMessage.textContent =
+            "Tray cleared. Rebuild the butterfly to match the ticket.";
+        });
+        selectors.hintBtn.addEventListener("click", provideHint);
+      }
+
+      function handleServe() {
+        if (!state.currentOrder) return;
+        const activeParts = getActiveParts();
+        const missing = activeParts.filter((part) => !state.selections[part]);
+        if (missing.length) {
+          selectors.statusMessage.textContent = `Missing selections: ${missing.join(
+            ", "
+          )}`;
+          return;
+        }
+
+        const incorrect = activeParts.filter(
+          (part) => state.selections[part] !== state.currentOrder[part]
+        );
+        if (incorrect.length) {
+          handleFail(incorrect);
+        } else {
+          handleSuccess();
+        }
+      }
+
+      function handleSuccess() {
+        const baseScore = 100 * state.level;
+        const streakBonus = state.streak * 10;
+        state.score += baseScore + streakBonus;
+        state.streak += 1;
+        state.totalServed += 1;
+        selectors.statusMessage.textContent = `Perfect match! +${
+          baseScore + streakBonus
+        } points.`;
+        celebrateButterfly();
+        levelCheck();
+        persistStats();
+        advanceOrder();
+      }
+
+      function handleFail(parts) {
+        state.streak = 0;
+        state.lives -= 1;
+        shakeButterflyBase();
+        selectors.statusMessage.textContent = `Mismatch on ${parts.join(
+          ", "
+        )}. You lost a life.`;
+        if (state.lives <= 0) {
+          selectors.statusMessage.textContent =
+            "All lives spent. Queue reset and score banked!";
+          persistStats();
+          resetGame();
+        } else {
+          advanceOrder();
+        }
+      }
+
+      function levelCheck() {
+        if (state.totalServed && state.totalServed % 4 === 0) {
+          const previousLevel = state.level;
+          state.level = Math.min(4, state.level + 1);
+          if (state.level !== previousLevel) {
+            selectors.statusMessage.textContent = `Level up! New trait added to orders.`;
+            initProgressDots();
+            updateProgressDots();
+          }
+        }
+      }
+
+      function provideHint() {
+        if (!state.currentOrder) return;
+        const activeParts = getActiveParts();
+        const mismatched = activeParts.find(
+          (part) =>
+            state.selections[part] &&
+            state.selections[part] !== state.currentOrder[part]
+        );
+        if (mismatched) {
+          const option = PARTS[mismatched].find(
+            (opt) => opt.id === state.currentOrder[mismatched]
+          );
+          selectors.statusMessage.textContent = `Hint: ${mismatched.toUpperCase()} should be ${
+            option.label
+          }.`;
+          return;
+        }
+        const incomplete = activeParts.find((part) => !state.selections[part]);
+        if (incomplete) {
+          const option = PARTS[incomplete].find(
+            (opt) => opt.id === state.currentOrder[incomplete]
+          );
+          selectors.statusMessage.textContent = `Hint: Select ${option.label} for ${incomplete}.`;
+        } else {
+          selectors.statusMessage.textContent =
+            "Looks perfect! Hit Serve to deliver it.";
+        }
+      }
+
+      function resetGame() {
+        state.score = 0;
+        state.streak = 0;
+        state.level = 1;
+        state.lives = MAX_LIVES;
+        state.totalServed = 0;
+        clearPreviewLayers();
+        initProgressDots();
+        seedQueue();
+        refreshUI();
+        updateProgressDots();
+      }
+    </script>
+  </body>
+</html>
