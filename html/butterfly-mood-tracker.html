@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Butterfly Hub - Mood Tracker 💫</title>
+    <meta
+      name="description"
+      content="Track your emotions and mental wellbeing with Butterfly Hub's mood tracker. Beautiful Y2K-inspired design with analytics and insights."
+    />
+
+    <!-- Butterfly Theme System -->
+    <script src="../js/butterfly-theme.js"></script>
+    <link rel="stylesheet" href="../css/theme-selector.css" />
+    <script src="../js/theme-selector.js" defer></script>
+
+    <!-- Mood Tracker Styles -->
+    <link rel="stylesheet" href="../css/butterfly-mood-tracker.css" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Unbounded:wght@600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <!-- Butterfly Field Animation -->
+    <div class="butterfly-field" aria-hidden="true"></div>
+
+    <!-- Header -->
+    <header>
+      <a
+        class="hub-link"
+        href="../hub.html"
+        aria-label="Return to Butterfly Hub home page"
+      >
+        <img
+          src="../assets/Butterfly6.png"
+          width="24"
+          height="24"
+          alt="Butterfly home icon"
+          loading="lazy"
+        />
+        Back to Hub
+      </a>
+      <h1>
+        <img
+          src="../assets/Butterfly4.png"
+          style="
+            width: 32px;
+            vertical-align: middle;
+            image-rendering: pixelated;
+            margin-right: 10px;
+          "
+          alt="Butterfly Mood Tracker icon"
+          loading="eager"
+        />
+        Mood Tracker
+      </h1>
+      <div class="user-plan">
+        <span id="userGreeting">Welcome!</span>
+        <span class="plan-badge" id="planBadge">Free</span>
+      </div>
+    </header>
+
+    <!-- Main Container -->
+    <main>
+      <!-- Mood Selection Section -->
+      <section class="panel">
+        <div class="section-header">
+          <div>
+            <h2>How are you feeling?</h2>
+            <p class="section-subtitle">
+              Select your current mood and add a note if you'd like
+            </p>
+          </div>
+        </div>
+
+        <div class="mood-selection" id="moodSelection">
+          <button class="mood-btn" data-mood="happy">
+            <span class="mood-emoji">😄</span>
+            <span class="mood-label">Happy</span>
+          </button>
+          <button class="mood-btn" data-mood="sad">
+            <span class="mood-emoji">😢</span>
+            <span class="mood-label">Sad</span>
+          </button>
+          <button class="mood-btn" data-mood="anxious">
+            <span class="mood-emoji">😰</span>
+            <span class="mood-label">Anxious</span>
+          </button>
+          <button class="mood-btn" data-mood="peaceful">
+            <span class="mood-emoji">😌</span>
+            <span class="mood-label">Peaceful</span>
+          </button>
+          <button class="mood-btn" data-mood="stressed">
+            <span class="mood-emoji">😣</span>
+            <span class="mood-label">Stressed</span>
+          </button>
+          <button class="mood-btn" data-mood="grateful">
+            <span class="mood-emoji">🙏</span>
+            <span class="mood-label">Grateful</span>
+          </button>
+          <button class="mood-btn" data-mood="tired">
+            <span class="mood-emoji">😴</span>
+            <span class="mood-label">Tired</span>
+          </button>
+          <button class="mood-btn" data-mood="excited">
+            <span class="mood-emoji">🤩</span>
+            <span class="mood-label">Excited</span>
+          </button>
+        </div>
+
+        <textarea
+          class="mood-note"
+          id="moodNote"
+          placeholder="Add a note about how you're feeling (optional)..."
+          maxlength="200"
+        ></textarea>
+
+        <button class="primary-btn" id="submitMood">💾 Save Mood</button>
+
+        <div class="free-limitation hidden" id="freeLimitation">
+          ℹ️ You can log 1 mood per day on the free plan.
+          <a href="#" onclick="showUpgradeModal(); return false;"
+            >Upgrade to Butterfly+</a
+          >
+          for unlimited tracking!
+        </div>
+      </section>
+
+      <!-- Streak Counter (Premium) -->
+      <section class="panel streak-section hidden" id="streakSection">
+        <div class="streak-counter">
+          <div class="streak-number" id="streakNumber">0</div>
+          <div class="streak-label">Day Streak 🔥</div>
+        </div>
+      </section>
+
+      <!-- Mood History Section -->
+      <section class="panel">
+        <div class="section-header">
+          <div>
+            <h2>Mood History</h2>
+            <p class="section-subtitle">Track your emotional journey</p>
+          </div>
+          <button class="ghost-btn" onclick="clearHistory()">🗑️ Clear</button>
+        </div>
+
+        <div class="mood-history" id="moodHistory">
+          <div class="no-entries">
+            <div style="font-size: 3rem; margin-bottom: 1rem">💜</div>
+            <p>No mood entries yet. Start tracking your emotions!</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Analytics Section (Premium) -->
+      <section class="panel analytics-section">
+        <div class="section-header">
+          <div>
+            <h2>Mood Analytics</h2>
+            <p class="section-subtitle">
+              Deep insights into your emotional patterns
+            </p>
+          </div>
+          <span class="plan-badge plan-premium">Butterfly+</span>
+        </div>
+
+        <!-- Premium Lock Overlay -->
+        <div class="premium-lock" id="premiumLock">
+          <div style="font-size: 3rem; margin-bottom: 1rem">👑</div>
+          <h3 style="color: #ffd700; margin-bottom: 1rem">
+            Butterfly+ Exclusive
+          </h3>
+          <p style="color: var(--muted); margin-bottom: 1.5rem">
+            Unlock advanced analytics, mood patterns, and emotional insights
+            with Butterfly+
+          </p>
+          <button class="unlock-btn" onclick="showUpgradeModal()">
+            Upgrade to Butterfly+ ✨
+          </button>
+        </div>
+
+        <!-- Chart Container -->
+        <div class="chart-container" id="chartContainer">
+          <canvas id="moodChart"></canvas>
+        </div>
+
+        <!-- Insights Grid -->
+        <div class="insights-grid" id="insightsGrid">
+          <div class="insight-card">
+            <div class="insight-value" id="mostCommonMood">-</div>
+            <div class="insight-label">Most Common Mood</div>
+          </div>
+          <div class="insight-card">
+            <div class="insight-value" id="bestDay">-</div>
+            <div class="insight-label">Best Day This Week</div>
+          </div>
+          <div class="insight-card">
+            <div class="insight-value" id="moodTrend">-</div>
+            <div class="insight-label">Emotional Trend</div>
+          </div>
+          <div class="insight-card">
+            <div class="insight-value" id="totalEntries">0</div>
+            <div class="insight-label">Total Entries</div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Modals -->
+    <!-- Daily Limit Modal -->
+    <div class="modal" id="dailyLimitModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Daily Limit Reached</h3>
+        </div>
+        <p class="modal-text">
+          You've already logged your mood today ✨<br />
+          Unlock Butterfly+ to track unlimited moods and gain deeper emotional
+          insights.
+        </p>
+        <div class="modal-buttons">
+          <button
+            class="primary-btn"
+            onclick="showUpgradeModal(); closeDailyLimitModal();"
+          >
+            Upgrade to Butterfly+ 🦋
+          </button>
+          <button class="ghost-btn" onclick="closeDailyLimitModal()">
+            Maybe Later
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Upgrade Modal -->
+    <div class="modal" id="upgradeModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Upgrade to Butterfly+</h3>
+        </div>
+        <p class="modal-text">
+          Butterfly+ unlocks your full emotional journey 💫<br />
+          See patterns, track streaks, and understand your moods on a deeper
+          level.
+        </p>
+        <div class="premium-features">
+          <h4>Butterfly+ Features:</h4>
+          <ul>
+            <li>✅ Unlimited mood tracking</li>
+            <li>✅ Advanced mood analytics</li>
+            <li>✅ Weekly mood charts</li>
+            <li>✅ Streak tracking</li>
+            <li>✅ Emotional insights</li>
+            <li>✅ Export your data</li>
+          </ul>
+        </div>
+        <div class="modal-buttons">
+          <button class="primary-btn" onclick="upgradeToPremium()">
+            See Plans ✨
+          </button>
+          <button class="ghost-btn" onclick="closeUpgradeModal()">
+            Not Now
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mood Tracker Script -->
+    <script src="../js/butterfly-mood-tracker.js"></script>
+  </body>
+</html>
