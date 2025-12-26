@@ -193,19 +193,34 @@ function loadUser() {
 function saveUser() {
   localStorage.setItem(USER_KEY, JSON.stringify(user));
 
-  // Also update the global butterfly hub user if it exists
-  const hubUser = localStorage.getItem("butterflyHubCurrentUser");
-  if (hubUser) {
-    try {
-      const hubData = JSON.parse(hubUser);
-      hubData.butterflyPlus = {
-        plan: user.plan,
-        activeSkin: user.activeSkin,
+  // Also update or create the global butterfly hub user
+  try {
+    let hubData;
+    const hubUser = localStorage.getItem("butterflyHubCurrentUser");
+
+    if (hubUser) {
+      // Update existing hub user
+      hubData = JSON.parse(hubUser);
+    } else {
+      // Create new hub user if it doesn't exist
+      hubData = {
+        username: "Guest",
+        email: "",
       };
-      localStorage.setItem("butterflyHubCurrentUser", JSON.stringify(hubData));
-    } catch (e) {
-      console.warn("Could not sync with hub user", e);
+      console.log("📝 Created new butterflyHubCurrentUser");
     }
+
+    // Update both the plan directly and in butterflyPlus object
+    hubData.plan = user.plan;
+    hubData.butterflyPlus = {
+      plan: user.plan,
+      activeSkin: user.activeSkin,
+    };
+
+    localStorage.setItem("butterflyHubCurrentUser", JSON.stringify(hubData));
+    console.log("✅ Synced plan to hub user:", user.plan);
+  } catch (e) {
+    console.warn("Could not sync with hub user", e);
   }
 }
 
@@ -215,6 +230,11 @@ function isPremium() {
 
 function updatePlanLabel() {
   const label = document.getElementById("planLabel");
+  if (!label) {
+    console.warn("planLabel element not found");
+    return;
+  }
+
   let text = "Current Plan: Free";
 
   if (user.plan === "monthly") {
@@ -228,6 +248,7 @@ function updatePlanLabel() {
   }
 
   label.textContent = text;
+  console.log("Plan label updated:", text, "User plan:", user.plan);
 }
 
 // ===== UPGRADE SYSTEM =====
