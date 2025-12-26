@@ -260,6 +260,7 @@ body {
   font-weight: 300;
   text-shadow: 0 0 20px rgba(0, 212, 255, 0.8);
   letter-spacing: 3px;
+  z-index: 2000;
 }
 
 /* Mode toggle styles */
@@ -437,4 +438,137 @@ body {
 
 .mode-section.active {
   display: block;
+}
+
+/* iPad Portrait Optimization */
+@media (max-width: 1024px) and (orientation: portrait) {
+  .title {
+    top: 30px;
+    font-size: 2em;
+    width: 90%;
+    text-align: center;
+  }
+
+  .butterfly-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin-top: -80px;
+  }
+
+  .mode-toggle {
+    position: fixed;
+    top: auto;
+    bottom: 280px;
+    left: 50%;
+    transform: translate(-50%, 0);
+  }
+
+  .mode-toggle:hover {
+    transform: translate(-50%, 0) scale(1.1);
+  }
+
+  #displayMode .options-btn {
+    position: fixed;
+    top: auto;
+    bottom: 220px;
+    left: 50%;
+    transform: translate(-50%, 0);
+  }
+
+  #displayMode .options-btn:hover {
+    transform: translate(-50%, 0) scale(1.05);
+  }
+
+  #displayMode .hub-button {
+    position: fixed;
+    top: auto;
+    bottom: 160px;
+    left: 50%;
+    transform: translate(-50%, 0);
+  }
+
+  #displayMode .hub-button:hover {
+    transform: translate(-50%, 0) scale(1.05);
+  }
+
+  #displayMode .options-panel {
+    bottom: 320px;
+    top: auto;
+  }
+}
+
+/* iPad Landscape and larger screens */
+@media (min-width: 1024px) and (orientation: landscape) {
+  .title {
+    font-size: 2.5em;
+  }
+}
+
+/* Mobile Portrait */
+@media (max-width: 768px) and (orientation: portrait) {
+  .title {
+    top: 20px;
+    font-size: 1.5em;
+    padding: 0 10px;
+  }
+
+  .butterfly-container {
+    width: 250px;
+    height: 250px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin-top: -100px;
+  }
+
+  .mode-toggle {
+    position: fixed;
+    top: auto;
+    bottom: 240px;
+    left: 50%;
+    transform: translate(-50%, 0);
+    font-size: 18px;
+    padding: 15px 30px;
+  }
+
+  .mode-toggle:hover {
+    transform: translate(-50%, 0) scale(1.1);
+  }
+
+  #displayMode .options-btn {
+    position: fixed;
+    top: auto;
+    bottom: 185px;
+    left: 50%;
+    transform: translate(-50%, 0);
+    font-size: 14px;
+    padding: 10px 24px;
+  }
+
+  #displayMode .options-btn:hover {
+    transform: translate(-50%, 0) scale(1.05);
+  }
+
+  #displayMode .hub-button {
+    position: fixed;
+    top: auto;
+    bottom: 130px;
+    left: 50%;
+    transform: translate(-50%, 0);
+    font-size: 14px;
+    padding: 10px 24px;
+  }
+
+  #displayMode .hub-button:hover {
+    transform: translate(-50%, 0) scale(1.05);
+  }
+
+  #displayMode .options-panel {
+    bottom: 280px;
+    top: auto;
+    width: 260px;
+  }
 }

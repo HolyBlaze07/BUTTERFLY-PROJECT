@@ -1,0 +1,650 @@
+<!-- ============================================ -->
+<!-- BUTTERFLY POMODORO - KEY REFACTORED SECTIONS -->
+<!-- ============================================ -->
+
+<!-- ADD TO CSS SECTION -->
+<style>
+/* === COMBINED PLANNER LAYOUT === */
+.planner-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+@media (max-width: 768px) {
+  .planner-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* === COMBINED PROGRESS LAYOUT === */
+.progress-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+/* === STATS UNLOCK PLACEHOLDER === */
+.stats-locked-card {
+  background: linear-gradient(135deg, rgba(255, 107, 214, 0.15), rgba(82, 171, 244, 0.15));
+  border: 2px solid var(--accent-pink);
+  border-radius: 20px;
+  padding: 3rem 2rem;
+  text-align: center;
+  box-shadow: 0 0 40px var(--panel-glow);
+}
+
+.stats-locked-card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: var(--accent-cyan);
+}
+
+.stats-locked-card p {
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  color: var(--text-subtle);
+}
+
+.unlock-progress {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.progress-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.progress-dot.completed {
+  background: var(--accent-lime);
+  box-shadow: 0 0 15px var(--accent-lime);
+}
+
+/* === PREMIUM LOCK OVERLAY === */
+.premium-lock-overlay {
+  position: relative;
+  pointer-events: none;
+}
+
+.premium-lock-overlay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(6, 1, 28, 0.8);
+  backdrop-filter: blur(8px);
+  border-radius: 20px;
+  z-index: 1;
+}
+
+.premium-lock-overlay::after {
+  content: "🔒 Unlock with Butterfly Plus";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--accent-cyan);
+  font-weight: 600;
+  font-size: 1.1rem;
+  text-shadow: 0 0 20px var(--accent-cyan);
+  z-index: 2;
+  white-space: nowrap;
+}
+
+.premium-lock-overlay.clickable {
+  pointer-events: all;
+  cursor: pointer;
+}
+
+/* === UPGRADE MODAL === */
+.upgrade-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(10px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 1rem;
+}
+
+.upgrade-modal.open {
+  display: flex;
+}
+
+.upgrade-modal-content {
+  background: linear-gradient(135deg, #1c0342, #06011c);
+  border: 2px solid var(--accent-pink);
+  border-radius: 30px;
+  padding: 3rem 2.5rem;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 0 60px var(--panel-glow);
+  position: relative;
+}
+
+.upgrade-modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: var(--text-subtle);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  line-height: 1;
+}
+
+.upgrade-modal h2 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  background: linear-gradient(90deg, var(--accent-pink), var(--accent-cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.upgrade-benefits {
+  list-style: none;
+  margin: 2rem 0;
+}
+
+.upgrade-benefits li {
+  padding: 0.75rem 0;
+  padding-left: 2rem;
+  position: relative;
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+
+.upgrade-benefits li::before {
+  content: "✨";
+  position: absolute;
+  left: 0;
+}
+
+.upgrade-modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.btn-upgrade-primary {
+  background: linear-gradient(90deg, var(--accent-pink), var(--accent-cyan));
+  border: none;
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: var(--radius-pill);
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 0 30px rgba(255, 107, 214, 0.5);
+}
+
+.btn-upgrade-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 40px rgba(255, 107, 214, 0.7);
+}
+
+.btn-upgrade-secondary {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: var(--text-subtle);
+  padding: 1rem 2rem;
+  border-radius: var(--radius-pill);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-upgrade-secondary:hover {
+  border-color: var(--accent-cyan);
+  color: var(--accent-cyan);
+}
+</style>
+
+<!-- ============================================ -->
+<!-- UPDATED HTML STRUCTURE -->
+<!-- ============================================ -->
+
+<!-- REPLACE THE EXISTING SECTIONS WITH THESE COMBINED VERSIONS -->
+
+<!-- NEW PLANNER SECTION (Combines Tasks + Calendar) -->
+<section id="planner-section" class="content-section" aria-hidden="true">
+  <h2 class="section-title">
+    <img
+      src="../assets/Butterfly7.png"
+      alt=""
+      style="width: 32px; vertical-align: middle; margin-right: 12px; image-rendering: pixelated"
+    />
+    Focus Planner
+  </h2>
+
+  <div class="planner-grid">
+    <!-- LEFT: TASKS LIST -->
+    <div class="planner-tasks">
+      <div class="panel">
+        <h3 style="margin-bottom: 1.5rem; font-size: 1.3rem;">
+          📝 Your Tasks
+        </h3>
+        
+        <form id="task-form-inline" onsubmit="addTask(event)" style="margin-bottom: 2rem;">
+          <div style="display: flex; gap: 0.75rem;">
+            <input
+              type="text"
+              id="task-input-inline"
+              class="input-field"
+              placeholder="Add a focus task..."
+              style="flex: 1;"
+              required
+            />
+            <button type="submit" class="btn-primary" style="white-space: nowrap;">
+              + Add
+            </button>
+          </div>
+        </form>
+
+        <!-- QUICK ACTIONS (Premium: Favorites) -->
+        <div id="quick-actions" style="margin-bottom: 1.5rem; display: none;">
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <button class="btn-outline" onclick="repeatLastTask()">
+              🔄 Repeat Last
+            </button>
+            <button class="btn-outline premium-feature" onclick="showFavorites()">
+              ⭐ Favorites
+              <span class="premium-badge">Plus</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="tasks-list"></div>
+      </div>
+    </div>
+
+    <!-- RIGHT: CALENDAR -->
+    <div class="planner-calendar">
+      <div class="panel">
+        <h3 style="margin-bottom: 1.5rem; font-size: 1.3rem;">
+          📅 Focus Calendar
+        </h3>
+        <p style="color: var(--text-subtle); font-size: 0.9rem; margin-bottom: 1.5rem;">
+          Days with completed sessions are highlighted
+        </p>
+        
+        <div id="calendar-container">
+          <!-- Calendar will render here -->
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NEW PROGRESS SECTION (Combines Achievements + Statistics) -->
+<section id="progress-section" class="content-section" aria-hidden="true">
+  <h2 class="section-title">
+    <img
+      src="../assets/Butterfly12.png"
+      alt=""
+      style="width: 32px; vertical-align: middle; margin-right: 12px; image-rendering: pixelated"
+    />
+    Your Progress
+  </h2>
+
+  <div class="progress-stack">
+    <!-- ACHIEVEMENTS (Always visible) -->
+    <div class="panel">
+      <h3 style="margin-bottom: 1.5rem; font-size: 1.3rem;">
+        🏆 Achievements
+      </h3>
+      <div id="achievements-grid" class="achievement-grid"></div>
+    </div>
+
+    <!-- STATISTICS (Progressive unlock) -->
+    <div id="stats-container">
+      <!-- This will show either the lock placeholder OR the stats panel -->
+    </div>
+  </div>
+</section>
+
+<!-- UPGRADE MODAL -->
+<div id="upgrade-modal" class="upgrade-modal">
+  <div class="upgrade-modal-content">
+    <button class="upgrade-modal-close" onclick="closeUpgradeModal()">✕</button>
+    
+    <h2>Unlock Butterfly Plus</h2>
+    
+    <p style="text-align: center; color: var(--text-subtle); margin-bottom: 2rem;">
+      Supercharge your focus sessions with premium features
+    </p>
+    
+    <ul class="upgrade-benefits">
+      <li>Advanced analytics (30-day & all-time history)</li>
+      <li>Enhanced insights (best focus times, patterns)</li>
+      <li>Task scheduling & unlimited favorites</li>
+      <li>Distraction tracking & top insights</li>
+      <li>Ad-free experience</li>
+      <li>Priority support</li>
+    </ul>
+    
+    <div class="upgrade-modal-actions">
+      <button class="btn-upgrade-primary" onclick="goToPricing()">
+        Go to Butterfly Plus Plans
+      </button>
+      <button class="btn-upgrade-secondary" onclick="closeUpgradeModal()">
+        Maybe Later
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- UPDATED JAVASCRIPT -->
+<!-- ============================================ -->
+
+<script>
+/* ============================================
+   CONFIGURATION & CONSTANTS
+   ============================================ */
+
+// === THRESHOLDS ===
+const STATS_UNLOCK_THRESHOLD = 3;  // Sessions needed to unlock stats
+const FREE_STATS_DAYS = 7;          // Free users see last 7 days
+const PREMIUM_STATS_DAYS = 30;      // Premium users see last 30 days
+
+// === STORAGE KEYS ===
+const STORAGE_KEYS = {
+  user: 'BH_user',
+  tasks: 'BH_tasks',
+  sessions: 'BH_sessions',
+  schedules: 'BH_schedules',
+  achievements: 'BH_achievements',
+  calendar: 'BH_calendar'
+};
+
+// === FREE VS PREMIUM FEATURES ===
+const PREMIUM_FEATURES = {
+  extendedStats: true,       // 30-day stats vs 7-day
+  taskScheduling: true,       // Schedule task start times
+  unlimitedFavorites: true,   // Unlimited favorite tasks
+  distractionLog: true,       // Log interruption reasons
+  topInsights: true,          // Best focus day, time patterns
+  adFree: true               // No ads
+};
+
+/* ============================================
+   USER STATE MANAGEMENT
+   ============================================ */
+
+function getUser() {
+  const raw = localStorage.getItem(STORAGE_KEYS.user);
+  if (raw) {
+    try {
+      return JSON.parse(raw);
+    } catch {}
+  }
+  // Default free user
+  return {
+    username: 'Butterfly User',
+    plan: 'free',  // 'free' | 'monthly' | 'lifetime'
+    joinDate: new Date().toISOString()
+  };
+}
+
+function isPremium() {
+  const user = getUser();
+  return user.plan === 'monthly' || user.plan === 'lifetime';
+}
+
+function getSessions() {
+  const raw = localStorage.getItem(STORAGE_KEYS.sessions);
+  return raw ? JSON.parse(raw) : [];
+}
+
+function getCompletedSessionsCount() {
+  const sessions = getSessions();
+  return sessions.filter(s => s.completed).length;
+}
+
+function hasUnlockedStats() {
+  return getCompletedSessionsCount() >= STATS_UNLOCK_THRESHOLD;
+}
+
+/* ============================================
+   PROGRESSIVE DISCLOSURE - STATS UNLOCK
+   ============================================ */
+
+function renderStatsSection() {
+  const container = document.getElementById('stats-container');
+  if (!container) return;
+
+  const completedCount = getCompletedSessionsCount();
+  const unlocked = completedCount >= STATS_UNLOCK_THRESHOLD;
+
+  if (!unlocked) {
+    // Show lock placeholder
+    container.innerHTML = `
+      <div class="stats-locked-card">
+        <h3>📊 Your stats will unlock soon!</h3>
+        <p>Complete <strong>${STATS_UNLOCK_THRESHOLD}</strong> focus sessions to unlock your statistics dashboard.</p>
+        
+        <div class="unlock-progress">
+          ${Array.from({length: STATS_UNLOCK_THRESHOLD}, (_, i) => `
+            <div class="progress-dot ${i < completedCount ? 'completed' : ''}"></div>
+          `).join('')}
+        </div>
+        
+        <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-subtle);">
+          Sessions completed: <strong>${completedCount}/${STATS_UNLOCK_THRESHOLD}</strong>
+        </p>
+      </div>
+    `;
+  } else {
+    // Show full stats panel
+    const premium = isPremium();
+    const statsHtml = renderStatsPanel(premium);
+    container.innerHTML = statsHtml;
+  }
+}
+
+function renderStatsPanel(premium) {
+  const days = premium ? PREMIUM_STATS_DAYS : FREE_STATS_DAYS;
+  const lockClass = premium ? '' : 'premium-lock-overlay clickable';
+  
+  return `
+    <div class="panel">
+      <h3 style="margin-bottom: 1.5rem; font-size: 1.3rem;">
+        📈 Statistics
+        ${!premium ? '<span style="font-size: 0.8rem; color: var(--accent-cyan); margin-left: 0.5rem;">(Last 7 days)</span>' : ''}
+      </h3>
+      
+      <!-- Basic KPI Cards (Always visible after unlock) -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+        <div class="stat-card">
+          <div class="stat-value" id="total-sessions-stat">0</div>
+          <div class="stat-label">Total Sessions</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="total-hours-stat">0h</div>
+          <div class="stat-label">Focus Hours</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="streak-stat">0</div>
+          <div class="stat-label">Day Streak</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="completion-rate-stat">0%</div>
+          <div class="stat-label">Completion Rate</div>
+        </div>
+      </div>
+
+      <!-- Chart Section (Free: 7 days, Premium: 30 days) -->
+      <div style="margin-bottom: 2rem;">
+        <canvas id="stats-chart"></canvas>
+      </div>
+
+      <!-- Premium Insights (Locked for free users) -->
+      <div class="${lockClass}" ${!premium ? 'onclick="showUpgradeModal()"' : ''}>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+          <div class="insight-card">
+            <h4>Best Focus Day</h4>
+            <div class="insight-value" id="best-day-insight">Monday</div>
+          </div>
+          <div class="insight-card">
+            <h4>Avg Session Length</h4>
+            <div class="insight-value" id="avg-length-insight">24m</div>
+          </div>
+          <div class="insight-card">
+            <h4>Peak Focus Time</h4>
+            <div class="insight-value" id="peak-time-insight">2-4 PM</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/* ============================================
+   PREMIUM GATING
+   ============================================ */
+
+function checkFeatureAccess(feature) {
+  if (!PREMIUM_FEATURES[feature]) {
+    return true; // Feature is free
+  }
+  return isPremium();
+}
+
+function showUpgradeModal() {
+  const modal = document.getElementById('upgrade-modal');
+  if (modal) {
+    modal.classList.add('open');
+  }
+}
+
+function closeUpgradeModal() {
+  const modal = document.getElementById('upgrade-modal');
+  if (modal) {
+    modal.classList.remove('open');
+  }
+}
+
+function goToPricing() {
+  // Navigate to pricing page
+  // TODO: Update this path to your actual pricing page
+  window.location.href = '../html/butterfly-plus.html';
+  
+  // Alternative: If pricing page doesn't exist yet, stub it
+  // alert('Pricing page coming soon! Plan options: Monthly ($4.99) or Lifetime ($29.99)');
+  // closeUpgradeModal();
+}
+
+/* ============================================
+   TAB SWITCHING (Updated for 3 tabs)
+   ============================================ */
+
+function switchTab(tabName, button) {
+  // Update tab buttons
+  document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+  if (button) {
+    button.classList.add('active');
+  }
+
+  // Update sections
+  document.querySelectorAll('.content-section').forEach(section => {
+    section.classList.remove('active');
+    section.setAttribute('aria-hidden', 'true');
+  });
+
+  const activeSection = document.getElementById(`${tabName}-section`);
+  if (activeSection) {
+    activeSection.classList.add('active');
+    activeSection.removeAttribute('aria-hidden');
+  }
+
+  // Special handling for progress tab
+  if (tabName === 'progress') {
+    renderStatsSection();
+    setTimeout(updateCharts, 150);
+  }
+}
+
+/* ============================================
+   INITIALIZATION
+   ============================================ */
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Check stats unlock status and render accordingly
+  renderStatsSection();
+  
+  // Show quick actions if user has tasks
+  const tasks = JSON.parse(localStorage.getItem(STORAGE_KEYS.tasks) || '[]');
+  if (tasks.length > 0) {
+    const quickActions = document.getElementById('quick-actions');
+    if (quickActions) quickActions.style.display = 'block';
+  }
+  
+  // Initialize other components
+  loadTasks();
+  renderCalendar();
+  loadAchievements();
+});
+
+/* ============================================
+   HELPER FUNCTIONS FOR PREMIUM FEATURES
+   ============================================ */
+
+function repeatLastTask() {
+  const tasks = JSON.parse(localStorage.getItem(STORAGE_KEYS.tasks) || '[]');
+  if (tasks.length > 0) {
+    const lastTask = tasks[tasks.length - 1];
+    document.getElementById('task-input-inline').value = lastTask.text;
+  }
+}
+
+function showFavorites() {
+  if (!checkFeatureAccess('unlimitedFavorites')) {
+    showUpgradeModal();
+    return;
+  }
+  // Show favorites list (implement as needed)
+  alert('Favorites feature - implement your UI here!');
+}
+
+function logDistraction(reason) {
+  if (!checkFeatureAccess('distractionLog')) {
+    return; // Silently skip for free users
+  }
+  
+  // Log the distraction
+  const sessions = getSessions();
+  const lastSession = sessions[sessions.length - 1];
+  if (lastSession) {
+    lastSession.distractionReason = reason;
+    localStorage.setItem(STORAGE_KEYS.sessions, JSON.stringify(sessions));
+  }
+}
+
+/* ============================================
+   FUTURE ENHANCEMENTS
+   ============================================ */
+
+// To add a new premium feature:
+// 1. Add it to PREMIUM_FEATURES object
+// 2. Use checkFeatureAccess('featureName') before allowing access
+// 3. Show upgrade modal if access denied: showUpgradeModal()
+// 4. Add UI with premium-lock-overlay class if needed
+
+</script>

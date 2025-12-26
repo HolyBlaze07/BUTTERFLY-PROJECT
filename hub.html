@@ -2,7 +2,11 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Butterfly Hub" />
+    <meta name="format-detection" content="telephone=no" />
     <title>Butterfly Hub - Butterfly Games Collection</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -19,6 +23,17 @@
         margin: 0;
         padding: 0;
         box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+        -webkit-touch-callout: none;
+      }
+
+      html {
+        /* Prevent iOS text size adjustment */
+        -webkit-text-size-adjust: 100%;
+        text-size-adjust: 100%;
+        /* Smooth scrolling for iOS */
+        -webkit-overflow-scrolling: touch;
+        scroll-behavior: smooth;
       }
 
       body {
@@ -35,6 +50,7 @@
         );
         background-attachment: fixed;
         min-height: 100vh;
+        min-height: -webkit-fill-available;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -44,6 +60,9 @@
         image-rendering: pixelated;
         image-rendering: -moz-crisp-edges;
         image-rendering: crisp-edges;
+        /* iOS Safari optimization */
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
       }
 
       body::before {
@@ -143,6 +162,7 @@
       .header {
         width: 100%;
         padding: 2rem;
+        padding-top: max(2rem, env(safe-area-inset-top));
         text-align: center;
         background: linear-gradient(
           180deg,
@@ -150,6 +170,7 @@
           rgba(26, 15, 51, 0.95) 100%
         );
         backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
         border-bottom: 4px solid;
         border-image: linear-gradient(90deg, #ff69b4, #00ffff, #ff00ff, #4169e1)
           1;
@@ -165,10 +186,12 @@
         right: 2rem;
         display: flex;
         gap: 0.75rem;
+        flex-wrap: wrap;
       }
 
       .auth-link {
-        padding: 0.6rem 1.2rem;
+        padding: 0.75rem 1.5rem;
+        min-height: 44px;
         border: 2px solid #00ffff;
         color: #00ffff;
         text-decoration: none;
@@ -178,6 +201,12 @@
         background: rgba(10, 14, 39, 0.6);
         transition: all 0.3s ease;
         box-shadow: 0 0 10px rgba(0, 255, 255, 0.4);
+        cursor: pointer;
+        touch-action: manipulation;
+      }
+
+      .auth-link:active {
+        transform: scale(0.95);
       }
 
       .auth-link:hover {
@@ -217,7 +246,8 @@
       }
 
       .sign-out-btn {
-        padding: 0.35rem 0.6rem;
+        padding: 0.5rem 0.9rem;
+        min-height: 44px;
         border: 1px solid #ff00ff;
         background: rgba(255, 0, 255, 0.15);
         color: #fff;
@@ -225,6 +255,11 @@
         text-transform: uppercase;
         cursor: pointer;
         transition: all 0.2s ease;
+        touch-action: manipulation;
+      }
+
+      .sign-out-btn:active {
+        transform: scale(0.95);
       }
 
       .sign-out-btn:hover {
@@ -233,7 +268,7 @@
       }
 
       .header h1 {
-        font-size: 2.5rem;
+        font-size: clamp(1.5rem, 5vw, 2.5rem);
         margin-bottom: 1rem;
         font-weight: bold;
         text-shadow: 3px 3px 0px #ff69b4, -2px -2px 0px #00ffff,
@@ -257,7 +292,7 @@
       }
 
       .header p {
-        font-size: 1rem;
+        font-size: clamp(0.85rem, 2.5vw, 1rem);
         color: #ff69b4;
         margin-bottom: 2rem;
         text-shadow: 0 0 10px rgba(255, 105, 180, 0.8), 2px 2px 0px #4169e1;
@@ -266,9 +301,10 @@
 
       .games-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
         gap: 2rem;
         padding: 2rem;
+        padding-bottom: max(2rem, env(safe-area-inset-bottom));
         max-width: 1200px;
         width: 100%;
         position: relative;
@@ -286,6 +322,7 @@
         padding: 2rem;
         text-align: center;
         backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
         border: 4px solid;
         border-image: linear-gradient(
             135deg,
@@ -301,31 +338,22 @@
         box-shadow: 0 0 15px rgba(255, 105, 180, 0.5),
           0 0 30px rgba(65, 105, 225, 0.3),
           inset 0 0 30px rgba(138, 43, 226, 0.2), 0 8px 0 rgba(75, 0, 130, 0.5);
-        padding: 2rem;
-        text-align: center;
-        backdrop-filter: blur(10px);
-        border: 3px solid;
-        border-image: linear-gradient(
-            135deg,
-            #ff00ff,
-            #00ffff,
-            #ffff00,
-            #00ff00
-          )
-          1;
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-        box-shadow: 0 0 10px rgba(255, 0, 255, 0.5),
-          0 0 20px rgba(0, 255, 255, 0.3), inset 0 0 20px rgba(0, 255, 255, 0.1);
+        cursor: pointer;
+        touch-action: manipulation;
       }
 
-      .game-card:hover {
-        transform: translateY(-8px) scale(1.03);
-        box-shadow: 0 0 25px rgba(255, 105, 180, 0.9),
-          0 0 50px rgba(65, 105, 225, 0.7), 0 0 75px rgba(255, 0, 255, 0.5),
-          inset 0 0 40px rgba(138, 43, 226, 0.3), 0 12px 0 rgba(75, 0, 130, 0.7);
-        animation: pixelPulse 0.5s ease-in-out;
+      @media (hover: hover) {
+        .game-card:hover {
+          transform: translateY(-8px) scale(1.03);
+          box-shadow: 0 0 25px rgba(255, 105, 180, 0.9),
+            0 0 50px rgba(65, 105, 225, 0.7), 0 0 75px rgba(255, 0, 255, 0.5),
+            inset 0 0 40px rgba(138, 43, 226, 0.3), 0 12px 0 rgba(75, 0, 130, 0.7);
+          animation: pixelPulse 0.5s ease-in-out;
+        }
+      }
+
+      .game-card:active {
+        transform: translateY(-4px) scale(0.98);
       }
 
       @keyframes pixelPulse {
@@ -355,8 +383,10 @@
         transition: left 0.5s;
       }
 
-      .game-card:hover::before {
-        left: 100%;
+      @media (hover: hover) {
+        .game-card:hover::before {
+          left: 100%;
+        }
       }
 
       .game-icon {
@@ -378,7 +408,7 @@
       }
 
       .game-title {
-        font-size: 1.5rem;
+        font-size: clamp(1.2rem, 3.5vw, 1.5rem);
         margin-bottom: 0.5rem;
         color: #0ff;
         text-shadow: 2px 2px 0px #ff00ff, -1px -1px 0px #ffff00,
@@ -392,6 +422,7 @@
         margin-bottom: 1.5rem;
         line-height: 1.6;
         text-shadow: 1px 1px 2px rgba(255, 0, 255, 0.5);
+        font-size: clamp(0.85rem, 2vw, 1rem);
       }
 
       .game-features {
@@ -437,7 +468,8 @@
         border: 2px solid #0ff;
         border-radius: 20px;
         color: #000;
-        padding: 0.8rem 2rem;
+        padding: 1rem 2.5rem;
+        min-height: 48px;
         font-size: 1rem;
         font-weight: bold;
         cursor: pointer;
@@ -449,24 +481,23 @@
           inset 0 0 10px rgba(255, 255, 255, 0.3);
         animation: gradientShift 3s ease infinite;
         text-shadow: 1px 1px 0px rgba(255, 0, 255, 0.8);
+        touch-action: manipulation;
+        -webkit-user-select: none;
+        user-select: none;
       }
 
-      @keyframes gradientShift {
-        0%,
-        100% {
-          background-position: 0% 50%;
-        }
-        50% {
-          background-position: 100% 50%;
-        }
+      .open-button:active {
+        transform: scale(0.95);
       }
 
-      .open-button:hover {
-        transform: scale(1.1);
-        box-shadow: 0 0 20px rgba(255, 0, 255, 0.9),
-          0 0 40px rgba(0, 255, 255, 0.7), 0 0 60px rgba(255, 255, 0, 0.5),
-          inset 0 0 20px rgba(255, 255, 255, 0.5);
-        animation: buttonGlitch 0.5s ease-in-out;
+      @media (hover: hover) {
+        .open-button:hover {
+          transform: scale(1.1);
+          box-shadow: 0 0 20px rgba(255, 0, 255, 0.9),
+            0 0 40px rgba(0, 255, 255, 0.7), 0 0 60px rgba(255, 255, 0, 0.5),
+            inset 0 0 20px rgba(255, 255, 255, 0.5);
+          animation: buttonGlitch 0.5s ease-in-out;
+        }
       }
 
       @keyframes buttonGlitch {
@@ -482,6 +513,16 @@
         }
       }
 
+      @keyframes gradientShift {
+        0%,
+        100% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+      }
+
       .stats-panel {
         background: linear-gradient(
           180deg,
@@ -493,6 +534,7 @@
         margin: 2rem;
         text-align: center;
         backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
         border: 4px solid;
         border-image: linear-gradient(
             135deg,
@@ -511,7 +553,7 @@
 
       .stats-title {
         color: #ff69b4;
-        font-size: 1.3rem;
+        font-size: clamp(1.1rem, 3vw, 1.3rem);
         text-shadow: 2px 2px 0px #4169e1, -1px -1px 0px #00ffff,
           0 0 20px rgba(255, 105, 180, 1), 0 0 40px rgba(65, 105, 225, 0.8);
         font-weight: bold;
@@ -564,6 +606,7 @@
         pointer-events: none;
         filter: drop-shadow(0 0 10px #ff00ff) drop-shadow(0 0 20px #00ffff)
           drop-shadow(0 0 30px #ffff00);
+        z-index: 1;
       }
 
       .floating-butterfly img {
@@ -608,18 +651,93 @@
         animation-delay: 4s;
       }
 
-      @media (max-width: 768px) {
+      /* iPad and Tablet Optimizations */
+      @media (min-width: 768px) and (max-width: 1024px) {
+        .games-grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 1.5rem;
+          padding: 1.5rem;
+        }
+
         .header h1 {
-          font-size: 2rem;
+          font-size: 2.2rem;
+        }
+
+        .header-actions {
+          position: static;
+          justify-content: center;
+          margin-bottom: 1.5rem;
+        }
+      }
+
+      /* Mobile Optimizations */
+      @media (max-width: 768px) {
+        .header {
+          padding: 1.5rem 1rem;
+        }
+
+        .header h1 {
+          font-size: 1.8rem;
+        }
+
+        .header-actions {
+          position: static;
+          justify-content: center;
+          margin-bottom: 1rem;
         }
 
         .games-grid {
           grid-template-columns: 1fr;
           padding: 1rem;
+          gap: 1.5rem;
         }
 
         .game-card {
           padding: 1.5rem;
+        }
+
+        .stats-panel {
+          margin: 1rem;
+          padding: 1.25rem;
+        }
+
+        .stats-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      /* iPad Landscape Optimization */
+      @media (min-width: 1024px) and (max-width: 1366px) and (orientation: landscape) {
+        .games-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+
+      /* Touch device optimizations */
+      @media (hover: none) and (pointer: coarse) {
+        .game-card,
+        .stat-item {
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .floating-butterfly {
+          animation: none;
+          display: none; /* Hide animations for better performance */
+        }
+
+        body::before {
+          animation: none; /* Reduce animations for battery */
+        }
+      }
+
+      /* Reduce motion for accessibility */
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
         }
       }
     </style>
@@ -831,7 +949,7 @@
         </button>
       </div>
 
-      <div class="game-card">
+      <!-- <div class="game-card">
         <div class="game-icon">
           <img
             src="assets/Butterfly3.png"
@@ -857,7 +975,7 @@
         >
           Launch Lab
         </button>
-      </div>
+      </div> -->
 
       <div class="game-card">
         <div class="game-icon">

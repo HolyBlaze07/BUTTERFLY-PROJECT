@@ -53,8 +53,8 @@ body.dark-mode {
       rgba(0, 255, 255, 0.15),
       transparent 50%
     );
-  background-size: contain, cover, 100% 100%, 100% 100%;
-  background-position: center, center, center, center;
+  background-size: auto 100%, cover, 100% 100%, 100% 100%;
+  background-position: center center, center, center, center;
   background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
   background-attachment: fixed;
   image-rendering: pixelated;
@@ -147,8 +147,8 @@ body {
       rgba(182, 243, 255, 0.3),
       transparent 50%
     );
-  background-size: contain, cover, 100% 100%, 100% 100%;
-  background-position: center, center, center, center;
+  background-size: auto 100%, cover, 100% 100%, 100% 100%;
+  background-position: center center, center, center, center;
   background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
   background-attachment: fixed;
   image-rendering: pixelated;
