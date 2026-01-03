@@ -557,6 +557,21 @@
         font-size: 0.85rem;
       }
 
+      .task-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        margin-bottom: 0.75rem;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .task-item:hover {
+        background: rgba(255, 255, 255, 0.06);
+      }
+
       .chart-container {
         height: 360px;
         padding: 1rem;
@@ -932,19 +947,37 @@
         </div>
       </section>
 
-      <section id="tasks-section" class="content-section" aria-hidden="true">
+      <section
+        id="planner-section"
+        class="content-section"
+        aria-hidden="true"
+      >
         <div class="panel">
-          <h2>Task Management</h2>
-          <div id="task-list">
-            Create tasks via the focus console above to see them here.
+          <h2>Task Planner</h2>
+          <form id="task-form-inline" onsubmit="addTask(event)">
+            <div class="form-group">
+              <input
+                type="text"
+                id="task-name-input"
+                placeholder="Enter task name..."
+                required
+              />
+            </div>
+            <div class="form-group">
+              <input
+                type="text"
+                id="task-tags-input"
+                placeholder="Tags (optional)"
+              />
+            </div>
+            <button class="btn-primary" type="submit">Add Task</button>
+          </form>
+          <div id="tasks-list" style="margin-top: 2rem;">
+            <p style="color: var(--text-subtle);">No tasks yet. Add your first task above!</p>
           </div>
-        </div>
-      </section>
 
-      <section id="calendar-section" class="content-section" aria-hidden="true">
-        <div class="panel">
-          <h2>Focus Calendar</h2>
-          <div class="calendar-container">
+          <div id="calendar-container" style="margin-top: 3rem;">
+            <h3>Focus Calendar</h3>
             <div
               class="calendar-header"
               style="
@@ -968,12 +1001,12 @@
       </section>
 
       <section
-        id="achievements-section"
+        id="progress-section"
         class="content-section"
         aria-hidden="true"
       >
         <div class="panel">
-          <h2>Achievements</h2>
+          <h2>Progress & Statistics</h2>
           <div class="stats-grid">
             <div class="stat-card">
               <div class="stat-value" id="total-sessions">0</div>
@@ -999,20 +1032,8 @@
               role="img"
             ></canvas>
           </div>
+          <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Achievements</h3>
           <div class="achievements-grid" id="achievements-grid"></div>
-        </div>
-      </section>
-
-      <section id="stats-section" class="content-section" aria-hidden="true">
-        <div class="panel">
-          <h2>Weekly Stats</h2>
-          <div class="chart-container">
-            <canvas
-              id="weekly-chart"
-              aria-label="Weekly focus time bar chart"
-              role="img"
-            ></canvas>
-          </div>
         </div>
       </section>
     </main>
@@ -1104,7 +1125,7 @@
       const sessionKey = "butterflySessions";
       const tasksKey = "butterflyTasks";
       const calendarKey = "butterflyCalendar";
-      const achievementsKey = "butterflyAchievements";
+      const achievementsKey = "butterflyACHIEVEMENTS";
       const currentTaskKey = "butterflyCurrentTask";
       const completedTasksKey = "butterflyCompletedTasks";
 
@@ -1142,6 +1163,7 @@
         initializeAchievements();
         updateStatistics();
         checkAchievements();
+        renderTasksList();
         hydrateFooter();
 
         const anytimeToggle = document.getElementById("modal-anytime");
@@ -1443,6 +1465,72 @@
         }
       }
 
+      function addTask(event) {
+        event.preventDefault();
+        const nameInput = document.getElementById("task-name-input");
+        const tagsInput = document.getElementById("task-tags-input");
+        
+        const name = nameInput.value.trim();
+        if (!name) return;
+
+        const task = {
+          id: Date.now(),
+          name,
+          tags: tagsInput.value.trim(),
+          createdAt: new Date().toISOString(),
+          userId: currentUser.id,
+          completed: false
+        };
+
+        tasks.push(task);
+        localStorage.setItem(tasksKey, JSON.stringify(tasks));
+        
+        nameInput.value = "";
+        tagsInput.value = "";
+        
+        renderTasksList();
+      }
+
+      function renderTasksList() {
+        const tasksList = document.getElementById("tasks-list");
+        if (!tasksList) return;
+
+        const userTasks = tasks.filter(t => t.userId === currentUser.id);
+        
+        if (userTasks.length === 0) {
+          tasksList.innerHTML = '<p style="color: var(--text-subtle);">No tasks yet. Add your first task above!</p>';
+          return;
+        }
+
+        tasksList.innerHTML = userTasks.map(task => `
+          <div class="task-item" data-task-id="${task.id}">
+            <div style="flex: 1;">
+              <strong>${escapeHtml(task.name)}</strong>
+              ${task.tags ? `<div style="font-size: 0.85rem; color: var(--text-subtle); margin-top: 0.25rem;">${escapeHtml(task.tags)}</div>` : ''}
+            </div>
+            <button 
+              class="ghost-btn" 
+              onclick="deleteTask(${task.id})"
+              style="padding: 0.5rem 1rem;"
+            >
+              Delete
+            </button>
+          </div>
+        `).join('');
+      }
+
+      function deleteTask(taskId) {
+        tasks = tasks.filter(t => t.id !== taskId);
+        localStorage.setItem(tasksKey, JSON.stringify(tasks));
+        renderTasksList();
+      }
+
+      function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
       function initializeCalendar() {
         const now = new Date();
         renderCalendar(now.getFullYear(), now.getMonth());
@@ -1730,7 +1818,6 @@
 
       function updateCharts() {
         updateProgressChart();
-        updateWeeklyChart();
       }
 
       function updateProgressChart() {
@@ -1853,7 +1940,7 @@
           activeSection.classList.add("active");
           activeSection.removeAttribute("aria-hidden");
         }
-        if (tabName === "stats") {
+        if (tabName === "progress") {
           setTimeout(updateCharts, 150);
         }
       }
